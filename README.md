@@ -43,38 +43,33 @@ $$z_x \leftarrow |z_x|, \quad z_y \leftarrow z_y - \alpha \left(\sqrt{|z_x| + \e
 
 ---
 
-### 2. Cyber Matrix Vortex (3D Cylindrical Wormhole)
+### 2. Cyber Matrix Vortex (Multi-Scene Story & Gentle Interleaving)
 
 <div align="center">
   <img src="screenshots/matrix_vortex_mobile.gif" alt="Cyber Matrix Vortex Mobile Preview" width="220">
 </div>
 
-#### 3D Cylindrical Coordinate Projection
-Screen-space coordinates $\mathbf{u} \in [-1, 1]^2$ are projected onto an infinite 3D cylindrical tunnel with depth $z$:
+#### Macro Story Architecture & Gentle Interleaving
+The narrative progresses through three distinct cyberpunk realms across a $72.0\text{s}$ macro cycle, smoothly blended using partition-of-unity cubic smoothstep easing:
 
-$$r = \|\mathbf{u}\|_2, \quad \phi = \mathrm{atan2}(u_y, u_x), \quad z = \frac{1}{r + \epsilon}$$
+$$\mathbf{C}_{\text{total}} = \sum_{k=1}^3 w_k(t) \mathbf{C}_k + \mathbf{C}_{\text{crossing}}, \quad \sum_{k=1}^3 w_k(t) = 1$$
 
-The cylinder surface is mapped into discretized helical matrix rain columns:
+- **Chapter 1: The Gateway to Cyberspace ($0\text{s} - 20\text{s}$)**: Planar 3D perspective cyber grid receding into an infinite neon horizon, accompanied by cascading vertical sky rain and data packets.
+- **Chapter 2: The Helical Vortex Descent ($24\text{s} - 46\text{s}$)**: Accelerated 3D cylindrical vortex plunge with dynamic helical twisting, cipher streams deciphering into luminous Kanji and sacred runes, and rotating holographic word banners.
+- **Chapter 3: AI Singularity Core & Sacred Mandala ($50\text{s} - 68\text{s}$)**: Four concentric counter-rotating sacred glyph rings orbiting around a blinding incandescent solar singularity with volumetric crepuscular rays and lightning arcs.
 
-$$u_{\text{cyl}} = \left(\frac{\phi + z \cdot \omega_{\text{twist}}}{2\pi} + \frac{1}{2}\right) \cdot N_{\text{cols}}, \quad v_{\text{cyl}} = z \cdot v_z + t \cdot v_t$$
+#### Interleaving Crossings (Defragmentation & Gravitational Ripples)
+Transitions are rendered organically through optical wavefront sweeps:
 
-$$\text{col} = \lfloor u_{\text{cyl}} \rfloor, \quad \text{row} = \lfloor v_{\text{cyl}} \rfloor$$
+$$\text{Crossing 1: } \mathbf{u}' = \mathbf{u} + \hat{\mathbf{x}} \sin(\psi_y \cdot \omega) e^{-k_1 |\psi_y|}, \quad \text{Crossing 2: } \mathbf{u}' = \mathbf{u} + \frac{\mathbf{u}}{\|\mathbf{u}\|} \sin\left((\|\mathbf{u}\| - r_w) \omega_r\right) e^{-k_2 |\|\mathbf{u}\| - r_w|}$$
 
-#### Deciphering Streams & Hardware Mipmap Bloom
-Stream intensity decomposes into a white-hot laser head and exponential phosphor decay:
-
-$$I(p) = \exp(-\gamma \cdot |p - 1.0|) + \alpha_{\text{ambient}}, \quad p = \mathrm{mod}(\text{row} + t \cdot v_{\text{stream}}, L)$$
-
-Target columns periodically decipher cascading code into luminous Kanji and sacred cybernetic runes. Halo bloom is extracted directly via hardware texture LOD mipmaps:
-
-$$I_{\text{glow}}(\mathbf{uv}) = \mathrm{tex}_{\mathrm{LOD}}(\mathbf{uv}, \lambda + 2.5)$$
-
-#### Solar Flare Burst & Demoscene VFX Pipeline
-A radiant sun flare at the vortex singularity projects multi-harmonic diffraction starburst rays, anamorphic streaks, and volumetric crepuscular shafts:
-
-$$I_{\text{solar}}(\mathbf{u}) = c_{\text{disc}} \exp(-\beta_1 \|\mathbf{u} - \mathbf{p}_{\odot}\|) + \sum_{k \in \{8, 12\}} \cos^{m_k}(k \phi_{\odot} \pm \omega_k t) \exp(-\beta_{\text{ray}} \|\mathbf{u} - \mathbf{p}_{\odot}\|)$$
-
-$$I_{\text{streak}}(\mathbf{u}) = \exp(-\beta_y |u_y'|) \exp(-\beta_x |u_x'|), \quad \mathbf{u}' = \mathbf{R}_{\theta} (\mathbf{u} - \mathbf{p}_{\odot})$$
+#### 3D Perspective Grid, Cylindrical Wormhole & Orbital Mandala
+- **Perspective Data Grid**:
+  $$z_{\text{grid}} = \frac{h}{|u_y + \delta|}, \quad X = u_x \cdot z_{\text{grid}}, \quad Z = z_{\text{grid}} + v_z t, \quad I_{\text{grid}} = e^{-\kappa |X - \lfloor X \rceil|} + e^{-\kappa |Z - \lfloor Z \rceil|}$$
+- **3D Helical Vortex**:
+  $$z = \frac{1}{\|\mathbf{u}\| + \epsilon}, \quad \phi_{\text{tunnel}} = \mathrm{atan2}(u_y, u_x) + z \cdot \omega_{\text{twist}}, \quad u_{\text{cyl}} = \left(\frac{\phi_{\text{tunnel}}}{2\pi} + \frac{1}{2}\right) N_{\text{cols}}$$
+- **Counter-Rotating Sacred Mandala**:
+  $$\theta_k = \phi - \Omega_k t, \quad u_k = \left(\frac{\theta_k}{2\pi} + \frac{1}{2}\right) N_k, \quad I_{\text{ring}}(r) = \exp\left(-\frac{(r - R_k)^2}{2\sigma_k^2}\right)$$
 
 ---
 
