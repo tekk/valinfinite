@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>Valinfinite V2 • Vortex Void</title>
+    <title>Valinfinite V2 • Cyber Matrix Vortex</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="loading-overlay">
-        <div class="pulsing-heart">💖</div>
-        <div class="loading-text">Awakening Vortex Void...</div>
+        <div class="pulsing-heart">⚡</div>
+        <div class="loading-text">Deciphering Cyber Matrix Vortex...</div>
     </div>
 
     <canvas id="fractal-canvas"></canvas>
@@ -70,10 +70,103 @@
             }
         });
 
+        function createFontAtlas() {
+            const atlasCanvas = document.createElement('canvas');
+            atlasCanvas.width = 1024;
+            atlasCanvas.height = 1024;
+            const ctx = atlasCanvas.getContext('2d');
+
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 1024, 1024);
+
+            const katakana = [
+                'ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ',
+                'サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト',
+                'ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ',
+                'マ','ミ','ム','メ','モ','ヤ','ユ','ヨ','ラ','リ',
+                'ル','レ','ロ','ワ','ヲ','ン'
+            ];
+            const kanji = [
+                '愛','心','命','夢','魂','恋','龍','光','星','零',
+                '壱','幻','闇','炎','雷','鏡','永','破','絆','宙',
+                '響','創','神','無'
+            ];
+            const runes = [
+                '§','※','⚡','✦','Ξ','Ψ','Ω','λ','π','∞',
+                '░','▒','▓','⌗','◊','∿','⌖','⌬','⎊','⎋',
+                '⏣','⟁','⟐','⧖','⨂','<>','::','0','1','2',
+                '3','4','5','6','7','8','9','+','*','#'
+            ];
+            const letters = [
+                'V','A','L','I','K','P','E','T','O',
+                'ヴ','ァ','リ','カ','ペ','ト','テ','ッ','ク','コ'
+            ];
+            const banners = {
+                200: 'VALIKA',
+                201: 'PETO',
+                202: 'VALI',
+                203: 'TEKK',
+                204: 'TEKKO',
+                205: 'ヴァリカ',
+                206: 'ペト',
+                207: 'テック',
+                208: 'テッコ',
+                209: '愛心',
+                210: '命夢',
+                211: '無限'
+            };
+
+            const cols = 16;
+            const cellW = 1024 / cols;
+            const cellH = 1024 / cols;
+
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#ffffff';
+
+            function drawCell(idx, text, fontSize) {
+                const c = idx % cols;
+                const r = Math.floor(idx / cols);
+                const x = c * cellW + cellW / 2;
+                const y = r * cellH + cellH / 2;
+                ctx.font = 'bold ' + fontSize + 'px "Courier New", monospace, sans-serif';
+                ctx.fillText(text, x, y);
+            }
+
+            katakana.forEach((ch, i) => drawCell(i, ch, 40));
+            kanji.forEach((ch, i) => drawCell(46 + i, ch, 40));
+            runes.forEach((ch, i) => drawCell(70 + i, ch, 36));
+            letters.forEach((ch, i) => drawCell(110 + i, ch, 42));
+
+            for (const [idxStr, text] of Object.entries(banners)) {
+                const idx = parseInt(idxStr, 10);
+                const size = text.length > 5 ? 14 : (text.length > 3 ? 17 : 24);
+                drawCell(idx, text, size);
+            }
+            return atlasCanvas;
+        }
+
+        function bindFontAtlas(canvas) {
+            const atlasCanvas = createFontAtlas();
+            const gl = canvas.getContext('webgl2');
+            if (!gl) return;
+            const fontTex = gl.createTexture();
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, fontTex);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, atlasCanvas);
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        }
+
         async function launch() {
             try {
                 await init();
+                const canvas = document.getElementById('fractal-canvas');
                 start_fractal('fractal-canvas');
+                bindFontAtlas(canvas);
 
                 requestAnimationFrame(() => {
                     const loader = document.getElementById('loading-overlay');
