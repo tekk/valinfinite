@@ -2,20 +2,20 @@
 
 Continuous scale-invariant GPU fractals in WebAssembly and WebGL2 with vivid psychedelic palettes, zero precision degradation, and audio synchronization.
 
-🌐 **Live Experience**: [https://tekk.github.io/valinfinite/](https://tekk.github.io/valinfinite/)
-- **V1 (Celestial Heart)**: [https://tekk.github.io/valinfinite/v1/](https://tekk.github.io/valinfinite/v1/)
-- **V2 (Cyber Matrix Vortex)**: [https://tekk.github.io/valinfinite/v2/](https://tekk.github.io/valinfinite/v2/)
-- **V3 (Deep Cosmic Fractal)**: [https://tekk.github.io/valinfinite/v3/](https://tekk.github.io/valinfinite/v3/)
-- **V4 (Heart Vortex Void)**: [https://tekk.github.io/valinfinite/v4/](https://tekk.github.io/valinfinite/v4/)
+🌐 **Live Portal**: [https://tekk.github.io/valinfinite/](https://tekk.github.io/valinfinite/)
+- **Celestial Heart**: [https://tekk.github.io/valinfinite/celestial-heart/](https://tekk.github.io/valinfinite/celestial-heart/)
+- **Cyber Matrix Vortex**: [https://tekk.github.io/valinfinite/matrix-vortex/](https://tekk.github.io/valinfinite/matrix-vortex/)
+- **Cosmic Mandelbrot**: [https://tekk.github.io/valinfinite/cosmic-mandelbrot/](https://tekk.github.io/valinfinite/cosmic-mandelbrot/)
+- **Vortex Void**: [https://tekk.github.io/valinfinite/vortex-void/](https://tekk.github.io/valinfinite/vortex-void/)
 
 ---
 
 ## 🔬 Mathematical Formulations & Scene Algorithms
 
-### 1. Version 1 — Celestial Heart (Infinite Shepard Zoom)
+### 1. Celestial Heart (Infinite Shepard Zoom)
 
 <div align="center">
-  <img src="screenshots/v1_mobile.gif" alt="Version 1 Mobile Preview" width="220">
+  <img src="screenshots/celestial_heart_mobile.gif" alt="Celestial Heart Mobile Preview" width="220">
 </div>
 
 #### Logarithmic Octave Synthesis (Shepard Scale)
@@ -39,10 +39,10 @@ $$z \leftarrow \begin{cases}
 
 ---
 
-### 2. Version 2 — Cyber Matrix Vortex (3D Cylindrical Wormhole)
+### 2. Cyber Matrix Vortex (3D Cylindrical Wormhole)
 
 <div align="center">
-  <img src="screenshots/v2_mobile.gif" alt="Version 2 Mobile Preview" width="220">
+  <img src="screenshots/matrix_vortex_mobile.gif" alt="Cyber Matrix Vortex Mobile Preview" width="220">
 </div>
 
 #### 3D Cylindrical Coordinate Projection
@@ -67,10 +67,10 @@ $$I_{\text{glow}}(\mathbf{uv}) = \operatorname{tex}_{\text{LOD}}(\mathbf{uv}, \l
 
 ---
 
-### 3. Version 3 — Deep Cosmic Fractal (Mandelbrot Seahorse Valley)
+### 3. Cosmic Mandelbrot (Deep Fractal Zoom)
 
 <div align="center">
-  <img src="screenshots/v3_mobile.gif" alt="Version 3 Mobile Preview" width="220">
+  <img src="screenshots/cosmic_mandelbrot_mobile.gif" alt="Cosmic Mandelbrot Mobile Preview" width="220">
 </div>
 
 #### Dual-Phase Zoom Dynamics & Ease-Out Return
@@ -95,10 +95,10 @@ $$\mathbf{C}(\nu) = \mathbf{a} + \mathbf{b} \cos\left(2\pi (\mathbf{c} \cdot \nu
 
 ---
 
-### 4. Version 4 — Heart Vortex Void (High-Contrast Cardioid Plunge)
+### 4. Vortex Void (High-Contrast Cardioid Plunge)
 
 <div align="center">
-  <img src="screenshots/v4_mobile.gif" alt="Version 4 Mobile Preview" width="220">
+  <img src="screenshots/vortex_void_mobile.gif" alt="Vortex Void Mobile Preview" width="220">
 </div>
 
 #### Swirling Cardiac Rotations & Cardioid Orbit Traps
@@ -121,26 +121,42 @@ $$\mathbf{C}_{\text{final}} = \left(\frac{\mathbf{C}^\gamma}{\mathbf{C}^\gamma +
 
 ---
 
-## 🌿 Branches
-
-- **`main`**: Portal entry with 3D liquid fluid canvas, responsive cards, and GitHub Pages deployments.
-- **`v1`**: Celestial Heart — serene infinite zoom with pastel aurora.
-- **`v2`**: Cyber Matrix Vortex — 3D cylindrical tunnel composed of Japanese glyphs, matrix runes, and target names.
-- **`v3`**: Deep Cosmic Fractal — authentic Mandelbrot deep zoom into Seahorse Valley spiral galaxies.
-- **`v4`**: Heart Vortex Void — accelerated cardiac sway, dark cosmic chasms, and cardioid neon ribs.
-
----
-
 ## 🎵 Soundtracks
 
-- **V1**: *GoldFish & Cat Dealers — Colours & Lights (Clément Leroux Remix)*
-- **V2**: *cYsmix — Escapism (Original Mix)*
-- **V3**: *Brookes Brothers — Beautiful feat. Robert Owens (Original Mix)*
-- **V4**: *Oliver Heldens feat. Shungudzo — Fire In My Soul*
+- **Celestial Heart**: *GoldFish & Cat Dealers — Colours & Lights (Clément Leroux Remix)*
+- **Cyber Matrix Vortex**: *cYsmix — Escapism (Original Mix)*
+- **Cosmic Mandelbrot**: *Brookes Brothers — Beautiful feat. Robert Owens (Original Mix)*
+- **Vortex Void**: *Oliver Heldens feat. Shungudzo — Fire In My Soul*
 
 ---
 
-## 🛠️ Local Build
+## 🏛️ Project Architecture
+
+```
+├── index.html                 # Responsive portal entry with 3D liquid fluid canvas
+├── style.css                  # Modern glassmorphism & responsive grid
+├── celestial-heart/           # Celestial Heart (Shepard cardioid zoom)
+│   ├── index.html
+│   ├── pkg/
+│   └── audio/
+├── matrix-vortex/             # Cyber Matrix Vortex (3D glyph tunnel)
+│   ├── index.html
+│   ├── pkg/
+│   └── audio/
+├── cosmic-mandelbrot/         # Cosmic Mandelbrot (Deep zoom + ease-out return)
+│   ├── index.html
+│   ├── pkg/
+│   └── audio/
+├── vortex-void/               # Vortex Void (High-contrast cardiac plunge)
+│   ├── index.html
+│   ├── pkg/
+│   └── audio/
+└── screenshots/               # Previews and animated mobile GIFs
+```
+
+---
+
+## 🛠️ Local Development
 
 ```bash
 # Compile WASM

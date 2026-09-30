@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>Valinfinite V1 • Celestial Heart</title>
+    <title>Valinfinite • Cosmic Mandelbrot</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="loading-overlay">
         <div class="pulsing-heart">💖</div>
-        <div class="loading-text">Awakening Celestial Heart...</div>
+        <div class="loading-text">Awakening Cosmic Mandelbrot...</div>
     </div>
 
     <canvas id="fractal-canvas"></canvas>
@@ -83,7 +83,7 @@
                     }
                 });
             } catch (err) {
-                console.error('Failed to launch V1:', err);
+                console.error('Failed to launch V3:', err);
                 const text = document.querySelector('.loading-text');
                 if (text) {
                     text.textContent = 'WebGL2 / WASM Error: ' + err;
