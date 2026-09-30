@@ -57,8 +57,9 @@ void main() {
         
         zoom = exp(s_in * LN_MAX);
 
-        // Gentle spiral rotation inward, easing to zero rotation speed at the peak
-        rot_angle = s_in * 2.2 + sin(u_time * 0.20) * 0.20 * (1.0 - 0.5 * s_in);
+        // Gentle spiral rotation inward, easing smoothly to zero wobble and exactly 2.2 rad at the peak
+        float wobble_damping = max(0.0, 1.0 - s_in);
+        rot_angle = s_in * 2.2 + sin(u_time * 0.20) * 0.20 * wobble_damping * wobble_damping;
     } else {
         // --- PHASE 2: ZOOM-OUT (Exponential acceleration with easing, cruise, easing stop) ---
         float q = (cycle_time - T_IN) / T_OUT; // 0.0 -> 1.0

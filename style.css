@@ -182,6 +182,10 @@ html, body {
     width: 100%;
 }
 
+.previews-grid.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
 /* Preview Card */
 .preview-card {
     display: flex;
@@ -400,6 +404,19 @@ html, body {
     color: #cbd5e1;
     letter-spacing: 0.02em;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+}
+
+.footer-author-link {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.footer-author-link:hover {
+    color: #7dd3fc;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+    text-decoration: underline;
 }
 
 .github-link {

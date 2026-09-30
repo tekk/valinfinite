@@ -6,23 +6,22 @@ Continuous scale-invariant GPU fractals in WebAssembly and WebGL2 with vivid psy
 
 ---
 
-## 🌌 Gallery of 8 Real-Time GPU Fractals
+## 🌌 Gallery of 7 Real-Time GPU Animations
 
-### Series I: Classic GPU Fractals
+### Series I: Classic Procedural Zooms
 Continuous logarithmic zooms and pure procedural coordinate topologies.
 
 1. **Celestial Heart**: [https://tekk.github.io/valinfinite/celestial-heart/](https://tekk.github.io/valinfinite/celestial-heart/)
 2. **Cyber Matrix Vortex**: [https://tekk.github.io/valinfinite/matrix-vortex/](https://tekk.github.io/valinfinite/matrix-vortex/)
-3. **Cosmic Mandelbrot**: [https://tekk.github.io/valinfinite/cosmic-mandelbrot/](https://tekk.github.io/valinfinite/cosmic-mandelbrot/)
-4. **Vortex Void**: [https://tekk.github.io/valinfinite/vortex-void/](https://tekk.github.io/valinfinite/vortex-void/)
+3. **Vortex Void**: [https://tekk.github.io/valinfinite/vortex-void/](https://tekk.github.io/valinfinite/vortex-void/)
 
 ### Series II: Evolving Narrative & Metamorphic Odysseys
 Multi-act narrative journeys, organic Bezier SDF morphing, optical wavefront crossings, and exponential relativistic dynamics.
 
-5. **Celestial Odyssey**: [https://tekk.github.io/valinfinite/celestial-odyssey/](https://tekk.github.io/valinfinite/celestial-odyssey/)
-6. **Matrix Saga**: [https://tekk.github.io/valinfinite/matrix-saga/](https://tekk.github.io/valinfinite/matrix-saga/)
-7. **Cosmic Infinity**: [https://tekk.github.io/valinfinite/cosmic-infinity/](https://tekk.github.io/valinfinite/cosmic-infinity/)
-8. **Vortex Metamorphosis**: [https://tekk.github.io/valinfinite/vortex-metamorphosis/](https://tekk.github.io/valinfinite/vortex-metamorphosis/)
+4. **Celestial Odyssey**: [https://tekk.github.io/valinfinite/celestial-odyssey/](https://tekk.github.io/valinfinite/celestial-odyssey/)
+5. **Matrix Saga**: [https://tekk.github.io/valinfinite/matrix-saga/](https://tekk.github.io/valinfinite/matrix-saga/)
+6. **Cosmic Infinity**: [https://tekk.github.io/valinfinite/cosmic-infinity/](https://tekk.github.io/valinfinite/cosmic-infinity/)
+7. **Vortex Metamorphosis**: [https://tekk.github.io/valinfinite/vortex-metamorphosis/](https://tekk.github.io/valinfinite/vortex-metamorphosis/)
 
 ---
 
@@ -74,30 +73,7 @@ $$I_{\text{glow}}(\mathbf{uv}) = \mathrm{tex}_{\mathrm{LOD}}(\mathbf{uv}, \lambd
 
 ---
 
-### 3. Cosmic Mandelbrot (Classic Deep Logarithmic Zoom)
-
-<div align="center">
-  <img src="screenshots/cosmic_mandelbrot_mobile.gif" alt="Cosmic Mandelbrot Mobile Preview" width="220">
-</div>
-
-#### Renormalized Continuous Potential (Escape-Time)
-For the complex quadratic map $z_{n+1} = z_n^2 + c$, escape dynamics with threshold $R_{\text{esc}} = 256.0$ eliminate banding artifacts via fractional iteration count:
-
-$$\nu = n + 1 - \frac{\ln(\ln |z_n|)}{\ln 2}$$
-
-#### Cosine Spectrum Palette
-Continuous potential maps into a cyclic RGB spectrum:
-
-$$\mathbf{C}(\nu) = \mathbf{a} + \mathbf{b} \cos(2\pi(\mathbf{c} \cdot \nu + \mathbf{d}))$$
-
-#### Smooth Camera Deceleration
-Quadratic deceleration dampens the inward velocity as the viewport approaches the deep Seahorse Valley structure:
-
-$$s(t) = \exp\left(\left(t \cdot v_0 - \frac{a}{2} t^2\right) \cdot \ln S\right)$$
-
----
-
-### 4. Vortex Void (Classic Cardiac Singularity Plunge)
+### 3. Vortex Void (Classic Cardiac Singularity Plunge)
 
 <div align="center">
   <img src="screenshots/vortex_void_mobile.gif" alt="Vortex Void Mobile Preview" width="220">
@@ -117,7 +93,7 @@ $$\mathbf{C}_{\text{out}} = \frac{\mathbf{C}_{\text{in}}^{1.6}}{\mathbf{C}_{\tex
 
 ---
 
-### 5. Celestial Odyssey (3-Act Narrative Journey & Wavefront Crossing)
+### 4. Celestial Odyssey (3-Act Narrative Journey & Wavefront Crossing)
 
 <div align="center">
   <img src="screenshots/celestial_odyssey_mobile.gif" alt="Celestial Odyssey Mobile Preview" width="220">
@@ -130,7 +106,7 @@ $$w_1(t) + w_2(t) + w_3(t) = 1, \quad \theta_{\text{cam}}(t) = \theta_1(t) w_1(t
 
 - **Act 1: Celestial Genesis ($0\text{s} - 20\text{s}$)**: Serene infinite Shepard scale zoom with gentle breathing sway, sapphire/rose neon auroras, and rhythmic heartbeat pulses.
 - **Act 2: Vortex Mandala Bloom ($24\text{s} - 44\text{s}$)**: Hypnotic swirling vortex rotation with dihedral symmetry folds, blooming kaleidoscopic heart rosettes, and emerald-cyan auroras.
-- **Act 3: Supernova Astral Storm ($48\text{s} - 68\text{s}$)**: Relativistic accelerating surges, molten plasma gold, incandescent solar core eruptions, and crackling procedural lightning arcs.
+- **Act 3: Supernova Astral Storm ($48\text{s} - 68\text{s}$)**: Relativistic accelerating surges, molten plasma gold, incandescent solar core eruptions, and atmospheric radiance.
 
 #### Scene Changing Crossings (Optical Caustics & Singularity Ripples)
 Acts are bridged by optical wavefront sweeps refracting spacetime:
@@ -144,7 +120,7 @@ $$\Phi(t) = v_0 \cdot t - \frac{A_1}{\omega_1} \cos(\omega_1 t) - \frac{A_2}{\om
 
 ---
 
-### 6. Matrix Saga (3-Stage Cyberpunk Infiltration & Sacred AI Mandala)
+### 5. Matrix Saga (3-Stage Cyberpunk Infiltration & Sacred AI Mandala)
 
 <div align="center">
   <img src="screenshots/matrix_saga_mobile.gif" alt="Matrix Saga Mobile Preview" width="220">
@@ -167,7 +143,7 @@ $$\mathbf{C}_{\text{total}} = \sum_{k=1}^3 w_k(t) \mathbf{C}_k + \mathbf{C}_{\te
 
 ---
 
-### 7. Cosmic Infinity (64,000x Ultra-Zoom & Relativistic Return)
+### 6. Cosmic Infinity (64,000x Ultra-Zoom & Relativistic Return)
 
 <div align="center">
   <img src="screenshots/cosmic_infinity_mobile.gif" alt="Cosmic Infinity Mobile Preview" width="220">
@@ -186,7 +162,7 @@ $$\sigma(x) = \frac{1}{1 + \exp(-x)}, \quad \theta_{\text{out}}(q) = \theta_0 + 
 
 ---
 
-### 8. Vortex Metamorphosis (8-Phase Bezier Morphing & Procedural VFX)
+### 7. Vortex Metamorphosis (8-Phase Bezier Morphing & Procedural VFX)
 
 <div align="center">
   <img src="screenshots/vortex_metamorphosis_mobile.gif" alt="Vortex Metamorphosis Mobile Preview" width="220">
@@ -265,15 +241,14 @@ The audio engine features a persistent non-repeating shuffle pool stored in `loc
 │
 ├── celestial-heart/             # [01] Classic Shepard scale infinite zoom
 ├── matrix-vortex/               # [02] Classic cylindrical raymarched matrix tunnel
-├── cosmic-mandelbrot/           # [03] Classic deep complex logarithmic zoom
-├── vortex-void/                 # [04] Classic high-contrast cardiac singularity plunge
+├── vortex-void/                 # [03] Classic high-contrast cardiac singularity plunge
 │
-├── celestial-odyssey/           # [05] 3-Act narrative journey with optical wavefronts
-├── matrix-saga/                 # [06] 3-Stage cyberpunk infiltration & sacred AI mandala
-├── cosmic-infinity/             # [07] 64,000x ultra-zoom with relativistic S-curve return
-├── vortex-metamorphosis/        # [08] 8-Phase Bezier SDF morphing & procedural VFX
+├── celestial-odyssey/           # [04] 3-Act narrative journey with optical wavefronts
+├── matrix-saga/                 # [05] 3-Stage cyberpunk infiltration & sacred AI mandala
+├── cosmic-infinity/             # [06] 64,000x ultra-zoom with relativistic S-curve return
+├── vortex-metamorphosis/        # [07] 8-Phase Bezier SDF morphing & procedural VFX
 │
-├── screenshots/                 # 8 Landscape PNGs + 8 Vertical Mobile Animated GIFs
+├── screenshots/                 # Landscape PNGs + Vertical Mobile Animated GIFs
 └── src/                         # Rust & WebGL2 shader source pipeline
 ```
 

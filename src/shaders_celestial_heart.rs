@@ -39,24 +39,7 @@ vec3 palette_act3(float t) {
     return palette(t, vec3(0.68, 0.45, 0.22), vec3(0.55, 0.48, 0.35), vec3(1.1, 1.0, 0.8), vec3(0.02, 0.28, 0.58));
 }
 
-// =========================================================================
-// 2. PROCEDURAL ACTION VFX (LIGHTNING & SHOCKWAVES)
-// =========================================================================
-float fxLightning(vec2 p, float t, float seed) {
-    float bolt = 0.0;
-    for (int i = 0; i < 3; i++) {
-        float fi = float(i);
-        float flash = step(0.68, fract(sin(floor(t * 5.0 + fi * 19.3 + seed)) * 43758.5453));
-        if (flash > 0.0) {
-            float y = p.y * 3.2;
-            float path = 0.28 * sin(y * 2.2 + t * 16.0 + fi * 3.14)
-                       + 0.12 * sin(y * 7.5 - t * 32.0);
-            float d = abs(p.x - path - (fi - 1.0) * 0.42);
-            bolt += flash * (exp(-d * 75.0) * 1.6 + exp(-d * 14.0) * 0.4);
-        }
-    }
-    return bolt;
-}
+
 
 // ACES Filmic Tone Mapping for cinematic HDR range
 vec3 aces_tonemap(vec3 x) {
@@ -260,13 +243,7 @@ void main() {
 
     vec3 scene_color = total_color / max(total_weight, 1e-5);
 
-    // =========================================================================
-    // 7. STORY ACTION PARTICLES & LIGHTNING DISCHARGES (ACT 3 & CROSSINGS)
-    // =========================================================================
-    if (act3_w > 0.05) {
-        float bolts = fxLightning(p, u_time, 13.7) * act3_w;
-        scene_color += vec3(1.2, 0.95, 0.65) * bolts * 0.85;
-    }
+
 
     // Blend scene changing optical crossing beams
     scene_color += crossing_fx;

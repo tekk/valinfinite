@@ -67,22 +67,7 @@ vec2 get_glyph_sample(int cell_idx, vec2 local_uv, float lod) {
     return vec2(stroke, glow);
 }
 
-// Procedural Lightning Arcs
-float fxLightning(vec2 p, float t, float seed) {
-    float bolt = 0.0;
-    for (int i = 0; i < 3; i++) {
-        float fi = float(i);
-        float flash = step(0.68, fract(sin(floor(t * 5.0 + fi * 19.3 + seed)) * 43758.5453));
-        if (flash > 0.0) {
-            float y = p.y * 3.2;
-            float path = 0.28 * sin(y * 2.2 + t * 16.0 + fi * 3.14)
-                       + 0.12 * sin(y * 7.5 - t * 32.0);
-            float d = abs(p.x - path - (fi - 1.0) * 0.42);
-            bolt += flash * (exp(-d * 75.0) * 1.6 + exp(-d * 14.0) * 0.4);
-        }
-    }
-    return bolt;
-}
+
 
 // Compute comprehensive Solar Flare / Sun Flare Effects
 vec3 compute_sun_flare(vec2 uv, vec2 sun_pos, float time) {
@@ -351,9 +336,7 @@ vec3 render_scene3_mandala(vec2 uv, float t) {
     vec3 solar_burst = compute_sun_flare(uv, sun_origin, t);
     col += solar_burst;
     
-    // Crackling Lightning Arcs bridging the rings
-    float bolts = fxLightning(uv, t, 37.1);
-    col += vec3(1.0, 0.9, 0.6) * bolts * 0.75;
+
     
     return col;
 }
