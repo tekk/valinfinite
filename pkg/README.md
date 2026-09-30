@@ -80,16 +80,18 @@ $$I_{\text{streak}}(\mathbf{u}) = \exp(-\beta_y |u_y'|) \exp(-\beta_x |u_x'|), \
   <img src="screenshots/cosmic_mandelbrot_mobile.gif" alt="Cosmic Mandelbrot Mobile Preview" width="220">
 </div>
 
-#### Dual-Phase Zoom Dynamics & Ease-Out Return
-The trajectory alternates between an immersive $24.0\text{s}$ plunge ($1\times \to 16{,}000\times$) toward the Seahorse Valley cusp $c_0 = -0.743643887 + 0.131825904i$ and a swift $6.0\text{s}$ ease-out return with accelerated rotational spin:
+#### Dual-Phase Zoom Dynamics: Gradual Stop & Exponential Ease-Out Return
+The trajectory alternates between an immersive $24.0\text{s}$ plunge deep into Seahorse Valley ($1\times \to 64{,}000\times$) at $c_0 = -0.743643887 + 0.131825904i$, smoothly decelerating to a total stop at the apex, followed by an $8.0\text{s}$ exponential acceleration zoom-out with an easing stop:
 
-$$\text{Zoom-In } (p \in [0, 1]): \quad s(p) = \exp(p \cdot \ln s_{\max}), \quad \theta_{\text{in}}(p) = p \cdot \theta_0 + \sigma \sin(\omega t)$$
+$$\text{Zoom-In } (p \in [0, 1]): \quad s_{\text{in}}(p) = \begin{cases} v_0 \cdot p & p \le p_0 \\ 1 - a_{\text{dec}} (1 - p)^2 & p > p_0 \end{cases}, \quad \text{zoom}(p) = \exp(s_{\text{in}}(p) \cdot \ln s_{\max})$$
 
-$$\text{Zoom-Out } (q \in [0, 1]): \quad s(q) = \exp\left((1 - q)^{2.2} \cdot \ln s_{\max}\right), \quad \theta_{\text{out}}(q) = \theta_0 + (1 - (1-q)^{2.2}) \cdot (2\pi - \theta_0) + \sigma \sin(\omega t)$$
+At $p = 1.0$, the inward velocity $\frac{ds_{\text{in}}}{dp} = 0$, bringing the zoom to a complete standstill at $64{,}000\times$. Zoom-out immediately commences, accelerating exponentially:
 
-$$c(\mathbf{u}, t) = c_0 + \mathbf{R}(\theta_t) \cdot \mathbf{u} \cdot \left(\frac{s_0}{s(t)}\right), \quad \mathbf{R}(\theta_t) = \begin{pmatrix} \cos \theta_t & -\sin \theta_t \\ \sin \theta_t & \cos \theta_t \end{pmatrix}$$
+$$\text{Zoom-Out } (q \in [0, 1]): \quad g(q) = \frac{\sigma(k(2q - 1)) - \sigma(-k)}{\sigma(k) - \sigma(-k)}, \quad \text{zoom}(q) = \exp((1 - g(q)) \cdot \ln s_{\max})$$
 
-Upon completing the $2\pi$ rotation at $q = 1$, the camera smoothly rolls into the subsequent zoom-in without boundary cuts or resets.
+$$\sigma(x) = \frac{1}{1 + \exp(-x)}, \quad \theta_{\text{out}}(q) = \theta_0 + g(q) \cdot (2\pi - \theta_0)$$
+
+The camera accelerates exponentially into full zoom-out speed at $q = 0.5$, then gracefully eases to a stop back at overview ($1\times$) as it rolls into the next cycle.
 
 #### Renormalized Continuous Potential (Escape-Time)
 For $z_{n+1} = z_n^2 + c$, escape dynamics with threshold $R_{\text{esc}} = 256.0$ are smoothed using continuous fractional iteration count $\nu$:
