@@ -73,12 +73,16 @@ $$I_{\text{glow}}(\mathbf{uv}) = \operatorname{tex}_{\text{LOD}}(\mathbf{uv}, \l
   <img src="screenshots/v3_mobile.gif" alt="Version 3 Mobile Preview" width="220">
 </div>
 
-#### Exponential Trajectory Navigation
-The complex coordinate space scales continuously up to $16{,}000\times$ toward the Seahorse Valley cusp $c_0 = -0.743643887 + 0.131825904i$:
+#### Dual-Phase Zoom Dynamics & Ease-Out Return
+The trajectory alternates between an immersive $24.0\text{s}$ plunge ($1\times \to 16{,}000\times$) toward the Seahorse Valley cusp $c_0 = -0.743643887 + 0.131825904i$ and a swift $6.0\text{s}$ ease-out return with accelerated rotational spin:
 
-$$c(\mathbf{u}, t) = c_0 + \mathbf{R}(\theta_t) \cdot \mathbf{u} \cdot \left(\frac{s_0}{\exp(\lambda \cdot \tau_t)}\right)$$
+$$\text{Zoom-In } (p \in [0, 1]): \quad s(p) = \exp(p \cdot \ln s_{\max}), \quad \theta_{\text{in}}(p) = p \cdot \theta_0 + \sigma \sin(\omega t)$$
 
-$$\mathbf{R}(\theta_t) = \begin{pmatrix} \cos \theta_t & -\sin \theta_t \\ \sin \theta_t & \cos \theta_t \end{pmatrix}, \quad \theta_t = \mu \cdot \tau_t + \sigma \sin(\omega t)$$
+$$\text{Zoom-Out } (q \in [0, 1]): \quad s(q) = \exp\left((1 - q)^{2.2} \cdot \ln s_{\max}\right), \quad \theta_{\text{out}}(q) = \theta_0 + (1 - (1-q)^{2.2}) \cdot (2\pi - \theta_0) + \sigma \sin(\omega t)$$
+
+$$c(\mathbf{u}, t) = c_0 + \mathbf{R}(\theta_t) \cdot \mathbf{u} \cdot \left(\frac{s_0}{s(t)}\right), \quad \mathbf{R}(\theta_t) = \begin{pmatrix} \cos \theta_t & -\sin \theta_t \\ \sin \theta_t & \cos \theta_t \end{pmatrix}$$
+
+Upon completing the $2\pi$ rotation at $q = 1$, the camera smoothly rolls into the subsequent zoom-in without boundary cuts or resets.
 
 #### Renormalized Continuous Potential (Escape-Time)
 For $z_{n+1} = z_n^2 + c$, escape dynamics with threshold $R_{\text{esc}} = 256.0$ are smoothed using continuous fractional iteration count $\nu$:

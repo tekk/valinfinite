@@ -10,7 +10,7 @@ import sys
 import time
 
 PORT = 8199
-FRAMES_PER_SCENE = 24
+FRAMES_PER_SCENE = 30
 FRAME_DIR = "/tmp/valinfinite_gif_frames"
 OUTPUT_DIR = "/home/tekk/dev/wasm-infinite-gpu-fractal/screenshots"
 
@@ -67,7 +67,7 @@ class GIFHandler(http.server.SimpleHTTPRequestHandler):
         start_times = {
             'v1': 1.0,
             'v2': 1.0,
-            'v3': 16.0,
+            'v3': 24.0,
             'v4': 1.0
         }
         step = time_steps.get(scene, 0.08)
