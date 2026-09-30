@@ -3,220 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#030008">
-    <title>Valinfinite • Infinite Real-Time Heart Fractal Zoom</title>
+    <meta name="theme-color" content="#03050d">
+    <title>Valinfinite</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="ambient-glow"></div>
+    <!-- 3D Fluid Metaballs Demoscene Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
 
-    <main class="portal-container">
-        <!-- Header -->
-        <header class="portal-header">
-            <div class="badge-pill">✨ WebAssembly + WebGL2 GPU Engine</div>
-            <h1 class="portal-title">VALINFINITE</h1>
-            <p class="portal-subtitle">Infinite Real-Time Heart Fractal Zooming</p>
-            <p class="portal-desc">
-                Experience infinite, scale-invariant GPU fractals with vivid psychedelic colors and zero precision breakdown.
-                Optimized for buttery smooth 60–120 FPS on mobile (Samsung Galaxy S22) & desktop.
-            </p>
-        </header>
-
-        <!-- Version Comparison Cards -->
-        <section class="cards-grid">
-            <!-- Card V1 -->
-            <article class="fractal-card" id="card-v1">
-                <a href="v1/" class="card-image-wrap" aria-label="Launch V1 Celestial Heart">
-                    <img src="screenshots/v1_preview.png" alt="Valinfinite V1 Celestial Heart" loading="lazy">
-                    <span class="card-badge badge-v1">Branch: v1</span>
-                    <div class="card-play-overlay">
-                        <span class="play-icon">▶</span>
-                        <span class="play-label">Launch Animation</span>
-                    </div>
+    <!-- Main Container: Pure Preview Pictures and Demure Footer -->
+    <div class="landing-wrap">
+        <main class="previews-container">
+            <div class="previews-grid">
+                <a href="v1/" class="preview-card" aria-label="Version 1">
+                    <img src="screenshots/v1_preview.png" alt="Version 1 Preview" loading="eager">
                 </a>
-                <div class="card-content">
-                    <div class="card-header">
-                        <h2 class="card-title">V1 • Celestial Heart</h2>
-                        <span class="card-pill">Serene & Pure</span>
-                    </div>
-                    <p class="card-desc">
-                        A smooth, meditative plunge into glowing recursive heart cardioids. Features continuous unidirectional zoom, gentle organic light pulse, and an iridescent celestial spectrum.
-                    </p>
-                    <ul class="card-features">
-                        <li>✦ Steady, relaxing zoom velocity</li>
-                        <li>✦ Smooth organic heartbeat glow modulation</li>
-                        <li>✦ Symmetrical recursive heart chambers</li>
-                        <li>✦ Zero-stutter continuous scale synthesis</li>
-                    </ul>
-                    <div class="card-actions">
-                        <a href="v1/" class="btn btn-primary launch-btn">
-                            <span class="btn-icon">⚡</span> Launch V1
-                        </a>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Card V2 -->
-            <article class="fractal-card" id="card-v2">
-                <a href="v2/" class="card-image-wrap" aria-label="Launch V2 Vortex Void">
-                    <img src="screenshots/v2_preview.png" alt="Valinfinite V2 Vortex Void" loading="lazy">
-                    <span class="card-badge badge-v2">Branch: v2</span>
-                    <div class="card-play-overlay">
-                        <span class="play-icon">▶</span>
-                        <span class="play-label">Launch Animation</span>
-                    </div>
+                <a href="v2/" class="preview-card" aria-label="Version 2">
+                    <img src="screenshots/v2_preview.png" alt="Version 2 Preview" loading="eager">
                 </a>
-                <div class="card-content">
-                    <div class="card-header">
-                        <h2 class="card-title">V2 • Vortex Void</h2>
-                        <span class="card-pill pill-v2">Dynamic & Psychedelic</span>
-                    </div>
-                    <p class="card-desc">
-                        Accelerated pace and hypnotic cardiac sway. Carves deep cosmic chasms with velvet dark zones, high-contrast S-curve tone mapping, and radiant nested heart cardioid contours.
-                    </p>
-                    <ul class="card-features">
-                        <li>✦ 1.7× Accelerated zoom pace</li>
-                        <li>✦ Swaying cardiac vortex keeping heart upright</li>
-                        <li>✦ Cosmic dark zones & deep contrast chasms</li>
-                        <li>✦ Concentric neon heart ribs & laser contours</li>
-                    </ul>
-                    <div class="card-actions">
-                        <a href="v2/" class="btn btn-primary btn-v2 launch-btn">
-                            <span class="btn-icon">⚡</span> Launch V2
-                        </a>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Card V3 -->
-            <article class="fractal-card" id="card-v3">
-                <a href="v3/" class="card-image-wrap" aria-label="Launch V3 Deep Cosmic Fractal">
-                    <img src="screenshots/v3_preview.png" alt="Valinfinite V3 Deep Cosmic Fractal" loading="lazy">
-                    <span class="card-badge badge-v3">Branch: v3</span>
-                    <div class="card-play-overlay">
-                        <span class="play-icon">▶</span>
-                        <span class="play-label">Launch Animation</span>
-                    </div>
+                <a href="v3/" class="preview-card" aria-label="Version 3">
+                    <img src="screenshots/v3_preview.png" alt="Version 3 Preview" loading="eager">
                 </a>
-                <div class="card-content">
-                    <div class="card-header">
-                        <h2 class="card-title">V3 • Deep Fractal</h2>
-                        <span class="card-pill pill-v3">Infinite Zoom</span>
-                    </div>
-                    <p class="card-desc">
-                        Authentic infinite escape-time fractal zoom into the Heart Mandelbrot. Plunges 16,000× deep through cosmic spiral galaxies, dendritic lightning, and recursive mini-heart nurseries.
-                    </p>
-                    <ul class="card-features">
-                        <li>✦ True Mandelbrot escape-time fractal mathematics</li>
-                        <li>✦ Continuous 16,000× deep dive into Seahorse Spiral Valley</li>
-                        <li>✦ Smooth renormalized iteration & electric glowing filaments</li>
-                        <li>✦ Seamless cyclic loop with infinite self-similar depth</li>
-                    </ul>
-                    <div class="card-actions">
-                        <a href="v3/" class="btn btn-primary btn-v3 launch-btn">
-                            <span class="btn-icon">⚡</span> Launch V3
-                        </a>
-                    </div>
-                </div>
-            </article>
-        </section>
-
-        <!-- Specifications Footer -->
-        <footer class="portal-footer">
-            <div class="spec-items">
-                <div class="spec-item">
-                    <span class="spec-label">Mobile Target</span>
-                    <span class="spec-val">Samsung Galaxy S22 (Adreno 730 / Xclipse 920)</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Engine</span>
-                    <span class="spec-val">Rust + wasm-bindgen + WebGL2 (GLSL 300 es)</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Precision</span>
-                    <span class="spec-val">Infinite Shepard Multi-Scale Synthesis</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Soundtrack</span>
-                    <span class="spec-val">Brookes Brothers - Beautiful feat. Robert Owens</span>
-                </div>
             </div>
-            <p class="repo-link">
-                GitHub Repository: <a href="https://github.com/tekk/valinfinite" target="_blank" rel="noopener">github.com/tekk/valinfinite</a>
+        </main>
+
+        <footer class="landing-footer">
+            <p class="footer-credit">
+                Coded with ❤️ by <a href="https://github.com/tekk" target="_blank" rel="noopener">@tekk</a>
             </p>
+            <a href="https://github.com/tekk/valinfinite" class="github-link" target="_blank" rel="noopener" aria-label="GitHub Repository">
+                <svg class="github-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+            </a>
         </footer>
-    </main>
-
-    <!-- Global Floating Music Player (Portal Preview) -->
-    <div id="music-player-bar" class="music-player-bar">
-        <div class="player-track-info">
-            <div class="player-eq">
-                <span class="bar bar1"></span>
-                <span class="bar bar2"></span>
-                <span class="bar bar3"></span>
-                <span class="bar bar4"></span>
-            </div>
-            <div class="track-details">
-                <span class="track-title">Beautiful feat. Robert Owens</span>
-                <span class="track-artist">Brookes Brothers (Original Mix)</span>
-            </div>
-        </div>
-        <div class="player-controls">
-            <button id="player-play-btn" class="player-btn" aria-label="Toggle Play">
-                <span id="player-play-icon">▶</span>
-            </button>
-            <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.8" aria-label="Volume">
-        </div>
     </div>
 
-    <!-- Audio Element -->
-    <audio id="global-music" loop preload="auto">
-        <source src="audio/music.m4a" type="audio/mp4">
-        <source src="audio/music.mp3" type="audio/mpeg">
-    </audio>
-
+    <!-- WebGL Background Fluid Shader Script -->
     <script>
-        const audio = document.getElementById('global-music');
-        const playerBar = document.getElementById('music-player-bar');
-        const playBtn = document.getElementById('player-play-btn');
-        const playIcon = document.getElementById('player-play-icon');
-        const volSlider = document.getElementById('volume-slider');
+        (function() {
+            const canvas = document.getElementById('bg-canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (!gl) return;
 
-        let isPlaying = false;
-
-        function updatePlayState(playing) {
-            isPlaying = playing;
-            if (isPlaying) {
-                playerBar.classList.add('is-playing');
-                playIcon.textContent = '❚❚';
-            } else {
-                playerBar.classList.remove('is-playing');
-                playIcon.textContent = '▶';
-            }
-        }
-
-        async function toggleMusic() {
-            if (audio.paused) {
-                try {
-                    await audio.play();
-                    updatePlayState(true);
-                } catch (err) {
-                    console.warn('Playback error:', err);
+            const vsSource = `
+                attribute vec2 position;
+                void main() {
+                    gl_Position = vec4(position, 0.0, 1.0);
                 }
-            } else {
-                audio.pause();
-                updatePlayState(false);
+            `;
+
+            const fsSource = `
+                precision highp float;
+                uniform vec2 u_resolution;
+                uniform float u_time;
+
+                // Polynomial smooth minimum for viscous fluid metaball blending
+                float smin(float a, float b, float k) {
+                    float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+                    return mix(b, a, h) - k * h * (1.0 - h);
+                }
+
+                mat2 rot2D(float a) {
+                    float c = cos(a), s = sin(a);
+                    return mat2(c, -s, s, c);
+                }
+
+                float sdEllipsoid(vec3 p, vec3 r) {
+                    float k0 = length(p / r);
+                    float k1 = length(p / (r * r));
+                    return k0 * (k0 - 1.0) / k1;
+                }
+
+                // 3D Scene: Merging semi-liquid oval blobs pouring into each other and backwards
+                float map(vec3 p) {
+                    float t = u_time * 0.40;
+
+                    // Slow, organic demoscene drift
+                    p.xz = rot2D(sin(t * 0.2) * 0.15) * p.xz;
+
+                    float cycle1 = sin(t * 1.0);
+                    float cycle2 = cos(t * 0.85);
+                    float cycle3 = sin(t * 0.65 + 1.8);
+
+                    // 1. Central fluid pool (oval blob receiving liquid)
+                    vec3 p1 = p - vec3(0.0, -0.3 + 0.18 * cycle2, 0.0);
+                    vec3 r1 = vec3(1.65 + 0.18 * cycle1, 1.05 - 0.14 * cycle1, 1.35 + 0.12 * cycle2);
+                    float d1 = sdEllipsoid(p1, r1);
+
+                    // 2. Upper oval pouring down into center, stretching, then pulling back upwards
+                    float pour1_y = 1.15 + 1.15 * cycle1;
+                    float stretch1_y = 1.45 + 0.45 * (1.0 - abs(cycle1));
+                    float stretch1_xz = 0.82 - 0.18 * (1.0 - abs(cycle1));
+                    vec3 p2 = p - vec3(0.35 * sin(t * 0.75), pour1_y, 0.2 * cos(t * 0.6));
+                    p2.xy = rot2D(0.18 * cycle2) * p2.xy;
+                    vec3 r2 = vec3(stretch1_xz, stretch1_y, stretch1_xz);
+                    float d2 = sdEllipsoid(p2, r2);
+
+                    // 3. Side pouring oval blob (flows into center and retracts)
+                    float pour2_x = -1.75 - 0.95 * cycle2;
+                    float pour2_y = 0.65 - 0.65 * cycle2;
+                    vec3 p3 = p - vec3(pour2_x, pour2_y, 0.3 * cycle1);
+                    p3.xy = rot2D(-0.45 + 0.25 * cycle1) * p3.xy;
+                    vec3 r3 = vec3(1.3 + 0.2 * cycle2, 0.75, 0.85);
+                    float d3 = sdEllipsoid(p3, r3);
+
+                    // 4. Companion right droplet coalescing and separating
+                    float pour3_x = 1.7 + 0.85 * cycle3;
+                    float pour3_y = -0.25 + 0.7 * sin(t * 1.1);
+                    vec3 p4 = p - vec3(pour3_x, pour3_y, -0.35 * cycle2);
+                    p4.yz = rot2D(0.35 * cycle1) * p4.yz;
+                    vec3 r4 = vec3(0.85, 1.05 + 0.25 * cycle1, 0.85);
+                    float d4 = sdEllipsoid(p4, r4);
+
+                    // Smooth fluid metaball coalescence with viscous surface tension
+                    float d = smin(d1, d2, 0.75);
+                    d = smin(d, d3, 0.70);
+                    d = smin(d, d4, 0.65);
+
+                    return d;
+                }
+
+                vec3 calcNormal(vec3 p) {
+                    const float eps = 0.002;
+                    vec2 h = vec2(eps, 0.0);
+                    return normalize(vec3(
+                        map(p + h.xyy) - map(p - h.xyy),
+                        map(p + h.yxy) - map(p - h.yxy),
+                        map(p + h.yyx) - map(p - h.yyx)
+                    ));
+                }
+
+                void main() {
+                    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / min(u_resolution.x, u_resolution.y);
+
+                    // Camera ray
+                    vec3 ro = vec3(0.0, 0.0, 6.2);
+                    vec3 rd = normalize(vec3(uv, -1.6));
+
+                    // Deep demoscene space gradient with soft skyblue horizon haze
+                    vec3 bg = mix(
+                        vec3(0.015, 0.025, 0.05),
+                        vec3(0.035, 0.075, 0.14),
+                        0.5 + 0.5 * uv.y
+                    );
+                    bg += vec3(0.06, 0.14, 0.26) * exp(-1.4 * dot(uv, uv));
+
+                    float t = 0.0;
+                    float d = 0.0;
+                    const int MAX_STEPS = 54;
+                    bool hit = false;
+                    vec3 p = ro;
+
+                    for (int i = 0; i < MAX_STEPS; i++) {
+                        p = ro + rd * t;
+                        d = map(p);
+                        if (d < 0.0018) {
+                            hit = true;
+                            break;
+                        }
+                        if (t > 10.5) break;
+                        t += d * 0.85;
+                    }
+
+                    vec3 col = bg;
+
+                    if (hit) {
+                        vec3 n = calcNormal(p);
+                        vec3 v = -rd;
+
+                        // Dual lighting
+                        vec3 l1 = normalize(vec3(1.2, 1.8, 1.0));
+                        vec3 l2 = normalize(vec3(-1.6, -1.0, 0.8));
+
+                        float diff1 = max(dot(n, l1), 0.0);
+                        float diff2 = max(dot(n, l2), 0.0) * 0.6;
+
+                        vec3 h1 = normalize(l1 + v);
+                        float spec1 = pow(max(dot(n, h1), 0.0), 40.0);
+
+                        float fresnel = pow(1.0 - max(dot(n, v), 0.0), 2.8);
+
+                        // Skyblue fluid colors (#2eadfa to #94ebff)
+                        vec3 fluidBase = vec3(0.18, 0.68, 0.98);
+                        vec3 fluidHighlight = vec3(0.58, 0.92, 1.0);
+                        vec3 fluidDeep = vec3(0.04, 0.28, 0.58);
+
+                        float sss = pow(max(0.0, dot(v, -l1)), 2.0) * 0.45;
+
+                        vec3 fluidCol = mix(fluidDeep, fluidBase, diff1 * 0.8 + 0.2);
+                        fluidCol += fluidHighlight * (diff2 * 0.5 + sss);
+                        fluidCol += vec3(1.0, 1.0, 1.0) * spec1 * 1.25;
+                        fluidCol += fluidHighlight * fresnel * 1.4;
+
+                        float ao = clamp(map(p + n * 0.18) / 0.18, 0.0, 1.0);
+                        fluidCol *= (0.45 + 0.55 * ao);
+
+                        col = mix(fluidCol, bg, smoothstep(6.8, 9.8, t));
+                    }
+
+                    col *= 1.0 - 0.25 * dot(uv, uv);
+                    gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+                }
+            `;
+
+            function createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                return shader;
             }
-        }
 
-        playBtn.addEventListener('click', toggleMusic);
+            const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+            const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+            const program = gl.createProgram();
+            gl.attachShader(program, vs);
+            gl.attachShader(program, fs);
+            gl.linkProgram(program);
+            gl.useProgram(program);
 
-        volSlider.addEventListener('input', (e) => {
-            audio.volume = parseFloat(e.target.value);
-        });
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1, -1,  1, -1, -1,  1,
+                -1,  1,  1, -1,  1,  1,
+            ]), gl.STATIC_DRAW);
+
+            const posAttr = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(posAttr);
+            gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 0, 0);
+
+            const uResLoc = gl.getUniformLocation(program, 'u_resolution');
+            const uTimeLoc = gl.getUniformLocation(program, 'u_time');
+
+            function resize() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+                const width = Math.floor(window.innerWidth * dpr);
+                const height = Math.floor(window.innerHeight * dpr);
+                if (canvas.width !== width || canvas.height !== height) {
+                    canvas.width = width;
+                    canvas.height = height;
+                    gl.viewport(0, 0, width, height);
+                }
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+
+            const startTime = performance.now();
+            function render() {
+                resize();
+                const now = (performance.now() - startTime) * 0.001;
+                gl.uniform2f(uResLoc, canvas.width, canvas.height);
+                gl.uniform1f(uTimeLoc, now);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                requestAnimationFrame(render);
+            }
+            requestAnimationFrame(render);
+        })();
     </script>
 </body>
 </html>
