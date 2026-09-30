@@ -2,39 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#030008">
-    <meta name="description" content="VALINFINITE - Infinite Real-Time GPU Heart Fractal Zooming in WebAssembly and WebGL2.">
-    <title>VALINFINITE • Infinite GPU Heart Fractal Zoom</title>
+    <title>Valinfinite • Infinite Real-Time Heart Fractal Zoom</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="ambient-glow glow-1"></div>
-    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow"></div>
 
     <main class="portal-container">
-        <!-- Hero Header -->
-        <header class="hero-section">
-            <div class="brand-badge">✨ WebAssembly + WebGL2 GPU Engine</div>
+        <!-- Header -->
+        <header class="portal-header">
+            <div class="badge-pill">✨ WebAssembly + WebGL2 GPU Engine</div>
             <h1 class="portal-title">VALINFINITE</h1>
-            <p class="portal-tagline">Infinite Real-Time Heart Fractal Zooming</p>
-            <p class="portal-description">
-                Experience infinite, scale-invariant GPU fractals with vivid psychedelic colors and zero precision breakdown. Optimized for buttery smooth 60–120 FPS on mobile (Samsung Galaxy S22) & desktop.
+            <p class="portal-subtitle">Infinite Real-Time Heart Fractal Zooming</p>
+            <p class="portal-desc">
+                Experience infinite, scale-invariant GPU fractals with vivid psychedelic colors and zero precision breakdown.
+                Optimized for buttery smooth 60–120 FPS on mobile (Samsung Galaxy S22) & desktop.
             </p>
         </header>
 
-        <!-- Version Selector Cards -->
+        <!-- Version Comparison Cards -->
         <section class="cards-grid">
             <!-- Card V1 -->
-            <article class="fractal-card" id="card-v1" data-version="v1">
-                <div class="card-image-wrap">
+            <article class="fractal-card" id="card-v1">
+                <a href="v1/" class="card-image-wrap" aria-label="Launch V1 Celestial Heart">
                     <img src="screenshots/v1_preview.png" alt="Valinfinite V1 Celestial Heart" loading="lazy">
                     <span class="card-badge badge-v1">Branch: v1</span>
-                    <button class="card-play-overlay" aria-label="Launch V1 with Music">
+                    <div class="card-play-overlay">
                         <span class="play-icon">▶</span>
-                        <span class="play-label">Launch with Music</span>
-                    </button>
-                </div>
+                        <span class="play-label">Launch Animation</span>
+                    </div>
+                </a>
                 <div class="card-content">
                     <div class="card-header">
                         <h2 class="card-title">V1 • Celestial Heart</h2>
@@ -50,26 +52,23 @@
                         <li>✦ Zero-stutter continuous scale synthesis</li>
                     </ul>
                     <div class="card-actions">
-                        <button class="btn btn-primary launch-btn" data-target="v1">
+                        <a href="v1/" class="btn btn-primary launch-btn">
                             <span class="btn-icon">⚡</span> Launch V1
-                        </button>
-                        <a href="v1/?play=1" class="btn btn-secondary direct-link">
-                            Direct URL ↗
                         </a>
                     </div>
                 </div>
             </article>
 
             <!-- Card V2 -->
-            <article class="fractal-card" id="card-v2" data-version="v2">
-                <div class="card-image-wrap">
+            <article class="fractal-card" id="card-v2">
+                <a href="v2/" class="card-image-wrap" aria-label="Launch V2 Vortex Void">
                     <img src="screenshots/v2_preview.png" alt="Valinfinite V2 Vortex Void" loading="lazy">
                     <span class="card-badge badge-v2">Branch: v2</span>
-                    <button class="card-play-overlay" aria-label="Launch V2 with Music">
+                    <div class="card-play-overlay">
                         <span class="play-icon">▶</span>
-                        <span class="play-label">Launch with Music</span>
-                    </button>
-                </div>
+                        <span class="play-label">Launch Animation</span>
+                    </div>
+                </a>
                 <div class="card-content">
                     <div class="card-header">
                         <h2 class="card-title">V2 • Vortex Void</h2>
@@ -85,11 +84,8 @@
                         <li>✦ Concentric neon heart ribs & laser contours</li>
                     </ul>
                     <div class="card-actions">
-                        <button class="btn btn-primary btn-v2 launch-btn" data-target="v2">
+                        <a href="v2/" class="btn btn-primary btn-v2 launch-btn">
                             <span class="btn-icon">⚡</span> Launch V2
-                        </button>
-                        <a href="v2/?play=1" class="btn btn-secondary direct-link">
-                            Direct URL ↗
                         </a>
                     </div>
                 </div>
@@ -122,7 +118,7 @@
         </footer>
     </main>
 
-    <!-- Global Floating Music Player -->
+    <!-- Global Floating Music Player (Portal Preview) -->
     <div id="music-player-bar" class="music-player-bar">
         <div class="player-track-info">
             <div class="player-eq">
@@ -144,19 +140,6 @@
         </div>
     </div>
 
-    <!-- Fullscreen Immersive Modal Viewport -->
-    <div id="immersive-modal" class="immersive-modal">
-        <header class="modal-header">
-            <button id="modal-back-btn" class="modal-btn">⬅ Exit to Portal</button>
-            <span id="modal-version-title" class="modal-title">VALINFINITE</span>
-            <div class="modal-right">
-                <button id="modal-audio-btn" class="modal-btn">Toggle Audio</button>
-                <a id="modal-direct-btn" href="#" class="modal-btn" target="_blank" rel="noopener">Open Standalone ↗</a>
-            </div>
-        </header>
-        <iframe id="modal-frame" src="" title="Fractal Viewer" allow="autoplay"></iframe>
-    </div>
-
     <!-- Audio Element -->
     <audio id="global-music" loop preload="auto">
         <source src="audio/music.m4a" type="audio/mp4">
@@ -169,12 +152,6 @@
         const playBtn = document.getElementById('player-play-btn');
         const playIcon = document.getElementById('player-play-icon');
         const volSlider = document.getElementById('volume-slider');
-        const modal = document.getElementById('immersive-modal');
-        const modalFrame = document.getElementById('modal-frame');
-        const modalBackBtn = document.getElementById('modal-back-btn');
-        const modalTitle = document.getElementById('modal-version-title');
-        const modalAudioBtn = document.getElementById('modal-audio-btn');
-        const modalDirectBtn = document.getElementById('modal-direct-btn');
 
         let isPlaying = false;
 
@@ -183,29 +160,20 @@
             if (isPlaying) {
                 playerBar.classList.add('is-playing');
                 playIcon.textContent = '❚❚';
-                modalAudioBtn.textContent = 'Pause Music';
             } else {
                 playerBar.classList.remove('is-playing');
                 playIcon.textContent = '▶';
-                modalAudioBtn.textContent = 'Play Music';
-            }
-        }
-
-        async function startMusic() {
-            try {
-                if (audio.paused) {
-                    await audio.play();
-                    updatePlayState(true);
-                }
-            } catch (err) {
-                console.warn('Autoplay prevented:', err);
             }
         }
 
         async function toggleMusic() {
             if (audio.paused) {
-                await audio.play();
-                updatePlayState(true);
+                try {
+                    await audio.play();
+                    updatePlayState(true);
+                } catch (err) {
+                    console.warn('Playback error:', err);
+                }
             } else {
                 audio.pause();
                 updatePlayState(false);
@@ -213,51 +181,9 @@
         }
 
         playBtn.addEventListener('click', toggleMusic);
-        modalAudioBtn.addEventListener('click', toggleMusic);
 
         volSlider.addEventListener('input', (e) => {
             audio.volume = parseFloat(e.target.value);
-        });
-
-        // Launch Animation
-        function launchAnimation(version) {
-            startMusic();
-            modalTitle.textContent = version === 'v1' ? 'V1 • Celestial Heart' : 'V2 • Vortex Void';
-            modalDirectBtn.href = `${version}/?play=1`;
-            modalFrame.src = `${version}/index.html`;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-            modalFrame.src = '';
-            document.body.style.overflow = '';
-        }
-
-        modalBackBtn.addEventListener('click', closeModal);
-
-        // Bind Launch buttons & card overlays
-        document.querySelectorAll('.launch-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const target = btn.getAttribute('data-target');
-                launchAnimation(target);
-            });
-        });
-
-        document.querySelectorAll('.card-play-overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                const card = overlay.closest('.fractal-card');
-                const target = card.getAttribute('data-version');
-                launchAnimation(target);
-            });
-        });
-
-        // Keyboard ESC to close modal
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closeModal();
-            }
         });
     </script>
 </body>

@@ -133,6 +133,8 @@ body {
 }
 
 .card-image-wrap {
+    display: block;
+    text-decoration: none;
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;

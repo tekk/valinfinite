@@ -10,98 +10,65 @@
 <body>
     <div id="loading-overlay">
         <div class="pulsing-heart">💖</div>
-        <div class="loading-text">Awakening V2 Vortex Void...</div>
+        <div class="loading-text">Awakening Vortex Void...</div>
     </div>
 
     <canvas id="fractal-canvas"></canvas>
 
-    <!-- Floating HUD Controls -->
-    <header class="hud-bar">
-        <a href="../" class="hud-btn back-btn" title="Back to Hub">⬅ Portal</a>
-        <span class="hud-title">V2 • Vortex Void</span>
-        <button id="audio-btn" class="hud-btn audio-btn" title="Toggle Music">
-            <span class="eq-bars">
-                <span class="bar bar1"></span>
-                <span class="bar bar2"></span>
-                <span class="bar bar3"></span>
-            </span>
-            <span id="audio-text">Play Audio</span>
-        </button>
-    </header>
-
     <audio id="bg-music" loop preload="auto">
-        <source src="../audio/music.m4a" type="audio/mp4">
-        <source src="../audio/music.mp3" type="audio/mpeg">
         <source src="audio/music.m4a" type="audio/mp4">
+        <source src="../audio/music.m4a" type="audio/mp4">
         <source src="audio/music.mp3" type="audio/mpeg">
+        <source src="../audio/music.mp3" type="audio/mpeg">
     </audio>
 
     <script type="module">
         import init, { start_fractal } from './pkg/wasm_infinite_gpu_fractal.js';
 
         const audio = document.getElementById('bg-music');
-        const audioBtn = document.getElementById('audio-btn');
-        const audioText = document.getElementById('audio-text');
-        let audioPlaying = false;
 
-        function updateAudioUI() {
-            if (audioPlaying) {
-                audioBtn.classList.add('playing');
-                audioText.textContent = 'Pause Music';
-            } else {
-                audioBtn.classList.remove('playing');
-                audioText.textContent = 'Play Music';
-            }
-        }
-
-        async function toggleAudio() {
+        function startAudio() {
             if (!audio) return;
-            try {
-                if (audio.paused) {
-                    await audio.play();
-                    audioPlaying = true;
-                } else {
-                    audio.pause();
-                    audioPlaying = false;
-                }
-            } catch (err) {
-                console.warn('Audio play request prevented:', err);
+            audio.volume = 0.9;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Browser requires a user gesture before unmuting/playing
+                });
             }
-            updateAudioUI();
         }
 
-        audioBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleAudio();
+        // Always attempt music playback immediately upon entering animation
+        startAudio();
+
+        // Ensure any touch, click, or keypress on screen triggers or resumes playback immediately
+        const unlockAudio = () => {
+            if (audio && audio.paused) {
+                audio.play().catch(() => {});
+            }
+        };
+        ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+            window.addEventListener(evt, unlockAudio, { passive: true });
         });
 
-        // Trigger on first screen tap if query param play=1 or user taps
-        const urlParams = new URLSearchParams(window.location.search);
-        const shouldPlay = urlParams.get('play') === '1' || urlParams.get('audio') === '1';
+        // Hide cursor after 2.5 seconds of inactivity on desktop
+        let idleTimer = null;
+        function resetIdleTimer() {
+            document.body.classList.remove('idle');
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => {
+                document.body.classList.add('idle');
+            }, 2500);
+        }
+        window.addEventListener('mousemove', resetIdleTimer);
+        resetIdleTimer();
 
-        function handleFirstInteraction() {
-            if (shouldPlay && !audioPlaying) {
-                audio.play().then(() => {
-                    audioPlaying = true;
-                    updateAudioUI();
-                }).catch(() => {});
+        // ESC key returns to the portal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                window.location.href = '../';
             }
-            window.removeEventListener('click', handleFirstInteraction);
-            window.removeEventListener('touchstart', handleFirstInteraction);
-        }
-
-        window.addEventListener('click', handleFirstInteraction);
-        window.addEventListener('touchstart', handleFirstInteraction, { passive: true });
-
-        // Auto-play attempt if allowed
-        if (shouldPlay) {
-            audio.play().then(() => {
-                audioPlaying = true;
-                updateAudioUI();
-            }).catch(() => {
-                // Will play on first click
-            });
-        }
+        });
 
         async function launch() {
             try {
@@ -112,7 +79,7 @@
                     const loader = document.getElementById('loading-overlay');
                     if (loader) {
                         loader.style.opacity = '0';
-                        setTimeout(() => loader.remove(), 250);
+                        setTimeout(() => loader.remove(), 300);
                     }
                 });
             } catch (err) {
@@ -125,7 +92,15 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', launch);
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', () => {
+                launch();
+                startAudio();
+            });
+        } else {
+            launch();
+            startAudio();
+        }
     </script>
 </body>
 </html>
