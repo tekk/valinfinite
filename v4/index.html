@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Valinfinite V4 • Vortex Void</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="pulsing-heart">💖</div>
+        <div class="loading-text">Awakening Vortex Void...</div>
+    </div>
+
+    <canvas id="fractal-canvas"></canvas>
+
+    <audio id="bg-music" loop preload="auto">
+        <source src="audio/music.m4a" type="audio/mp4">
+        <source src="../audio/music.m4a" type="audio/mp4">
+        <source src="audio/music.mp3" type="audio/mpeg">
+        <source src="../audio/music.mp3" type="audio/mpeg">
+    </audio>
+
+    <script type="module">
+        import init, { start_fractal } from './pkg/wasm_infinite_gpu_fractal.js';
+
+        const audio = document.getElementById('bg-music');
+
+        function startAudio() {
+            if (!audio) return;
+            audio.volume = 0.9;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Browser requires a user gesture before unmuting/playing
+                });
+            }
+        }
+
+        // Always attempt music playback immediately upon entering animation
+        startAudio();
+
+        // Ensure any touch, click, or keypress on screen triggers or resumes playback immediately
+        const unlockAudio = () => {
+            if (audio && audio.paused) {
+                audio.play().catch(() => {});
+            }
+        };
+        ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+            window.addEventListener(evt, unlockAudio, { passive: true });
+        });
+
+        // Hide cursor after 2.5 seconds of inactivity on desktop
+        let idleTimer = null;
+        function resetIdleTimer() {
+            document.body.classList.remove('idle');
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => {
+                document.body.classList.add('idle');
+            }, 2500);
+        }
+        window.addEventListener('mousemove', resetIdleTimer);
+        resetIdleTimer();
+
+        // ESC key returns to the portal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                window.location.href = '../';
+            }
+        });
+
+        async function launch() {
+            try {
+                await init();
+                start_fractal('fractal-canvas');
+
+                requestAnimationFrame(() => {
+                    const loader = document.getElementById('loading-overlay');
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        setTimeout(() => loader.remove(), 300);
+                    }
+                });
+            } catch (err) {
+                console.error('Failed to launch V2:', err);
+                const text = document.querySelector('.loading-text');
+                if (text) {
+                    text.textContent = 'WebGL2 / WASM Error: ' + err;
+                    text.style.color = '#ff4444';
+                }
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', () => {
+                launch();
+                startAudio();
+            });
+        } else {
+            launch();
+            startAudio();
+        }
+    </script>
+</body>
+</html>
