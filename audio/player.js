@@ -18,10 +18,30 @@
         { id: 15, title: "Genesis", artist: "Subsonic", file: "audio/tracks/track_15_genesis.mp3" },
         { id: 16, title: "Get To Me", artist: "Culture Shock", file: "audio/tracks/track_16_get_to_me.mp3" },
         { id: 17, title: "Focused", artist: "Soulfreq", file: "audio/tracks/track_17_focused.mp3" },
-        { id: 18, title: "King Of The Swingers", artist: "Krushed & Sorted", file: "audio/tracks/track_18_king_of_the_swingers_gettin_ma.mp3" }
+        { id: 18, title: "King Of The Swingers", artist: "Krushed & Sorted", file: "audio/tracks/track_18_king_of_the_swingers_gettin_ma.mp3" },
+        { id: 19, title: "Drugs I Like", artist: "nate band", file: "audio/tracks/track_19_drugs_i_like.mp3" },
+        { id: 20, title: "Remember Me", artist: "High Contrast", file: "audio/tracks/track_20_remember_me.mp3" },
+        { id: 21, title: "TANGARA", artist: "Etherwood, Hugh Hardie", file: "audio/tracks/track_21_tangara.mp3" },
+        { id: 22, title: "Beat Keep Rockin'", artist: "Starjunk 95", file: "audio/tracks/track_22_beat_keep_rockin.mp3" },
+        { id: 23, title: "Spectra Ocean Dream Circuit", artist: "Starjunk 95", file: "audio/tracks/track_23_spectra_ocean_dream_circuit.mp3" },
+        { id: 24, title: "Groove District", artist: "Starjunk 95", file: "audio/tracks/track_24_groove_district.mp3" },
+        { id: 25, title: "Tell You What I Did", artist: "Pola & Bryson, Zitah", file: "audio/tracks/track_25_tell_you_what_i_did.mp3" },
+        { id: 26, title: "TAKE ME", artist: "D A N N Y", file: "audio/tracks/track_26_take_me.mp3" },
+        { id: 27, title: "Mirage", artist: "MPH, Skrillex", file: "audio/tracks/track_27_mirage.mp3" },
+        { id: 28, title: "Liberate (Lane 8 Remix)", artist: "Eric Prydz", file: "audio/tracks/track_28_liberate_lane_8_remix.mp3" },
+        { id: 29, title: "Szikra", artist: "Kornél Kovács", file: "audio/tracks/track_29_szikra.mp3" },
+        { id: 30, title: "I Run", artist: "YUSSI", file: "audio/tracks/track_30_i_run.mp3" },
+        { id: 31, title: "On & On", artist: "Chris Lake, Yael Watchman", file: "audio/tracks/track_31_on_on.mp3" },
+        { id: 32, title: "Out For Blood", artist: "QZB", file: "audio/tracks/track_32_out_for_blood.mp3" },
+        { id: 33, title: "Don't Stop", artist: "MUZZ", file: "audio/tracks/track_33_dont_stop.mp3" },
+        { id: 34, title: "Tu Cafe (Mash Up)", artist: "Prodigy", file: "audio/tracks/track_34_tu_cafe_mash_up.mp3" },
+        { id: 35, title: "The People (Mehlor Remix)", artist: "Harrie Summers, Joey Rich", file: "audio/tracks/track_35_the_people_mehlor_remix.mp3" },
+        { id: 36, title: "Spacefunk", artist: "Stussko, Kolter", file: "audio/tracks/track_36_spacefunk.mp3" },
+        { id: 37, title: "Bunker", artist: "Culture Shock", file: "audio/tracks/track_37_bunker.mp3" },
+        { id: 38, title: "On & On (Kanine Remix)", artist: "Sub Focus, bbyclose, Kanine", file: "audio/tracks/track_38_on_on_kanine_remix.mp3" }
     ];
 
-    const STORAGE_KEY = 'valinfinite_played_tracks_v2';
+    const STORAGE_KEY = 'valinfinite_played_tracks_v3';
 
     function getAudioPath(relPath) {
         // Resolve path relative to current document location

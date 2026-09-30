@@ -2,14 +2,14 @@
   {
     "id": 1,
     "title": "Fire In My Soul",
-    "artist": "Oliver Heldens, Shungudzo",
+    "artist": "Oliver Heldens feat. Shungudzo",
     "duration": 175.3,
     "file": "audio/tracks/track_01_fire_in_my_soul.mp3"
   },
   {
     "id": 2,
     "title": "No Limits (Vocal Mix)",
-    "artist": "Danism, Train (UK) & DJ Rae, Danism, Train (UK), DJ Rae",
+    "artist": "Danism, Train & DJ Rae",
     "duration": 375.6,
     "file": "audio/tracks/track_02_no_limits_vocal_mix.mp3"
   },
@@ -36,10 +36,10 @@
   },
   {
     "id": 6,
-    "title": "Track 6",
-    "artist": "Unknown",
+    "title": "Beautiful",
+    "artist": "Brookes Brothers feat. Robert Owens",
     "duration": 295.2,
-    "file": "audio/tracks/track_06_track_6.mp3"
+    "file": "audio/tracks/track_06_beautiful.mp3"
   },
   {
     "id": 7,
@@ -78,10 +78,10 @@
   },
   {
     "id": 12,
-    "title": "Colours & Lights (Cl\u00e9ment Leroux Remix)",
-    "artist": "GoldFish, Cat Dealers",
+    "title": "Colours & Lights (Clément Leroux Remix)",
+    "artist": "GoldFish & Cat Dealers",
     "duration": 202.1,
-    "file": "audio/tracks/track_12_colours_lights_cl\u00e9ment_leroux_.mp3"
+    "file": "audio/tracks/track_12_colours_lights_clément_leroux_.mp3"
   },
   {
     "id": 13,
@@ -107,7 +107,7 @@
   {
     "id": 16,
     "title": "Get To Me",
-    "artist": "Culture Shock, James Pountney",
+    "artist": "Culture Shock",
     "duration": 245.5,
     "file": "audio/tracks/track_16_get_to_me.mp3"
   },
@@ -124,5 +124,145 @@
     "artist": "Krushed & Sorted",
     "duration": 364.6,
     "file": "audio/tracks/track_18_king_of_the_swingers_gettin_ma.mp3"
+  },
+  {
+    "id": 19,
+    "title": "Drugs I Like",
+    "artist": "nate band",
+    "duration": 198.8,
+    "file": "audio/tracks/track_19_drugs_i_like.mp3"
+  },
+  {
+    "id": 20,
+    "title": "Remember Me",
+    "artist": "High Contrast",
+    "duration": 235.8,
+    "file": "audio/tracks/track_20_remember_me.mp3"
+  },
+  {
+    "id": 21,
+    "title": "TANGARA",
+    "artist": "Etherwood, Hugh Hardie",
+    "duration": 223.4,
+    "file": "audio/tracks/track_21_tangara.mp3"
+  },
+  {
+    "id": 22,
+    "title": "Beat Keep Rockin'",
+    "artist": "Starjunk 95",
+    "duration": 183.9,
+    "file": "audio/tracks/track_22_beat_keep_rockin.mp3"
+  },
+  {
+    "id": 23,
+    "title": "Spectra Ocean Dream Circuit",
+    "artist": "Starjunk 95",
+    "duration": 194.3,
+    "file": "audio/tracks/track_23_spectra_ocean_dream_circuit.mp3"
+  },
+  {
+    "id": 24,
+    "title": "Groove District",
+    "artist": "Starjunk 95",
+    "duration": 186.2,
+    "file": "audio/tracks/track_24_groove_district.mp3"
+  },
+  {
+    "id": 25,
+    "title": "Tell You What I Did",
+    "artist": "Pola & Bryson, Zitah",
+    "duration": 209.7,
+    "file": "audio/tracks/track_25_tell_you_what_i_did.mp3"
+  },
+  {
+    "id": 26,
+    "title": "TAKE ME",
+    "artist": "D A N N Y",
+    "duration": 129.0,
+    "file": "audio/tracks/track_26_take_me.mp3"
+  },
+  {
+    "id": 27,
+    "title": "Mirage",
+    "artist": "MPH, Skrillex",
+    "duration": 292.0,
+    "file": "audio/tracks/track_27_mirage.mp3"
+  },
+  {
+    "id": 28,
+    "title": "Liberate (Lane 8 Remix)",
+    "artist": "Eric Prydz",
+    "duration": 314.8,
+    "file": "audio/tracks/track_28_liberate_lane_8_remix.mp3"
+  },
+  {
+    "id": 29,
+    "title": "Szikra",
+    "artist": "Kornél Kovács",
+    "duration": 401.6,
+    "file": "audio/tracks/track_29_szikra.mp3"
+  },
+  {
+    "id": 30,
+    "title": "I Run",
+    "artist": "YUSSI",
+    "duration": 124.7,
+    "file": "audio/tracks/track_30_i_run.mp3"
+  },
+  {
+    "id": 31,
+    "title": "On & On",
+    "artist": "Chris Lake, Yael Watchman",
+    "duration": 195.6,
+    "file": "audio/tracks/track_31_on_on.mp3"
+  },
+  {
+    "id": 32,
+    "title": "Out For Blood",
+    "artist": "QZB",
+    "duration": 248.4,
+    "file": "audio/tracks/track_32_out_for_blood.mp3"
+  },
+  {
+    "id": 33,
+    "title": "Don't Stop",
+    "artist": "MUZZ",
+    "duration": 176.9,
+    "file": "audio/tracks/track_33_dont_stop.mp3"
+  },
+  {
+    "id": 34,
+    "title": "Tu Cafe (Mash Up)",
+    "artist": "Prodigy",
+    "duration": 242.1,
+    "file": "audio/tracks/track_34_tu_cafe_mash_up.mp3"
+  },
+  {
+    "id": 35,
+    "title": "The People (Mehlor Remix)",
+    "artist": "Harrie Summers, Joey Rich",
+    "duration": 387.0,
+    "file": "audio/tracks/track_35_the_people_mehlor_remix.mp3"
+  },
+  {
+    "id": 36,
+    "title": "Spacefunk",
+    "artist": "Stussko, Kolter",
+    "duration": 456.0,
+    "file": "audio/tracks/track_36_spacefunk.mp3"
+  },
+  {
+    "id": 37,
+    "title": "Bunker",
+    "artist": "Culture Shock",
+    "duration": 281.7,
+    "file": "audio/tracks/track_37_bunker.mp3"
+  },
+  {
+    "id": 38,
+    "title": "On & On (Kanine Remix)",
+    "artist": "Sub Focus, bbyclose, Kanine",
+    "duration": 175.2,
+    "file": "audio/tracks/track_38_on_on_kanine_remix.mp3"
   }
 ]

@@ -208,7 +208,7 @@ $$\mathbf{p}' = \mathbf{p} + \frac{\mathbf{p}}{\|\mathbf{p}\|} \sin((\|\mathbf{p
 
 ---
 
-## 🎵 Complete 18-Track Demoscene Soundtrack
+## 🎵 Complete 38-Track Demoscene Soundtrack
 
 The audio engine features a persistent non-repeating shuffle pool stored in `localStorage`. Tracks are selected randomly without repetition until the entire library is exhausted, smoothly auto-advancing to provide an unbroken audio-visual journey across sessions:
 
@@ -230,6 +230,26 @@ The audio engine features a persistent non-repeating shuffle pool stored in `loc
 16. **Get To Me** — Culture Shock *(04:05)*
 17. **Focused** — Soulfreq *(07:36)*
 18. **King Of The Swingers (Gettin' Mad Mix)** — Krushed & Sorted *(06:04)*
+19. **Drugs I Like** — nate band *(03:18)*
+20. **Remember Me** — High Contrast *(03:55)*
+21. **TANGARA** — Etherwood, Hugh Hardie *(03:43)*
+22. **Beat Keep Rockin'** — Starjunk 95 *(03:03)*
+23. **Spectra Ocean Dream Circuit** — Starjunk 95 *(03:14)*
+24. **Groove District** — Starjunk 95 *(03:06)*
+25. **Tell You What I Did** — Pola & Bryson, Zitah *(03:29)*
+26. **TAKE ME** — D A N N Y *(02:09)*
+27. **Mirage** — MPH, Skrillex *(04:52)*
+28. **Liberate (Lane 8 Remix)** — Eric Prydz *(05:14)*
+29. **Szikra** — Kornél Kovács *(06:41)*
+30. **I Run** — YUSSI *(02:04)*
+31. **On & On** — Chris Lake, Yael Watchman *(03:15)*
+32. **Out For Blood** — QZB *(04:08)*
+33. **Don't Stop** — MUZZ *(02:56)*
+34. **Tu Cafe (Mash Up)** — Prodigy *(04:02)*
+35. **The People (Mehlor Remix)** — Harrie Summers, Joey Rich *(06:27)*
+36. **Spacefunk** — Stussko, Kolter *(07:36)*
+37. **Bunker** — Culture Shock *(04:41)*
+38. **On & On (Kanine Remix)** — Sub Focus, bbyclose, Kanine *(02:55)*
 
 ---
 
@@ -239,9 +259,9 @@ The audio engine features a persistent non-repeating shuffle pool stored in `loc
 ├── index.html                   # Responsive landing portal with 3D fluid metaball shader
 ├── style.css                    # Glassmorphism styling, crossfade cards & animated loops
 ├── audio/
-│   ├── player.js                # Smart non-repeating shuffle audio player
+│   ├── player.js                # Smart non-repeating shuffle audio player (38 tracks)
 │   ├── playlist.json            # Track catalog metadata
-│   └── tracks/                  # 18 high-fidelity demoscene tracks
+│   └── tracks/                  # 38 high-fidelity demoscene tracks
 │
 ├── celestial-heart/             # [01] Classic Shepard scale infinite zoom
 ├── matrix-vortex/               # [02] Classic cylindrical raymarched matrix tunnel
