@@ -21,7 +21,7 @@ Continuous scale-invariant GPU fractals in WebAssembly and WebGL2 with vivid psy
 #### Logarithmic Octave Synthesis (Shepard Scale)
 Infinite scale-invariant zoom is achieved without floating-point precision collapse by synthesizing $N = 4$ overlapping logarithmic octaves. Each octave $k \in \{0, \dots, N-1\}$ scales exponentially by base $S = 3.2$:
 
-$$\phi_k(t) = \operatorname{fract}\left(t \cdot v + \frac{k}{N}\right), \quad s_k(t) = \exp\left(\phi_k(t) \cdot \ln S\right)$$
+$$\phi_k(t) = \mathrm{fract}\left(t \cdot v + \frac{k}{N}\right), \quad s_k(t) = \exp\left(\phi_k(t) \cdot \ln S\right)$$
 
 A quadratic Hanning window eliminates boundary discontinuities:
 
@@ -48,7 +48,7 @@ $$z \leftarrow \begin{cases}
 #### 3D Cylindrical Coordinate Projection
 Screen-space coordinates $\mathbf{u} \in [-1, 1]^2$ are projected onto an infinite 3D cylindrical tunnel with depth $z$:
 
-$$r = \|\mathbf{u}\|_2, \quad \phi = \operatorname{atan2}(u_y, u_x), \quad z = \frac{1}{r + \epsilon}$$
+$$r = \|\mathbf{u}\|_2, \quad \phi = \mathrm{atan2}(u_y, u_x), \quad z = \frac{1}{r + \epsilon}$$
 
 The cylinder surface is mapped into discretized helical matrix rain columns:
 
@@ -59,11 +59,11 @@ $$\text{col} = \lfloor u_{\text{cyl}} \rfloor, \quad \text{row} = \lfloor v_{\te
 #### Deciphering Streams & Hardware Mipmap Bloom
 Stream intensity decomposes into a white-hot laser head and exponential phosphor decay:
 
-$$I(p) = \exp(-\gamma \cdot |p - 1.0|) + \alpha_{\text{ambient}}, \quad p = \operatorname{mod}(\text{row} + t \cdot v_{\text{stream}}, L)$$
+$$I(p) = \exp(-\gamma \cdot |p - 1.0|) + \alpha_{\text{ambient}}, \quad p = \mathrm{mod}(\text{row} + t \cdot v_{\text{stream}}, L)$$
 
 Target columns decrypt pseudo-random runes into the locked cipher sequence (`VALIKA`, `PETO`, `VALI`, `TEKK`, `TEKKO`). Halo bloom is extracted directly via hardware texture LOD mipmaps:
 
-$$I_{\text{glow}}(\mathbf{uv}) = \operatorname{tex}_{\text{LOD}}(\mathbf{uv}, \lambda + 2.5)$$
+$$I_{\text{glow}}(\mathbf{uv}) = \mathrm{tex}_{\mathrm{LOD}}(\mathbf{uv}, \lambda + 2.5)$$
 
 ---
 
