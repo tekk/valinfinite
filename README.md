@@ -1,12 +1,12 @@
-# 💖 Infinite Real-Time GPU Fractals
+# Infinite Real-Time GPU animations
 
 Continuous scale-invariant GPU fractals in WebAssembly and WebGL2 with vivid psychedelic palettes, zero precision degradation, multi-act demoscene cinematics, and non-repeating soundtrack synchronization.
 
-🌐 **Live Demo Portal**: [https://tekk.github.io/valinfinite/](https://tekk.github.io/valinfinite/)
+**Live Demo Portal**: [https://tekk.github.io/valinfinite/](https://tekk.github.io/valinfinite/)
 
 ---
 
-## 🌌 Gallery of 7 Real-Time GPU Animations
+## Gallery of 7 Real-Time GPU Animations
 
 ### Series I: Classic Procedural Zooms
 Continuous logarithmic zooms and pure procedural coordinate topologies.
@@ -25,7 +25,7 @@ Multi-act narrative journeys, organic Bezier SDF morphing, optical wavefront cro
 
 ---
 
-## 🔬 Mathematical Formulations & Scene Algorithms
+## Mathematical Formulations & Scene Algorithms
 
 ### 1. Celestial Heart (Classic Shepard Scale Zoom)
 
@@ -188,9 +188,9 @@ $$\mathbf{p}' = \mathbf{p} + \frac{\mathbf{p}}{\|\mathbf{p}\|} \sin((\|\mathbf{p
 
 ---
 
-## 🎵 Complete 38-Track Demoscene Soundtrack
+## Soundtrack
 
-The audio engine features a persistent non-repeating shuffle pool stored in `localStorage`. Tracks are selected randomly without repetition until the entire library is exhausted, smoothly auto-advancing to provide an unbroken audio-visual journey across sessions:
+Audio engine features a persistent non-repeating shuffle pool stored in `localStorage`. Tracks are selected randomly, with playback control OSD.
 
 1. **Fire In My Soul** — Oliver Heldens feat. Shungudzo *(02:55)*
 2. **No Limits (Vocal Mix)** — Danism, Train & DJ Rae *(06:15)*
@@ -233,7 +233,7 @@ The audio engine features a persistent non-repeating shuffle pool stored in `loc
 
 ---
 
-## 🏛️ Project Architecture
+## Project Architecture
 
 ```
 ├── index.html                   # Responsive landing portal with 3D fluid metaball shader
@@ -258,13 +258,13 @@ The audio engine features a persistent non-repeating shuffle pool stored in `loc
 
 ---
 
-## 🛠️ Local Development
+## Local Development
 
 ```bash
 # Compile WASM
 wasm-pack build --target web --release
 
-# Serve locally
+# Serve locally, i.e. with python3
 python3 -m http.server 8088
 ```
 Navigate to `http://localhost:8088/`.

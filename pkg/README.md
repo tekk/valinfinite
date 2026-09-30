@@ -1,12 +1,12 @@
-# 💖 Infinite Real-Time GPU Fractals
+# Infinite Real-Time GPU animations
 
 Continuous scale-invariant GPU fractals in WebAssembly and WebGL2 with vivid psychedelic palettes, zero precision degradation, multi-act demoscene cinematics, and non-repeating soundtrack synchronization.
 
-🌐 **Live Demo Portal**: [https://tekk.github.io/valinfinite/](https://tekk.github.io/valinfinite/)
+**Live Demo Portal**: [https://tekk.github.io/valinfinite/](https://tekk.github.io/valinfinite/)
 
 ---
 
-## 🌌 Gallery of 7 Real-Time GPU Animations
+## Gallery of 7 Real-Time GPU Animations
 
 ### Series I: Classic Procedural Zooms
 Continuous logarithmic zooms and pure procedural coordinate topologies.
@@ -25,7 +25,7 @@ Multi-act narrative journeys, organic Bezier SDF morphing, optical wavefront cro
 
 ---
 
-## 🔬 Mathematical Formulations & Scene Algorithms
+## Mathematical Formulations & Scene Algorithms
 
 ### 1. Celestial Heart (Classic Shepard Scale Zoom)
 
@@ -145,18 +145,18 @@ $$\mathbf{C}_{\text{total}} = \sum_{k=1}^3 w_k(t) \mathbf{C}_k + \mathbf{C}_{\te
 
 ---
 
-### 6. Cosmic Infinity (6,400,000x Multi-Target Ultra-Zoom & Relativistic Return)
+### 6. Cosmic Infinity (64,000x Multi-Target Deep Zoom & Continuous Filament Flow)
 
 <div align="center">
   <img src="screenshots/cosmic_infinity_mobile.gif" alt="Cosmic Infinity Mobile Preview" width="220">
 </div>
 
-#### Dual-Phase Zoom Dynamics: Multi-Target Wandering & Exponential Ease-Out Return
-The trajectory operates across an 80.0s macro cycle at 0.4x deliberate demoscene pace. Each cycle dynamically locks onto a different dense boundary feature from a curated catalog (Seahorse Valley, Quad Spiral Dendrites, Triple Spiral Valleys, Satellite Mini-Brots, Elephant Valley boundary):
+#### Dual-Phase Zoom Dynamics: Multi-Target Wandering, Multi-Stage Rotation & Relativistic Return
+The trajectory operates across an 80.0s macro cycle at 0.4x deliberate demoscene pace. Each cycle dynamically locks onto a different dense boundary feature from a curated catalog (Seahorse Valley, Quad Spiral Dendrites, Triple Spiral Valleys, Satellite Mini-Brots, Elephant Valley boundary) with continuous filament tracking and quantum nebula orbit-trap coloring to guarantee vibrant imagery across the entire plunge:
 
 $$\text{Zoom-In } (p \in [0, 1]): \quad s_{\text{in}}(p) = \begin{cases} v_0 \cdot p & p \le p_0 \\ 1 - a_{\text{dec}} (1 - p)^2 & p > p_0 \end{cases}, \quad \text{zoom}(p) = \exp(s_{\text{in}}(p) \cdot \ln s_{\max})$$
 
-At peak zoom ($s_{\max} = 6{,}400{,}000\times$, 100x deeper than the original 64,000x), inward velocity $\left.\frac{ds_{\text{in}}}{dp}\right|_{p=1} = 0$, bringing the plunge to a complete stop. The camera then smoothly accelerates outward with a logistic sigmoid return and 360° turnaround spin:
+At peak zoom ($s_{\max} = 64{,}000\times$, calibrated to prevent floating-point precision block quantization rectangles), inward velocity $\left.\frac{ds_{\text{in}}}{dp}\right|_{p=1} = 0$, bringing the plunge to a complete stop. Rotation speeds dynamically surge and ease through multi-stage harmonic modulation. The camera then smoothly accelerates outward with a logistic sigmoid return and 360° turnaround spin:
 
 $$\text{Zoom-Out } (q \in [0, 1]): \quad g(q) = \frac{\sigma(k(2q - 1)) - \sigma(-k)}{\sigma(k) - \sigma(-k)}, \quad \text{zoom}(q) = \exp((1 - g(q)) \cdot \ln s_{\max})$$
 
@@ -188,9 +188,9 @@ $$\mathbf{p}' = \mathbf{p} + \frac{\mathbf{p}}{\|\mathbf{p}\|} \sin((\|\mathbf{p
 
 ---
 
-## 🎵 Complete 38-Track Demoscene Soundtrack
+## Soundtrack
 
-The audio engine features a persistent non-repeating shuffle pool stored in `localStorage`. Tracks are selected randomly without repetition until the entire library is exhausted, smoothly auto-advancing to provide an unbroken audio-visual journey across sessions:
+Audio engine features a persistent non-repeating shuffle pool stored in `localStorage`. Tracks are selected randomly, with playback control OSD.
 
 1. **Fire In My Soul** — Oliver Heldens feat. Shungudzo *(02:55)*
 2. **No Limits (Vocal Mix)** — Danism, Train & DJ Rae *(06:15)*
@@ -233,7 +233,7 @@ The audio engine features a persistent non-repeating shuffle pool stored in `loc
 
 ---
 
-## 🏛️ Project Architecture
+## Project Architecture
 
 ```
 ├── index.html                   # Responsive landing portal with 3D fluid metaball shader
@@ -249,7 +249,7 @@ The audio engine features a persistent non-repeating shuffle pool stored in `loc
 │
 ├── celestial-odyssey/           # [04] 3-Act narrative journey with optical wavefronts
 ├── matrix-saga/                 # [05] 3-Stage cyberpunk infiltration & sacred AI mandala
-├── cosmic-infinity/             # [06] 6,400,000x ultra-zoom with relativistic S-curve return
+├── cosmic-infinity/             # [06] 64,000x deep zoom with relativistic S-curve return
 ├── vortex-metamorphosis/        # [07] 8-Phase Bezier SDF morphing & procedural VFX
 │
 ├── screenshots/                 # Landscape PNGs + Vertical Mobile Animated GIFs
@@ -258,13 +258,13 @@ The audio engine features a persistent non-repeating shuffle pool stored in `loc
 
 ---
 
-## 🛠️ Local Development
+## Local Development
 
 ```bash
 # Compile WASM
 wasm-pack build --target web --release
 
-# Serve locally
+# Serve locally, i.e. with python3
 python3 -m http.server 8088
 ```
 Navigate to `http://localhost:8088/`.

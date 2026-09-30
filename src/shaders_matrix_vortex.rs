@@ -46,16 +46,16 @@ vec3 palette(float t) {
 // Sample glyph from 16x16 font atlas
 // cell_idx in 0..255, local_uv in [0..1]
 vec2 get_glyph_sample(int cell_idx, vec2 local_uv, float lod) {
-    if (local_uv.x <= 0.01 || local_uv.x >= 0.99 || local_uv.y <= 0.01 || local_uv.y >= 0.99) {
+    if (local_uv.x <= 0.03 || local_uv.x >= 0.97 || local_uv.y <= 0.03 || local_uv.y >= 0.97) {
         return vec2(0.0);
     }
     float c = float(cell_idx % 16);
     float r = float(cell_idx / 16);
     vec2 atlas_uv = vec2((c + clamp(local_uv.x, 0.0, 1.0)) / 16.0, (r + clamp(local_uv.y, 0.0, 1.0)) / 16.0);
     
-    // Stroke in red channel, hardware-blurred bloom in higher mipmap level
-    float stroke = textureLod(u_fontTexture, atlas_uv, lod).r;
-    float glow = textureLod(u_fontTexture, atlas_uv, lod + 2.5).r;
+    // Stroke in red channel, hardware-blurred bloom in subtle higher mipmap
+    float stroke = textureLod(u_fontTexture, atlas_uv, clamp(lod, 0.0, 1.5)).r;
+    float glow = textureLod(u_fontTexture, atlas_uv, clamp(lod + 0.8, 0.0, 2.2)).r;
     return vec2(stroke, glow);
 }
 
@@ -67,6 +67,136 @@ vec3 aces_tonemap(vec3 x) {
     const float d = 0.59;
     const float e = 0.14;
     return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+}
+
+// =========================================================================
+// 1.5. INTACT INTENDED WORDS CATALOG (CONSECUTIVE, UNSCRAMBLED GLYPHS)
+// Words: VALIKA, PETO, TEKK, VALI, TEKKO, ヴァリカ, ペト, テック, テッコ
+// Guaranteed intact without interleaving dots or random characters
+// =========================================================================
+int get_intended_word_glyph(int word_id, int pos) {
+    // Word 0: VALIKA (6 letters) -> V(110), A(111), L(112), I(113), K(114), A(111)
+    if (word_id == 0) {
+        if (pos == 0) return 110;
+        if (pos == 1) return 111;
+        if (pos == 2) return 112;
+        if (pos == 3) return 113;
+        if (pos == 4) return 114;
+        return 111;
+    }
+    // Word 1: PETO (4 letters) -> P(115), E(116), T(117), O(118)
+    if (word_id == 1) {
+        if (pos == 0) return 115;
+        if (pos == 1) return 116;
+        if (pos == 2) return 117;
+        return 118;
+    }
+    // Word 2: TEKK (4 letters) -> T(117), E(116), K(114), K(114)
+    if (word_id == 2) {
+        if (pos == 0) return 117;
+        if (pos == 1) return 116;
+        if (pos == 2) return 114;
+        return 114;
+    }
+    // Word 3: VALI (4 letters) -> V(110), A(111), L(112), I(113)
+    if (word_id == 3) {
+        if (pos == 0) return 110;
+        if (pos == 1) return 111;
+        if (pos == 2) return 112;
+        return 113;
+    }
+    // Word 4: TEKKO (5 letters) -> T(117), E(116), K(114), K(114), O(118)
+    if (word_id == 4) {
+        if (pos == 0) return 117;
+        if (pos == 1) return 116;
+        if (pos == 2) return 114;
+        if (pos == 3) return 114;
+        return 118;
+    }
+    // Word 5: ヴァリカ (4 letters) -> 119, 120, 121, 122
+    if (word_id == 5) {
+        return 119 + pos;
+    }
+    // Word 6: ペト (2 letters) -> 123, 124
+    if (word_id == 6) {
+        return 123 + pos;
+    }
+    // Word 7: テック (3 letters) -> 125, 126, 127
+    if (word_id == 7) {
+        return 125 + pos;
+    }
+    // Word 8: テッコ (3 letters) -> 125, 126, 128
+    if (pos == 0) return 125;
+    if (pos == 1) return 126;
+    return 128;
+}
+
+int get_word_length(int word_id) {
+    if (word_id == 0) return 6; // VALIKA
+    if (word_id == 1) return 4; // PETO
+    if (word_id == 2) return 4; // TEKK
+    if (word_id == 3) return 4; // VALI
+    if (word_id == 4) return 5; // TEKKO
+    if (word_id == 5) return 4; // ヴァリカ
+    if (word_id == 6) return 2; // ペト
+    if (word_id == 7) return 3; // テック
+    return 3;                   // テッコ
+}
+
+// =========================================================================
+// 1.6. STAR TREK HYPERSPACE PARALLAX STARFIELD
+// (Radial warp streaks & sparkling star heads emerging during scene transitions)
+// =========================================================================
+vec3 render_startrek_starfield(vec2 p, float t, float warp_factor) {
+    if (warp_factor <= 0.005) return vec3(0.0);
+    
+    vec3 stars = vec3(0.0);
+    float r = length(p);
+    float phi = atan(p.y, p.x);
+    float phi_norm = (phi / TWO_PI) + 0.5;
+
+    // 3 Parallax Depth Tiers: Fast Foreground, Midground, Deep Starlight
+    for (int tier = 0; tier < 3; tier++) {
+        float f_tier = float(tier);
+        float num_rays = 48.0 + f_tier * 24.0;
+        float sector = floor(phi_norm * num_rays);
+        float s_hash = hash11(sector * 23.41 + f_tier * 91.17);
+        float s_hash2 = hash11(sector * 67.89 + f_tier * 13.51);
+
+        float ray_phi = (sector + 0.15 + 0.70 * s_hash) / num_rays * TWO_PI - PI;
+        float ang_diff = abs(phi - ray_phi);
+        if (ang_diff > PI) ang_diff = TWO_PI - ang_diff;
+        float d_perp = r * sin(ang_diff);
+
+        // Hyperspace speed forward: speeds up dramatically during warp
+        float speed = (2.2 + 5.8 * warp_factor) * (0.85 + 0.35 * f_tier);
+        float z = fract(s_hash2 + t * speed * 0.18);
+        
+        // Star emerges from center vanishing point (z=0 -> r=0.04) and races outward (z=1 -> r=1.45)
+        float r_star = 0.04 + pow(z, 1.8) * 1.40;
+        float streak_len = (0.04 + 0.40 * warp_factor) * pow(z, 1.2) * 0.75;
+        
+        float r_diff = r_star - r;
+        if (r_diff >= -0.010 && r_diff <= streak_len && d_perp < 0.004) {
+            float h = clamp(r_diff / max(1e-4, streak_len), 0.0, 1.0);
+            
+            // Needle-thin razor streak core (Star Trek style)
+            float streak_core = exp(-d_perp * 1600.0) * (1.0 - h * 0.75);
+            float streak_glow = exp(-d_perp * 400.0) * 0.25 * (1.0 - h * 0.6);
+            
+            float head_dist = length(p - vec2(cos(ray_phi), sin(ray_phi)) * r_star);
+            float head = exp(-head_dist * 220.0) * 1.8;
+
+            // Star Trek warp color: brilliant diamond white core, electric blue & cyan aura
+            vec3 star_color = mix(vec3(0.35, 0.85, 1.2), vec3(0.95, 0.98, 1.0), 1.0 - h);
+            if (s_hash > 0.82) star_color = mix(star_color, vec3(1.2, 0.95, 0.6), 0.6);
+
+            stars += (star_color * (streak_core * 1.6 + streak_glow * 0.5) + vec3(1.4, 1.5, 1.8) * head) 
+                   * (0.6 + 0.4 * s_hash);
+        }
+    }
+
+    return stars * warp_factor;
 }
 
 // =========================================================================
@@ -127,18 +257,47 @@ vec3 render_scene1_gateway(vec2 uv, float t) {
     float char_mask = smoothstep(0.0, 0.12, char_uv.x) * (1.0 - smoothstep(0.88, 1.0, char_uv.x))
                     * smoothstep(0.0, 0.12, char_uv.y) * (1.0 - smoothstep(0.88, 1.0, char_uv.y));
     
-    int glyph = int(mod(sky_seed * 73.0 + rain_row * 3.0 + floor(t * 3.0), 90.0));
+    // Intended words appear intact and consecutive across rows without scrambling:
+    int glyph = 0;
+    bool is_intended_word = false;
+
+    float col_h = hash11(sky_col_idx * 17.31 + 4.19);
+    int word_id = int(mod(col_h * 9.0 + floor(t * 0.10), 9.0));
+    int word_len = get_word_length(word_id);
+    int row_in_block = int(mod(rain_row, 16.0));
+    int word_start = int(mod(col_h * 11.0, 16.0 - float(word_len)));
+
+    if (row_in_block >= word_start && row_in_block < word_start + word_len) {
+        int pos = row_in_block - word_start;
+        glyph = get_intended_word_glyph(word_id, pos);
+        is_intended_word = true;
+    } else {
+        // Surrounding matrix characters: katakana (0..45), kanji (46..69), runes (70..109), symbols (130..148)
+        glyph = int(mod(sky_seed * 73.0 + rain_row * 3.0 + floor(t * 3.0), 105.0));
+        if (glyph >= 46 && glyph < 70 && hash11(float(glyph) + sky_col_idx) > 0.45) {
+            glyph += 24; // shift into runes
+        }
+    }
+
     vec2 g_samp = (char_mask > 0.001) ? get_glyph_sample(glyph, char_uv, 0.5) * char_mask : vec2(0.0);
     
     vec3 rain_col = mix(vec3(0.1, 0.9, 0.4), vec3(0.2, 0.85, 1.0), sky_seed);
-    if (rain_pos < 1.3) rain_col = vec3(1.6, 1.8, 2.0); // laser head
+    if (is_intended_word) {
+        // Intact intended words pulse with crystalline cyber-sapphire & gold luminescence
+        vec3 word_lum = mix(vec3(0.2, 0.95, 1.2), vec3(1.2, 1.1, 0.85), 0.5 + 0.5 * sin(t * 2.5 + float(glyph)));
+        rain_col = word_lum * 1.35;
+    } else if (rain_pos < 1.3) {
+        rain_col = vec3(1.25, 1.35, 1.5); // laser head (moderated flare)
+    }
     
-    float rain_light = (drop_head * 1.8 + drop_tail * 0.6) * (g_samp.x * 1.5 + g_samp.y * 0.8);
+    float glyph_vis = g_samp.x * 1.6 + g_samp.x * g_samp.y * 0.8;
+    float rain_light = (drop_head * 1.4 + drop_tail * 0.6) * glyph_vis;
+    if (is_intended_word) rain_light = max(rain_light, 0.95 * (g_samp.x * 1.8 + g_samp.x * g_samp.y * 0.9));
     col += rain_col * rain_light;
     
-    // Glowing neon horizon line
+    // Glowing neon horizon line (moderated flare)
     float horiz_dist = abs(y_cam);
-    float horiz_glow = exp(-horiz_dist * 25.0) * 1.2 + exp(-horiz_dist * 5.0) * 0.35;
+    float horiz_glow = exp(-horiz_dist * 25.0) * 0.45 + exp(-horiz_dist * 5.0) * 0.12;
     vec3 horiz_col = vec3(0.3, 0.9, 1.2) * (0.8 + 0.2 * sin(t * 1.5));
     col += horiz_col * horiz_glow;
     
@@ -187,15 +346,33 @@ vec3 render_scene2_vortex(vec2 uv, float t) {
                       * smoothstep(0.0, 0.14, char_uv.y) * (1.0 - smoothstep(0.86, 1.0, char_uv.y));
 
     // Cryptographic deciphering
+    // Cryptographic deciphering into intact intended words
     int glyph = 0;
-    bool is_deciphered = false;
-    float decipher_cycle = fract(t * 0.18 + col_seed);
+    bool is_intended_word = false;
+
+    float col_h = hash11(col_idx * 19.17 + 8.31);
+    int word_id = int(mod(col_h * 9.0 + floor(t * 0.10), 9.0));
+    int word_len = get_word_length(word_id);
+
     int row_in_block = int(mod(row_idx, 16.0));
-    if (decipher_cycle > 0.35 && row_in_block >= 0 && row_in_block < 8) {
-        glyph = int(mod(col_seed * 23.0 + float(row_in_block) * 7.0, 70.0));
-        is_deciphered = true;
+    int word_start = int(mod(col_h * 11.0, 16.0 - float(word_len)));
+
+    float decipher_cycle = fract(t * 0.18 + col_seed);
+    if (decipher_cycle > 0.30 && row_in_block >= word_start && row_in_block < word_start + word_len) {
+        int pos = row_in_block - word_start;
+        glyph = get_intended_word_glyph(word_id, pos);
+        is_intended_word = true;
     } else {
-        glyph = int(mod(col_seed * 113.0 + row_idx * 7.0 + floor(t * (4.0 + col_seed * 6.0)), 110.0));
+        // Surrounding matrix stream: Katakana (0..45), Kanji (46..69), and Numbers (70..109)
+        // Strictly numbers instead of runes!
+        float char_sel = hash11(col_seed * 53.1 + row_idx * 11.3);
+        if (char_sel < 0.45) {
+            glyph = int(mod(col_seed * 46.0 + row_idx, 46.0)); // Katakana
+        } else if (char_sel < 0.75) {
+            glyph = 70 + int(mod(col_seed * 10.0 + row_idx, 10.0)); // Numbers 0-9
+        } else {
+            glyph = 46 + int(mod(col_seed * 24.0 + row_idx, 24.0)); // Kanji
+        }
     }
 
     float lod = clamp((z - 2.0) * 0.15, 0.0, 3.0);
@@ -206,23 +383,23 @@ vec3 render_scene2_vortex(vec2 uv, float t) {
     float color_phase = z * 0.08 + col_idx * 0.06 + t * 0.35;
     vec3 neon_color = palette(color_phase);
 
-    if (is_deciphered) {
-        vec3 decipher_shimmer = mix(neon_color, vec3(0.5, 1.0, 0.95), 0.35 + 0.15 * sin(t * 2.5 + float(glyph)));
-        neon_color = decipher_shimmer * 1.25;
-    }
-    if (is_head) {
-        neon_color = mix(neon_color, vec3(1.5, 1.7, 2.0), 0.85);
+    if (is_intended_word) {
+        vec3 decipher_shimmer = mix(vec3(0.2, 0.95, 1.2), vec3(1.15, 1.1, 0.85), 0.5 + 0.5 * sin(t * 2.5 + float(glyph)));
+        neon_color = decipher_shimmer * 1.35;
+    } else if (is_head) {
+        neon_color = mix(neon_color, vec3(1.25, 1.35, 1.5), 0.85); // moderated flare
     }
 
     float stream_light = 0.22 + 0.78 * tail_intensity;
-    if (is_head) stream_light = 1.6;
-    float glyph_vis = stroke * 1.6 + glow * 1.0;
+    if (is_intended_word) stream_light = max(stream_light, 1.1);
+    else if (is_head) stream_light = 1.3;
+    float glyph_vis = stroke * 1.8 + stroke * glow * 0.9;
     vec3 tunnel_color = neon_color * glyph_vis * stream_light;
 
     float fog = 1.0 - smoothstep(1.8, 32.0, z);
     col += tunnel_color * fog;
 
-    // Floating 3D holographic word banners (200..212)
+    // Floating 3D holographic word banners (200..208)
     float ring_r = r_len * (1.6 + 0.4 * sin(t * 0.8));
     float ring_phi = phi - t * 0.5;
     const float RING_BANNERS = 8.0;
@@ -232,19 +409,19 @@ vec3 render_scene2_vortex(vec2 uv, float t) {
 
     float ring_mask = 1.0 - smoothstep(0.0, 0.12, abs(ring_r - 0.72));
     if (ring_mask > 0.01) {
-        int banner_glyph = 200 + int(mod(ring_idx + floor(t * 0.2), 13.0));
-        vec2 banner_uv = vec2((ring_fract_u - 0.10) / 0.80, (fract(r_len * 4.0 - t * 0.2) - 0.12) / 0.76);
-        float b_bounds = smoothstep(0.0, 0.1, banner_uv.x) * (1.0 - smoothstep(0.9, 1.0, banner_uv.x))
-                       * smoothstep(0.0, 0.1, banner_uv.y) * (1.0 - smoothstep(0.9, 1.0, banner_uv.y));
+        int banner_glyph = 200 + int(mod(ring_idx + floor(t * 0.2), 9.0));
+        vec2 banner_uv = vec2((ring_fract_u - 0.08) / 0.84, (fract(r_len * 4.0 - t * 0.2) - 0.12) / 0.76);
+        float b_bounds = smoothstep(0.0, 0.08, banner_uv.x) * (1.0 - smoothstep(0.92, 1.0, banner_uv.x))
+                       * smoothstep(0.0, 0.08, banner_uv.y) * (1.0 - smoothstep(0.92, 1.0, banner_uv.y));
         vec2 b_sample = (b_bounds > 0.001) ? get_glyph_sample(banner_glyph, banner_uv, 0.0) * b_bounds : vec2(0.0);
         
-        vec3 holo_col = palette(ring_idx * 0.25 - t * 0.3) * 1.8;
-        holo_col += vec3(0.4, 0.8, 1.0) * b_sample.y * 1.2;
-        col += holo_col * (b_sample.x * 2.0 + b_sample.y * 0.6) * ring_mask;
+        vec3 holo_col = palette(ring_idx * 0.25 - t * 0.3) * 1.5;
+        holo_col += vec3(0.4, 0.8, 1.0) * b_sample.y * 1.0;
+        col += holo_col * (b_sample.x * 1.8 + b_sample.y * 0.5) * ring_mask;
     }
 
-    // Deep central singularity glow
-    col += vec3(0.15, 0.65, 1.0) * exp(-r_len * 3.8) * 0.65;
+    // Deep central singularity glow (moderated flare)
+    col += vec3(0.15, 0.65, 1.0) * exp(-r_len * 3.8) * 0.30;
     
     return col;
 }
@@ -301,9 +478,9 @@ vec3 render_scene3_plexus(vec2 uv, float t) {
         float d_node = length(p - nodes[i]);
         if (d_node < 0.14) {
             // Incandescent core
-            float core = exp(-d_node * 75.0) * 2.4;
+            float core = exp(-d_node * 75.0) * 2.0;
             // Soft outer corona
-            float corona = exp(-d_node * 22.0) * 0.45;
+            float corona = exp(-d_node * 22.0) * 0.40;
             // High-tech holographic ring
             float ring_radius = 0.022 + 0.004 * sin(t * 3.0 + node_seeds[i] * 6.28);
             float ring = (1.0 - smoothstep(0.0, 0.004, abs(d_node - ring_radius))) * 0.75;
@@ -484,63 +661,90 @@ void main() {
 
     float cam_roll = roll1 * w_act1 + roll2 * w_act2 + roll3 * w_act3;
     float ca = cos(cam_roll), sa = sin(cam_roll);
-    vec2 p = mat2(ca, -sa, sa, ca) * screen_uv;
+    vec2 p_oriented = mat2(ca, -sa, sa, ca) * screen_uv;
 
     // Cyber glitch horizontal slicing
     float glitch_trigger = step(0.97, sin(u_time * 3.1) * sin(u_time * 7.3));
     if (glitch_trigger > 0.5) {
         float slice = step(0.5, fract(gl_FragCoord.y * 0.02 + u_time * 8.0));
         if (slice > 0.5) {
-            p.x += 0.03 * sin(gl_FragCoord.y * 0.2 + u_time * 15.0);
+            p_oriented.x += 0.03 * sin(gl_FragCoord.y * 0.2 + u_time * 15.0);
         }
     }
 
     // =========================================================================
-    // SCENE CHANGING CROSSING WARPS & CAUSTIC BEAMS
+    // STAR TREK HYPERSPACE WARP DYNAMICS (EMERGES AS SCENE CHANGES)
+    // - Narrower FOV (telephoto speedup zoom towards vanishing point)
+    // - Forward velocity acceleration down the hyperspace conduit
+    // - Radial motion parallax starfield streaks
+    // =========================================================================
+    // Transition 1: Gateway -> Wormhole (17.5s - 22.5s)
+    float warp1 = smoothstep(17.5, 20.0, macro_t) * (1.0 - smoothstep(20.5, 23.0, macro_t));
+    // Transition 2: Wormhole -> Plexus (38.5s - 41.0s)
+    float warp2 = smoothstep(38.5, 41.0, macro_t) * (1.0 - smoothstep(41.5, 44.0, macro_t));
+    // Transition 3: Plexus -> Wormhole Return (61.5s - 64.0s)
+    float warp3 = smoothstep(61.5, 64.0, macro_t) * (1.0 - smoothstep(64.5, 67.0, macro_t));
+    // Transition 4: Wormhole -> Gateway Loop (69.5s - 72.0s & 0.0s - 2.0s)
+    float warp4 = smoothstep(69.5, 71.5, macro_t) + (1.0 - smoothstep(0.0, 2.0, macro_t));
+    float warp_factor = clamp(warp1 + warp2 + warp3 + warp4, 0.0, 1.0);
+
+    // Narrower FOV during hyperspace speedup (smaller FOV = coordinate compression into center)
+    float fov_scale = 1.0 + 0.38 * warp_factor;
+    vec2 p = p_oriented / fov_scale;
+
+    // Hyperspace speedup time parameter
+    float hyper_time = u_time + warp_factor * 2.2;
+
+    // =========================================================================
+    // SCENE CHANGING CROSSING WARPS & CAUSTIC BEAMS (MODERATED FLARES)
     // =========================================================================
     vec2 p_warped = p;
     vec3 crossing_fx = vec3(0.0);
 
-    // Crossing 1 (18.5s - 22.5s): Horizontal Defragmentation Scan Beam
+    // Crossing 1 (18.5s - 22.5s): Horizontal Defragmentation Scan Beam (Toned down)
     if (macro_t >= 18.5 && macro_t < 22.5) {
         float ct = (macro_t - 18.5) / 4.0;
         float sweep = p.y - (ct * 2.4 - 1.2);
-        p_warped.x += sin(sweep * 25.0) * exp(-abs(sweep) * 8.0) * 0.035;
+        p_warped.x += sin(sweep * 25.0) * exp(-abs(sweep) * 8.0) * 0.025;
         
-        float beam = exp(-abs(sweep) * 12.0) * 2.2;
-        crossing_fx += vec3(0.3, 0.95, 1.2) * beam;
+        float beam = exp(-abs(sweep) * 14.0) * 0.55;
+        crossing_fx += vec3(0.2, 0.75, 1.0) * beam;
     }
-    // Crossing 2 (39.5s - 43.5s): Singularity Void Dissolve
+    // Crossing 2 (39.5s - 43.5s): Singularity Void Dissolve (Toned down)
     else if (macro_t >= 39.5 && macro_t < 43.5) {
         float ct = (macro_t - 39.5) / 4.0;
         float r = length(p);
         float wave = abs(r - ct * 1.35);
-        p_warped += normalize(p + 1e-4) * sin((r - ct * 1.35) * 28.0) * exp(-wave * 10.0) * 0.035 * (1.0 - ct);
+        p_warped += normalize(p + 1e-4) * sin((r - ct * 1.35) * 28.0) * exp(-wave * 10.0) * 0.025 * (1.0 - ct);
         
-        float pulse_beam = exp(-wave * 8.0) * (1.0 - ct * 0.3) * 1.8;
-        crossing_fx += vec3(0.2, 0.85, 1.1) * pulse_beam;
+        float pulse_beam = exp(-wave * 8.0) * (1.0 - ct * 0.3) * 0.45;
+        crossing_fx += vec3(0.15, 0.65, 0.95) * pulse_beam;
     }
-    // Crossing 3 (62.5s - 66.5s): Return of Wormhole Gravitational Warp
+    // Crossing 3 (62.5s - 66.5s): Return of Wormhole Gravitational Warp (Toned down)
     else if (macro_t >= 62.5 && macro_t < 66.5) {
         float ct = (macro_t - 62.5) / 4.0;
         float r = length(p);
         float wave = abs(r - (1.0 - ct) * 1.2);
-        p_warped += normalize(p + 1e-4) * sin((r - (1.0 - ct) * 1.2) * 24.0) * exp(-wave * 8.0) * 0.03 * ct;
-        crossing_fx += vec3(0.4, 0.7, 1.2) * exp(-wave * 7.0) * 1.6;
+        p_warped += normalize(p + 1e-4) * sin((r - (1.0 - ct) * 1.2) * 24.0) * exp(-wave * 8.0) * 0.02 * ct;
+        crossing_fx += vec3(0.25, 0.55, 1.0) * exp(-wave * 7.0) * 0.45;
     }
 
-    // Evaluate each scene
-    vec3 color_scene1 = (w_act1 > 0.001) ? render_scene1_gateway(p_warped, u_time) : vec3(0.0);
-    vec3 color_scene2 = (w_act2 > 0.001) ? render_scene2_vortex(p_warped, u_time) : vec3(0.0);
-    vec3 color_scene3 = (w_act3 > 0.001) ? render_scene3_plexus(p_warped, u_time) : vec3(0.0);
+    // Evaluate each scene with accelerated hyperspace flow
+    vec3 color_scene1 = (w_act1 > 0.001) ? render_scene1_gateway(p_warped, hyper_time) : vec3(0.0);
+    vec3 color_scene2 = (w_act2 > 0.001) ? render_scene2_vortex(p_warped, hyper_time) : vec3(0.0);
+    vec3 color_scene3 = (w_act3 > 0.001) ? render_scene3_plexus(p_warped, hyper_time) : vec3(0.0);
 
     // Gently composite the scenes
     vec3 final_color = color_scene1 * w_act1 
                      + color_scene2 * w_act2 
                      + color_scene3 * w_act3;
 
-    // Apply crossing optical beams
+    // Apply crossing optical beams (moderated flare)
     final_color += crossing_fx;
+
+    // Star Trek Parallaxing Warp Starfield (emerges as scene changes)
+    vec3 startrek_stars = render_startrek_starfield(p_warped, u_time, warp_factor);
+    final_color += startrek_stars;
 
     // Parallax tiny sparkles layer:
     // Starts moving upward from bottom, turns to side, and keeps continuously changing direction
