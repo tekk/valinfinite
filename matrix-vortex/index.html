@@ -98,22 +98,23 @@
                 '3','4','5','6','7','8','9','+','*','#'
             ];
             const letters = [
-                'V','A','L','I','K','P','E','T','O',
-                'ヴ','ァ','リ','カ','ペ','ト','テ','ッ','ク','コ'
+                'V','A','L','I','K','P','E','T','O','Y',
+                'ヴ','ァ','ル','ペ','ト','テ','ッ','キ','ク','コ','ィ'
             ];
             const banners = {
-                200: 'VALIKA',
-                201: 'PETO',
-                202: 'VALI',
-                203: 'TEKK',
-                204: 'TEKKO',
-                205: 'ヴァリカ',
-                206: 'ペト',
-                207: 'テック',
-                208: 'テッコ',
-                209: '愛心',
-                210: '命夢',
-                211: '無限'
+                200: 'V・A・L',
+                201: 'P・E・T・O',
+                202: 'T・E・K・K・I・T・T・Y',
+                203: 'T・E・K・K',
+                204: 'T・E・K・K・O',
+                205: 'ヴ・ァ・ル',
+                206: 'ペ・ト',
+                207: 'テ・ッ・キ・テ・ィ',
+                208: 'テ・ッ・ク',
+                209: 'テ・ッ・コ',
+                210: '愛・心',
+                211: '命・夢',
+                212: '無・限'
             };
 
             const cols = 16;
@@ -130,7 +131,7 @@
                 const x = c * cellW + cellW / 2;
                 const y = r * cellH + cellH / 2;
                 ctx.font = 'bold ' + fontSize + 'px "Courier New", monospace, sans-serif';
-                ctx.fillText(text, x, y);
+                ctx.fillText(text, x, y, cellW * 0.9);
             }
 
             katakana.forEach((ch, i) => drawCell(i, ch, 40));
@@ -140,7 +141,7 @@
 
             for (const [idxStr, text] of Object.entries(banners)) {
                 const idx = parseInt(idxStr, 10);
-                const size = text.length > 5 ? 14 : (text.length > 3 ? 17 : 24);
+                const size = text.length > 10 ? 8 : (text.length > 5 ? 12 : (text.length > 3 ? 16 : 22));
                 drawCell(idx, text, size);
             }
             return atlasCanvas;

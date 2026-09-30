@@ -53,6 +53,7 @@ impl FractalApp {
         let (width, height) = self.dimensions.get();
 
         self.gl.use_program(Some(&self.program));
+        self.gl.active_texture(WebGl2RenderingContext::TEXTURE0);
 
         let current_time_sec = (self.performance.now() * 0.001) as f32;
 
@@ -154,6 +155,10 @@ impl FractalApp {
         let u_time = gl
             .get_uniform_location(&program, "u_time")
             .ok_or("Uniform `u_time` not found")?;
+
+        if let Some(u_font) = gl.get_uniform_location(&program, "u_fontTexture") {
+            gl.uniform1i(Some(&u_font), 0);
+        }
 
         let dimensions = Rc::new(Cell::new((canvas.width() as i32, canvas.height() as i32)));
 
