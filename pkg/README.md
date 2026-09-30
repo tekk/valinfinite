@@ -120,7 +120,7 @@ $$\Phi(t) = v_0 \cdot t - \frac{A_1}{\omega_1} \cos(\omega_1 t) - \frac{A_2}{\om
 
 ---
 
-### 5. Matrix Saga (3-Stage Cyberpunk Infiltration & Sacred AI Mandala)
+### 5. Matrix Saga (3-Stage Cyberpunk Infiltration & Dynamic Plexus)
 
 <div align="center">
   <img src="screenshots/matrix_saga_mobile.gif" alt="Matrix Saga Mobile Preview" width="220">
@@ -129,17 +129,19 @@ $$\Phi(t) = v_0 \cdot t - \frac{A_1}{\omega_1} \cos(\omega_1 t) - \frac{A_2}{\om
 #### Tri-Realm Convex Interpolation
 The narrative progresses through three distinct cyberpunk environments across a $72.0\text{s}$ macro cycle:
 
-$$\mathbf{C}_{\text{total}} = \sum_{k=1}^3 w_k(t) \mathbf{C}_k + \mathbf{C}_{\text{crossing}}, \quad \sum_{k=1}^3 w_k(t) = 1$$
+$$\mathbf{C}_{\text{total}} = \sum_{k=1}^3 w_k(t) \mathbf{C}_k + \mathbf{C}_{\text{crossing}} + \mathbf{C}_{\text{sparkles}}, \quad \sum_{k=1}^3 w_k(t) = 1$$
 
-- **Chapter 1: Gateway to Cyberspace ($0\text{s} - 20\text{s}$)**: Planar 3D perspective cyber grid receding into an infinite neon horizon with vertical data cascades.
-- **Chapter 2: Helical Vortex Descent ($24\text{s} - 46\text{s}$)**: Accelerated 3D cylindrical vortex plunge with dynamic helical twisting and cipher streams.
-- **Chapter 3: Sacred AI Mandala ($50\text{s} - 68\text{s}$)**: Concentric counter-rotating sacred glyph rings orbiting around a blinding incandescent solar singularity with volumetric crepuscular rays.
+- **Chapter 1: Gateway to Cyberspace ($0\text{s} - 20\text{s}$)**: Planar 3D perspective cyber grid receding into an infinite neon horizon with centered falling glyph streams.
+- **Chapter 2: Helical Vortex Wormhole ($21\text{s} - 43\text{s}$)**: Accelerated 3D cylindrical vortex plunge with dynamic helical twisting and cipher streams, gracefully fading out into deep void before Chapter 3.
+- **Chapter 3: Dynamic Quantum Plexus & Parallax Sparkles ($42\text{s} - 64\text{s}$)**: Moving constellation vertices interconnected with local mesh lines whose connection intensities dynamically adapt based on distance, animated traveling photon pulses, and a multi-tier parallax layer of tiny sparkles that starts flowing upward from the bottom, curves horizontally, and continuously evolves its trajectory.
+- **The Wormhole Returns ($63\text{s} - 72\text{s}$)**: As Chapter 3 finishes, the camera plunges back into the helical wormhole at hyper-velocity before completing the macro loop.
 
-#### Planar Perspective Grid & Orbital Mandala Equations
+#### Planar Perspective Grid & Neural Plexus Equations
 - **Perspective Data Grid**:
   $$z_{\text{grid}} = \frac{h}{|u_y + \delta|}, \quad X = u_x \cdot z_{\text{grid}}, \quad Z = z_{\text{grid}} + v_z t, \quad I_{\text{grid}} = e^{-\kappa |X - \lfloor X \rceil|} + e^{-\kappa |Z - \lfloor Z \rceil|}$$
-- **Sacred Orbital Rings**:
-  $$\theta_k = \phi - \Omega_k t, \quad u_k = \left(\frac{\theta_k}{2\pi} + \frac{1}{2}\right) N_k, \quad I_{\text{ring}}(r) = \exp\left(-\frac{(r - R_k)^2}{2\sigma_k^2}\right)$$
+- **Distance-Based Dynamic Plexus Lines**:
+  $$d_{ij} = \|\mathbf{P}_i - \mathbf{P}_j\|, \quad w_{ij} = \left(\text{smoothstep}(D_{\max}, D_{\min}, d_{ij})\right)^2$$
+  $$I_{\text{laser}} = \left(1 - \text{smoothstep}(\epsilon_0, \epsilon_1, d_{\text{line}})\right) \cdot w_{ij}, \quad I_{\text{pulse}} = e^{-\beta |h_{\text{proj}} - p_{\text{pos}}|} \cdot e^{-\gamma d_{\text{line}}} \cdot w_{ij}$$
 
 ---
 
