@@ -145,18 +145,18 @@ $$\mathbf{C}_{\text{total}} = \sum_{k=1}^3 w_k(t) \mathbf{C}_k + \mathbf{C}_{\te
 
 ---
 
-### 6. Cosmic Infinity (6,400,000x Multi-Target Ultra-Zoom & Relativistic Return)
+### 6. Cosmic Infinity (64,000x Multi-Target Deep Zoom & Continuous Filament Flow)
 
 <div align="center">
   <img src="screenshots/cosmic_infinity_mobile.gif" alt="Cosmic Infinity Mobile Preview" width="220">
 </div>
 
-#### Dual-Phase Zoom Dynamics: Multi-Target Wandering & Exponential Ease-Out Return
-The trajectory operates across an 80.0s macro cycle at 0.4x deliberate demoscene pace. Each cycle dynamically locks onto a different dense boundary feature from a curated catalog (Seahorse Valley, Quad Spiral Dendrites, Triple Spiral Valleys, Satellite Mini-Brots, Elephant Valley boundary):
+#### Dual-Phase Zoom Dynamics: Multi-Target Wandering, Multi-Stage Rotation & Relativistic Return
+The trajectory operates across an 80.0s macro cycle at 0.4x deliberate demoscene pace. Each cycle dynamically locks onto a different dense boundary feature from a curated catalog (Seahorse Valley, Quad Spiral Dendrites, Triple Spiral Valleys, Satellite Mini-Brots, Elephant Valley boundary) with continuous filament tracking and quantum nebula orbit-trap coloring to guarantee vibrant imagery across the entire plunge:
 
 $$\text{Zoom-In } (p \in [0, 1]): \quad s_{\text{in}}(p) = \begin{cases} v_0 \cdot p & p \le p_0 \\ 1 - a_{\text{dec}} (1 - p)^2 & p > p_0 \end{cases}, \quad \text{zoom}(p) = \exp(s_{\text{in}}(p) \cdot \ln s_{\max})$$
 
-At peak zoom ($s_{\max} = 6{,}400{,}000\times$, 100x deeper than the original 64,000x), inward velocity $\left.\frac{ds_{\text{in}}}{dp}\right|_{p=1} = 0$, bringing the plunge to a complete stop. The camera then smoothly accelerates outward with a logistic sigmoid return and 360° turnaround spin:
+At peak zoom ($s_{\max} = 64{,}000\times$, calibrated to prevent floating-point precision block quantization rectangles), inward velocity $\left.\frac{ds_{\text{in}}}{dp}\right|_{p=1} = 0$, bringing the plunge to a complete stop. Rotation speeds dynamically surge and ease through multi-stage harmonic modulation. The camera then smoothly accelerates outward with a logistic sigmoid return and 360° turnaround spin:
 
 $$\text{Zoom-Out } (q \in [0, 1]): \quad g(q) = \frac{\sigma(k(2q - 1)) - \sigma(-k)}{\sigma(k) - \sigma(-k)}, \quad \text{zoom}(q) = \exp((1 - g(q)) \cdot \ln s_{\max})$$
 
@@ -249,7 +249,7 @@ The audio engine features a persistent non-repeating shuffle pool stored in `loc
 │
 ├── celestial-odyssey/           # [04] 3-Act narrative journey with optical wavefronts
 ├── matrix-saga/                 # [05] 3-Stage cyberpunk infiltration & sacred AI mandala
-├── cosmic-infinity/             # [06] 6,400,000x ultra-zoom with relativistic S-curve return
+├── cosmic-infinity/             # [06] 64,000x deep zoom with relativistic S-curve return
 ├── vortex-metamorphosis/        # [07] 8-Phase Bezier SDF morphing & procedural VFX
 │
 ├── screenshots/                 # Landscape PNGs + Vertical Mobile Animated GIFs
