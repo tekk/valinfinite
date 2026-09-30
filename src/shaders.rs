@@ -23,44 +23,49 @@ void main() {
     // Aspect-ratio normalized coordinates, centered at origin
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / min(u_resolution.x, u_resolution.y);
 
-    // Continuous, buttery-smooth Shepard multi-scale infinite zoom synthesis
-    // Using 4 overlapping logarithmic octaves (scale factor S = 3.2 per octave)
+    // Continuous, hypnotic camera vortex rotation
+    float cam_rot = u_time * 0.40;
+    float ca_cam = cos(cam_rot);
+    float sa_cam = sin(cam_rot);
+    vec2 rot_uv = mat2(ca_cam, -sa_cam, sa_cam, ca_cam) * uv;
+
+    float dist_sq = dot(rot_uv, rot_uv);
+    float r_len = sqrt(dist_sq);
+
+    // Shepard multi-scale infinite zoom synthesis (4 overlapping logarithmic octaves)
     const float S = 3.2;
     const float lnS = 1.1631508; // ln(3.2)
     const int NUM_OCTAVES = 4;
-    const int ITERATIONS = 12;
+    const int ITERATIONS = 13;
 
     vec3 total_color = vec3(0.0);
     float total_weight = 0.0;
 
-    // Zoom speed: steady, uninterrupted inward motion
-    float zoom_speed = 0.35;
+    // Increased pace: exhilarating, fast-paced infinite plunge
+    float zoom_speed = 0.65;
     float base_time = u_time * zoom_speed;
 
-    // Psychedelic neon palette components
+    // Rich psychedelic neon palette components
     vec3 pal_a = vec3(0.5, 0.5, 0.5);
     vec3 pal_b = vec3(0.5, 0.5, 0.5);
     vec3 pal_c = vec3(1.0, 1.0, 1.0);
     vec3 pal_d = vec3(0.0, 0.33, 0.67);
 
-    // Completely continuous, mathematically smooth heartbeat glow pulsation
-    float beat_osc = sin(u_time * 6.2831853 * 1.15);
-    float glow_pulse = beat_osc * beat_osc * 0.45;
-
-    // Gentle global breathing sway
-    float sway = 0.06 * sin(u_time * 0.4);
-    float ca = cos(sway);
-    float sa = sin(sway);
+    // Dynamic internal breathing twist
+    float twist = 0.35 + 0.12 * sin(u_time * 0.75);
+    float ca_tw = cos(twist);
+    float sa_tw = sin(twist);
+    mat2 rot_tw = mat2(ca_tw, -sa_tw, sa_tw, ca_tw);
 
     for (int o = 0; o < NUM_OCTAVES; o++) {
         float phase = fract(base_time + float(o) * 0.25);
         float scale = exp(phase * lnS);
 
-        // Smooth Hanning window with quadratic taper for completely invisible octave crossfades
+        // Smooth Hanning window with quadratic taper for completely seamless infinite loop
         float w = 0.5 - 0.5 * cos(6.2831853 * phase);
         w = w * w;
 
-        vec2 z = uv * scale;
+        vec2 z = rot_uv * scale;
         float accum = 0.0;
         float min_trap = 1e8;
         float edge_trap = 1e8;
@@ -70,20 +75,23 @@ void main() {
             z.x = abs(z.x);
 
             // 2. Smooth heart cusp fold (cardioid cleft)
-            z.y -= 0.58 * (sqrt(z.x + 0.035) - 0.187);
+            z.y -= 0.60 * (sqrt(max(0.0, z.x) + 0.035) - 0.187);
 
-            // 3. Spherical inversion / Kaleidoscopic fractal chamber
+            // 3. Spherical inversion (creates recursive chambers)
             float r2 = dot(z, z) + 1e-4;
             if (r2 < 0.22) {
                 z *= (1.0 / 0.22);
-            } else if (r2 < 1.38) {
+            } else if (r2 < 1.40) {
                 z *= (1.0 / r2);
             }
 
-            // 4. Subtle rotation and scale expansion
-            z = mat2(ca, -sa, sa, ca) * z * 1.48 - vec2(0.18, 0.30);
+            // 4. Secondary box fold (fractal heart sub-structures)
+            z = abs(z) - vec2(0.08, 0.16);
 
-            // 5. Heart orbit trap
+            // 5. Dynamic vortex rotation & scale expansion
+            z = rot_tw * z * 1.50 - vec2(0.16, 0.28);
+
+            // 6. Heart orbit traps
             float hx = abs(z.x);
             float hy = z.y - 0.52 * (sqrt(hx + 0.035) - 0.187);
             float hd = length(vec2(hx, hy));
@@ -92,48 +100,53 @@ void main() {
             float et = abs(z.x * z.y);
             edge_trap = min(edge_trap, et);
 
-            accum += exp(-3.5 * hd) + 0.5 * exp(-7.0 * et);
+            accum += exp(-3.5 * hd) + 0.45 * exp(-7.0 * et);
         }
 
-        // Continuous multi-frequency color mapping
-        float color_coord = accum * 0.18 + min_trap * 1.4 + u_time * 0.42 + float(o) * 0.25;
-        vec3 col_layer = palette(color_coord, pal_a, pal_b, pal_c, pal_d);
+        // Dynamic multi-frequency color mapping
+        float color_coord = accum * 0.20 + min_trap * 1.4 + u_time * 0.55 + float(o) * 0.25;
+        vec3 col = palette(color_coord, pal_a, pal_b, pal_c, pal_d);
 
-        // Radiant neon aura surrounding heart contours
-        float aura = exp(-1.1 * min_trap);
+        // DARK ZONES: Deep cosmic shadows and negative space chasms
+        float chasm = 0.5 + 0.5 * cos(accum * 1.5 - min_trap * 3.5 + u_time * 1.6);
+        float shadow = pow(chasm, 2.2);
+
+        // Glowing neon aura along heart contours
+        float aura = exp(-1.8 * min_trap);
         vec3 neon = vec3(
-            0.65 + 0.35 * sin(u_time * 1.6 + color_coord * 4.0),
-            0.55 + 0.45 * cos(u_time * 1.9 + color_coord * 3.0),
-            0.85 + 0.15 * sin(u_time * 2.2 + color_coord * 5.0)
+            0.5 + 0.5 * sin(u_time * 1.8 + color_coord * 4.0),
+            0.5 + 0.5 * cos(u_time * 2.2 + color_coord * 3.0),
+            0.5 + 0.5 * sin(u_time * 2.6 + color_coord * 5.0 + 2.0)
         );
-        col_layer = mix(col_layer, neon, aura * 0.7);
 
-        // White-hot core singularity beam with smooth organic pulse
-        float core_dist = length(uv) * scale;
-        float core_beam = exp(-7.0 * core_dist) * (1.0 + glow_pulse);
-        col_layer += vec3(1.2, 0.55, 0.95) * core_beam * 2.2;
+        // Electric iridescent filament lines piercing through the darkness
+        float edge_line = exp(-12.0 * edge_trap);
+        vec3 filament_col = vec3(
+            0.5 + 0.5 * cos(color_coord * 6.0 + 0.0),
+            0.5 + 0.5 * cos(color_coord * 6.0 + 2.0),
+            0.5 + 0.5 * cos(color_coord * 6.0 + 4.0)
+        );
 
-        // Electric iridescent filament lines
-        float edge_line = exp(-11.0 * edge_trap);
-        col_layer += vec3(0.2, 0.95, 1.0) * edge_line * 0.9;
+        // Focused white-hot core singularity beam
+        float core_beam = exp(-8.0 * (r_len * scale));
 
-        total_color += col_layer * w;
+        vec3 layer_col = (col * 0.8 + neon * aura * 0.8) * shadow
+                       + edge_line * filament_col * 1.6
+                       + vec3(1.5, 0.8, 1.3) * core_beam;
+
+        total_color += layer_col * w;
         total_weight += w;
     }
 
     vec3 final_color = total_color / max(total_weight, 1e-5);
 
-    // Subtle chromatic dispersion at peripheral edges
-    float dist_sq = dot(uv, uv);
-    final_color.r += 0.07 * sin(dist_sq * 9.0 + u_time * 2.0);
-    final_color.b += 0.07 * cos(dist_sq * 8.0 - u_time * 2.5);
+    // Peripheral chromatic dispersion
+    final_color.r += 0.05 * sin(dist_sq * 10.0 + u_time * 2.5) * sqrt(dist_sq);
+    final_color.b += 0.05 * cos(dist_sq * 9.0 - u_time * 3.0) * sqrt(dist_sq);
 
-    // Soft peripheral vignette tailored for both portrait mobile & landscape
-    float vignette = clamp(1.0 - 0.22 * dist_sq, 0.0, 1.0);
-    final_color *= vignette;
-
-    // S-curve contrast and punchy vibrance
-    final_color = pow(max(final_color, vec3(0.0)), vec3(0.82));
+    // HIGH CONTRAST: Sigmoid S-curve with deep pitch-black shadows & electric highlights
+    vec3 c_pow = pow(max(final_color, vec3(0.0)), vec3(1.6));
+    final_color = (c_pow / (c_pow + vec3(0.16))) * 1.30;
     final_color = clamp(final_color, 0.0, 1.0);
 
     fragColor = vec4(final_color, 1.0);

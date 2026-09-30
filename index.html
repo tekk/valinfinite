@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>Valinfinite V1 • Celestial Heart</title>
+    <title>Valinfinite V2 • Vortex Void</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="loading-overlay">
         <div class="pulsing-heart">💖</div>
-        <div class="loading-text">Awakening V1 Celestial Heart...</div>
+        <div class="loading-text">Awakening V2 Vortex Void...</div>
     </div>
 
     <canvas id="fractal-canvas"></canvas>
@@ -18,7 +18,7 @@
     <!-- Floating HUD Controls -->
     <header class="hud-bar">
         <a href="../" class="hud-btn back-btn" title="Back to Hub">⬅ Portal</a>
-        <span class="hud-title">V1 • Celestial Heart</span>
+        <span class="hud-title">V2 • Vortex Void</span>
         <button id="audio-btn" class="hud-btn audio-btn" title="Toggle Music">
             <span class="eq-bars">
                 <span class="bar bar1"></span>
@@ -116,7 +116,7 @@
                     }
                 });
             } catch (err) {
-                console.error('Failed to launch V1:', err);
+                console.error('Failed to launch V2:', err);
                 const text = document.querySelector('.loading-text');
                 if (text) {
                     text.textContent = 'WebGL2 / WASM Error: ' + err;
