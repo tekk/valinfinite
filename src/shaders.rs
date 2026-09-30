@@ -48,54 +48,7 @@ vec2 get_glyph_sample(int cell_idx, vec2 local_uv, float lod) {
     return vec2(stroke, glow);
 }
 
-// Target words:
-// Word 0: VAL (3 chars: V=110, A=111, L=112)
-// Word 1: PETO (4 chars: P=115, E=116, T=117, O=118)
-// Word 2: TEKKITTY (8 chars: T=117, E=116, K=114, K=114, I=113, T=117, T=117, Y=119)
-// Word 3: TEKK (4 chars: T=117, E=116, K=114, K=114)
-// Word 4: TEKKO (5 chars: T=117, E=116, K=114, K=114, O=118)
-int get_word_letter(int word_id, int letter_pos) {
-    if (word_id == 0) { // VAL
-        if (letter_pos == 0) return 110;
-        if (letter_pos == 1) return 111;
-        if (letter_pos == 2) return 112;
-    } else if (word_id == 1) { // PETO
-        if (letter_pos == 0) return 115;
-        if (letter_pos == 1) return 116;
-        if (letter_pos == 2) return 117;
-        if (letter_pos == 3) return 118;
-    } else if (word_id == 2) { // TEKKITTY
-        if (letter_pos == 0) return 117;
-        if (letter_pos == 1) return 116;
-        if (letter_pos == 2) return 114;
-        if (letter_pos == 3) return 114;
-        if (letter_pos == 4) return 113;
-        if (letter_pos == 5) return 117;
-        if (letter_pos == 6) return 117;
-        if (letter_pos == 7) return 119;
-    } else if (word_id == 3) { // TEKK
-        if (letter_pos == 0) return 117;
-        if (letter_pos == 1) return 116;
-        if (letter_pos == 2) return 114;
-        if (letter_pos == 3) return 114;
-    } else if (word_id == 4) { // TEKKO
-        if (letter_pos == 0) return 117;
-        if (letter_pos == 1) return 116;
-        if (letter_pos == 2) return 114;
-        if (letter_pos == 3) return 114;
-        if (letter_pos == 4) return 118;
-    }
-    return 70;
-}
 
-int get_word_len(int word_id) {
-    if (word_id == 0) return 3;
-    if (word_id == 1) return 4;
-    if (word_id == 2) return 8;
-    if (word_id == 3) return 4;
-    if (word_id == 4) return 5;
-    return 4;
-}
 
 // Compute comprehensive Solar Flare / Sun Flare Effects
 vec3 compute_sun_flare(vec2 uv, vec2 sun_pos, float time) {
@@ -222,39 +175,21 @@ void main() {
     // Cell character UV with margin padding
     vec2 char_uv = vec2((fract_u - 0.12) / 0.76, (fract_v - 0.12) / 0.76);
 
-    // Determine glyph: Interleaved deciphering streams
+    // Determine glyph: Continuous deciphering cyber streams
     int glyph = 0;
-    bool is_target_letter = false;
+    bool is_deciphered = false;
 
-    int col_mod = int(mod(col_idx, 5.0));
-    if (col_mod >= 0 && col_mod <= 4) {
-        int word_id = col_mod; // 0: VAL, 1: PETO, 2: TEKKITTY, 3: TEKK, 4: TEKKO
-        int word_len = get_word_len(word_id);
-        int total_interleaved_span = word_len * 2; // Interleaved with cryptic symbols
-        
-        int row_in_block = int(mod(row_idx, 20.0));
-        if (row_in_block >= 0 && row_in_block < total_interleaved_span) {
-            float decipher_t = fract(u_time * 0.22 + col_seed);
-            if (decipher_t > 0.25) {
-                if (row_in_block % 2 == 0) {
-                    // Even row: Target word letter
-                    glyph = get_word_letter(word_id, row_in_block / 2);
-                    is_target_letter = true;
-                } else {
-                    // Odd row: Interleaved matrix symbol (rune / kanji / katakana)
-                    // Camouflages the target word so it is not easily distinguishable!
-                    glyph = int(mod(col_seed * 43.0 + float(row_in_block) * 17.0 + float(word_id) * 31.0, 95.0));
-                    is_target_letter = false;
-                }
-            } else {
-                // Scrambling / cryptographic decipher phase
-                glyph = int(mod(col_seed * 80.0 + row_idx * 17.0 + floor(u_time * 15.0), 95.0));
-            }
-        } else {
-            glyph = int(mod(col_seed * 113.0 + row_idx * 7.0 + floor(u_time * 4.0), 95.0));
-        }
+    // Stream cryptographic cycle:
+    // Periodically, rain streams decipher into luminous Kanji and sacred runes
+    float decipher_cycle = fract(u_time * 0.18 + col_seed);
+    int row_in_block = int(mod(row_idx, 16.0));
+    if (decipher_cycle > 0.35 && row_in_block >= 0 && row_in_block < 8) {
+        // Deciphered sacred glyph sequence (Kanji 46..69 & Runes 70..109)
+        glyph = int(mod(col_seed * 23.0 + float(row_in_block) * 7.0, 70.0));
+        is_deciphered = true;
     } else {
-        glyph = int(mod(col_seed * 113.0 + row_idx * 7.0 + floor(u_time * (3.0 + col_seed * 5.0)), 95.0));
+        // Fast-scrambling matrix rain code
+        glyph = int(mod(col_seed * 113.0 + row_idx * 7.0 + floor(u_time * (4.0 + col_seed * 6.0)), 110.0));
     }
 
     // Sample glyph strokes and bloom
@@ -267,11 +202,10 @@ void main() {
     float color_phase = z * 0.08 + col_idx * 0.06 + u_time * 0.35;
     vec3 neon_color = palette(color_phase);
 
-    if (is_target_letter) {
-        // Target letters blend with the stream with a subtle, elegant energy shimmer
-        // Interleaved and not overly contrasting so they are not trivially distinguishable
+    if (is_deciphered) {
+        // Deciphered glyphs pulse with an energetic crystalline luminescence
         vec3 decipher_shimmer = mix(neon_color, vec3(0.5, 1.0, 0.95), 0.35 + 0.15 * sin(u_time * 2.5 + float(glyph)));
-        neon_color = decipher_shimmer * 1.15;
+        neon_color = decipher_shimmer * 1.25;
     }
 
     // Head raindrop is blinding laser white-hot core
@@ -303,8 +237,8 @@ void main() {
 
     float ring_mask = smoothstep(0.12, 0.0, abs(ring_r - 0.72));
     if (ring_mask > 0.01) {
-        // Interleaved banners (200..209: V·A·L, P·E·T·O, T·E·K·K·I·T·T·Y, T·E·K·K, T·E·K·K·O, Japanese equivalents)
-        int banner_glyph = 200 + int(mod(ring_idx + floor(u_time * 0.2), 10.0));
+        // Floating holographic cyber banners (200..212)
+        int banner_glyph = 200 + int(mod(ring_idx + floor(u_time * 0.2), 13.0));
         vec2 banner_uv = vec2((ring_fract_u - 0.05) / 0.9, (fract(r_len * 4.0 - u_time * 0.2) - 0.1) / 0.8);
         vec2 b_sample = get_glyph_sample(banner_glyph, banner_uv, 0.0);
         

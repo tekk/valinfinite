@@ -56,12 +56,12 @@ $$u_{\text{cyl}} = \left(\frac{\phi + z \cdot \omega_{\text{twist}}}{2\pi} + \fr
 
 $$\text{col} = \lfloor u_{\text{cyl}} \rfloor, \quad \text{row} = \lfloor v_{\text{cyl}} \rfloor$$
 
-#### Interleaved Cipher Streams & Hardware Mipmap Bloom
+#### Deciphering Streams & Hardware Mipmap Bloom
 Stream intensity decomposes into a white-hot laser head and exponential phosphor decay:
 
 $$I(p) = \exp(-\gamma \cdot |p - 1.0|) + \alpha_{\text{ambient}}, \quad p = \mathrm{mod}(\text{row} + t \cdot v_{\text{stream}}, L)$$
 
-Target columns decrypt pseudo-random runes into camouflaged, steganographic cipher sequences (`VAL`, `PETO`, `TEKKITTY`, `TEKK`, `TEKKO`), interleaved character-by-character with arcane matrix glyphs and runes. Halo bloom is extracted directly via hardware texture LOD mipmaps:
+Target columns periodically decipher cascading code into luminous Kanji and sacred cybernetic runes. Halo bloom is extracted directly via hardware texture LOD mipmaps:
 
 $$I_{\text{glow}}(\mathbf{uv}) = \mathrm{tex}_{\mathrm{LOD}}(\mathbf{uv}, \lambda + 2.5)$$
 
