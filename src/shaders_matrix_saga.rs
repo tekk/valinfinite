@@ -262,20 +262,26 @@ vec3 render_scene1_gateway(vec2 uv, float t) {
     bool is_intended_word = false;
 
     float col_h = hash11(sky_col_idx * 17.31 + 4.19);
-    int word_id = int(mod(col_h * 9.0 + floor(t * 0.10), 9.0));
+    // Sparsely distributed words across columns (~25% of columns contain an intended word)
+    bool col_has_word = (hash11(sky_col_idx * 31.73 + 11.45) > 0.72);
+    int word_id = int(mod(col_h * 9.0 + floor(t * 0.08), 9.0));
     int word_len = get_word_length(word_id);
-    int row_in_block = int(mod(rain_row, 16.0));
-    int word_start = int(mod(col_h * 11.0, 16.0 - float(word_len)));
+    int row_in_block = int(mod(rain_row, 24.0));
+    int word_start = int(mod(col_h * 11.0, 24.0 - float(word_len)));
 
-    if (row_in_block >= word_start && row_in_block < word_start + word_len) {
+    if (col_has_word && row_in_block >= word_start && row_in_block < word_start + word_len) {
         int pos = row_in_block - word_start;
         glyph = get_intended_word_glyph(word_id, pos);
         is_intended_word = true;
     } else {
-        // Surrounding matrix characters: katakana (0..45), kanji (46..69), runes (70..109), symbols (130..148)
-        glyph = int(mod(sky_seed * 73.0 + rain_row * 3.0 + floor(t * 3.0), 105.0));
-        if (glyph >= 46 && glyph < 70 && hash11(float(glyph) + sky_col_idx) > 0.45) {
-            glyph += 24; // shift into runes
+        // Surrounding matrix characters: Katakana (0..45), Numbers 0-9 (70..109), Kanji (46..69)
+        float char_sel = hash11(sky_seed * 73.0 + rain_row * 3.1 + floor(t * 3.0));
+        if (char_sel < 0.45) {
+            glyph = int(mod(char_sel * 100.0, 46.0));
+        } else if (char_sel < 0.78) {
+            glyph = 70 + int(mod(char_sel * 100.0, 10.0));
+        } else {
+            glyph = 46 + int(mod(char_sel * 100.0, 24.0));
         }
     }
 
@@ -283,16 +289,15 @@ vec3 render_scene1_gateway(vec2 uv, float t) {
     
     vec3 rain_col = mix(vec3(0.1, 0.9, 0.4), vec3(0.2, 0.85, 1.0), sky_seed);
     if (is_intended_word) {
-        // Intact intended words pulse with crystalline cyber-sapphire & gold luminescence
-        vec3 word_lum = mix(vec3(0.2, 0.95, 1.2), vec3(1.2, 1.1, 0.85), 0.5 + 0.5 * sin(t * 2.5 + float(glyph)));
-        rain_col = word_lum * 1.35;
+        // Naturally blended with matrix rain color - subtle harmonic cyan shimmer rather than bright highlight
+        rain_col = mix(rain_col, vec3(0.25, 0.95, 0.85), 0.20);
     } else if (rain_pos < 1.3) {
         rain_col = vec3(1.25, 1.35, 1.5); // laser head (moderated flare)
     }
     
     float glyph_vis = g_samp.x * 1.6 + g_samp.x * g_samp.y * 0.8;
+    // Naturally follows the rain pulse down the column (no jarring permanent illumination)
     float rain_light = (drop_head * 1.4 + drop_tail * 0.6) * glyph_vis;
-    if (is_intended_word) rain_light = max(rain_light, 0.95 * (g_samp.x * 1.8 + g_samp.x * g_samp.y * 0.9));
     col += rain_col * rain_light;
     
     // Glowing neon horizon line (moderated flare)
@@ -351,14 +356,16 @@ vec3 render_scene2_vortex(vec2 uv, float t) {
     bool is_intended_word = false;
 
     float col_h = hash11(col_idx * 19.17 + 8.31);
-    int word_id = int(mod(col_h * 9.0 + floor(t * 0.10), 9.0));
+    // Sparsely distributed words in vortex columns (~25% of columns)
+    bool col_has_word = (hash11(col_idx * 37.43 + 19.1) > 0.74);
+    int word_id = int(mod(col_h * 9.0 + floor(t * 0.08), 9.0));
     int word_len = get_word_length(word_id);
 
-    int row_in_block = int(mod(row_idx, 16.0));
-    int word_start = int(mod(col_h * 11.0, 16.0 - float(word_len)));
+    int row_in_block = int(mod(row_idx, 24.0));
+    int word_start = int(mod(col_h * 11.0, 24.0 - float(word_len)));
 
-    float decipher_cycle = fract(t * 0.18 + col_seed);
-    if (decipher_cycle > 0.30 && row_in_block >= word_start && row_in_block < word_start + word_len) {
+    float decipher_cycle = fract(t * 0.14 + col_seed);
+    if (col_has_word && decipher_cycle > 0.45 && row_in_block >= word_start && row_in_block < word_start + word_len) {
         int pos = row_in_block - word_start;
         glyph = get_intended_word_glyph(word_id, pos);
         is_intended_word = true;
@@ -384,22 +391,22 @@ vec3 render_scene2_vortex(vec2 uv, float t) {
     vec3 neon_color = palette(color_phase);
 
     if (is_intended_word) {
-        vec3 decipher_shimmer = mix(vec3(0.2, 0.95, 1.2), vec3(1.15, 1.1, 0.85), 0.5 + 0.5 * sin(t * 2.5 + float(glyph)));
-        neon_color = decipher_shimmer * 1.35;
+        // Softly integrate with the tunnel's procedural neon palette
+        neon_color = mix(neon_color, vec3(0.5, 0.95, 1.1), 0.20);
     } else if (is_head) {
         neon_color = mix(neon_color, vec3(1.25, 1.35, 1.5), 0.85); // moderated flare
     }
 
+    // Stream light naturally travels down the column without forced artificial boost
     float stream_light = 0.22 + 0.78 * tail_intensity;
-    if (is_intended_word) stream_light = max(stream_light, 1.1);
-    else if (is_head) stream_light = 1.3;
+    if (is_head) stream_light = 1.3;
     float glyph_vis = stroke * 1.8 + stroke * glow * 0.9;
     vec3 tunnel_color = neon_color * glyph_vis * stream_light;
 
     float fog = 1.0 - smoothstep(1.8, 32.0, z);
     col += tunnel_color * fog;
 
-    // Floating 3D holographic word banners (200..208)
+    // Floating 3D holographic word banners: ethereal subtle ghost watermark
     float ring_r = r_len * (1.6 + 0.4 * sin(t * 0.8));
     float ring_phi = phi - t * 0.5;
     const float RING_BANNERS = 8.0;
@@ -415,9 +422,10 @@ vec3 render_scene2_vortex(vec2 uv, float t) {
                        * smoothstep(0.0, 0.08, banner_uv.y) * (1.0 - smoothstep(0.92, 1.0, banner_uv.y));
         vec2 b_sample = (b_bounds > 0.001) ? get_glyph_sample(banner_glyph, banner_uv, 0.0) * b_bounds : vec2(0.0);
         
-        vec3 holo_col = palette(ring_idx * 0.25 - t * 0.3) * 1.5;
-        holo_col += vec3(0.4, 0.8, 1.0) * b_sample.y * 1.0;
-        col += holo_col * (b_sample.x * 1.8 + b_sample.y * 0.5) * ring_mask;
+        vec3 holo_col = palette(ring_idx * 0.25 - t * 0.3) * 0.55;
+        holo_col += vec3(0.2, 0.5, 0.7) * b_sample.y * 0.3;
+        float banner_pulse = 0.22 + 0.14 * sin(t * 1.4 + ring_idx * 1.5);
+        col += holo_col * (b_sample.x * 0.35 + b_sample.y * 0.12) * ring_mask * banner_pulse;
     }
 
     // Deep central singularity glow (moderated flare)

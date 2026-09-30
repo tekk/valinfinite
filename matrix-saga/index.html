@@ -110,8 +110,10 @@
 
             for (const [idxStr, text] of Object.entries(banners)) {
                 const idx = parseInt(idxStr, 10);
-                const size = text.length > 5 ? 14 : (text.length > 3 ? 18 : 24);
+                const size = text.length > 5 ? 13 : (text.length > 3 ? 16 : 22);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
                 drawCell(idx, text, size);
+                ctx.fillStyle = '#ffffff';
             }
             return atlasCanvas;
         }
