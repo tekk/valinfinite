@@ -2,130 +2,263 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#000000">
-    <title>Valinfinite V2 • Vortex Void</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#030008">
+    <meta name="description" content="VALINFINITE - Infinite Real-Time GPU Heart Fractal Zooming in WebAssembly and WebGL2.">
+    <title>VALINFINITE • Infinite GPU Heart Fractal Zoom</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="loading-overlay">
-        <div class="pulsing-heart">💖</div>
-        <div class="loading-text">Awakening V2 Vortex Void...</div>
-    </div>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
 
-    <canvas id="fractal-canvas"></canvas>
+    <main class="portal-container">
+        <!-- Hero Header -->
+        <header class="hero-section">
+            <div class="brand-badge">✨ WebAssembly + WebGL2 GPU Engine</div>
+            <h1 class="portal-title">VALINFINITE</h1>
+            <p class="portal-tagline">Infinite Real-Time Heart Fractal Zooming</p>
+            <p class="portal-description">
+                Experience infinite, scale-invariant GPU fractals with vivid psychedelic colors and zero precision breakdown. Optimized for buttery smooth 60–120 FPS on mobile (Samsung Galaxy S22) & desktop.
+            </p>
+        </header>
 
-    <!-- Floating HUD Controls -->
-    <header class="hud-bar">
-        <a href="../" class="hud-btn back-btn" title="Back to Hub">⬅ Portal</a>
-        <span class="hud-title">V2 • Vortex Void</span>
-        <button id="audio-btn" class="hud-btn audio-btn" title="Toggle Music">
-            <span class="eq-bars">
+        <!-- Version Selector Cards -->
+        <section class="cards-grid">
+            <!-- Card V1 -->
+            <article class="fractal-card" id="card-v1" data-version="v1">
+                <div class="card-image-wrap">
+                    <img src="screenshots/v1_preview.png" alt="Valinfinite V1 Celestial Heart" loading="lazy">
+                    <span class="card-badge badge-v1">Branch: v1</span>
+                    <button class="card-play-overlay" aria-label="Launch V1 with Music">
+                        <span class="play-icon">▶</span>
+                        <span class="play-label">Launch with Music</span>
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h2 class="card-title">V1 • Celestial Heart</h2>
+                        <span class="card-pill">Serene & Pure</span>
+                    </div>
+                    <p class="card-desc">
+                        A smooth, meditative plunge into glowing recursive heart cardioids. Features continuous unidirectional zoom, gentle organic light pulse, and an iridescent celestial spectrum.
+                    </p>
+                    <ul class="card-features">
+                        <li>✦ Steady, relaxing zoom velocity</li>
+                        <li>✦ Smooth organic heartbeat glow modulation</li>
+                        <li>✦ Symmetrical recursive heart chambers</li>
+                        <li>✦ Zero-stutter continuous scale synthesis</li>
+                    </ul>
+                    <div class="card-actions">
+                        <button class="btn btn-primary launch-btn" data-target="v1">
+                            <span class="btn-icon">⚡</span> Launch V1
+                        </button>
+                        <a href="v1/?play=1" class="btn btn-secondary direct-link">
+                            Direct URL ↗
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card V2 -->
+            <article class="fractal-card" id="card-v2" data-version="v2">
+                <div class="card-image-wrap">
+                    <img src="screenshots/v2_preview.png" alt="Valinfinite V2 Vortex Void" loading="lazy">
+                    <span class="card-badge badge-v2">Branch: v2</span>
+                    <button class="card-play-overlay" aria-label="Launch V2 with Music">
+                        <span class="play-icon">▶</span>
+                        <span class="play-label">Launch with Music</span>
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h2 class="card-title">V2 • Vortex Void</h2>
+                        <span class="card-pill pill-v2">Dynamic & Psychedelic</span>
+                    </div>
+                    <p class="card-desc">
+                        Accelerated pace and continuous vortex rotation. Carves deep cosmic chasms with velvet dark zones, high-contrast S-curve tone mapping, and radiant iridescent laser filaments.
+                    </p>
+                    <ul class="card-features">
+                        <li>✦ 2× Accelerated zoom pace</li>
+                        <li>✦ Hypnotic continuous camera vortex rotation</li>
+                        <li>✦ Cosmic dark zones & deep contrast chasms</li>
+                        <li>✦ Iridescent multi-tier laser filigrees</li>
+                    </ul>
+                    <div class="card-actions">
+                        <button class="btn btn-primary btn-v2 launch-btn" data-target="v2">
+                            <span class="btn-icon">⚡</span> Launch V2
+                        </button>
+                        <a href="v2/?play=1" class="btn btn-secondary direct-link">
+                            Direct URL ↗
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <!-- Specifications Footer -->
+        <footer class="portal-footer">
+            <div class="spec-items">
+                <div class="spec-item">
+                    <span class="spec-label">Mobile Target</span>
+                    <span class="spec-val">Samsung Galaxy S22 (Adreno 730 / Xclipse 920)</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Engine</span>
+                    <span class="spec-val">Rust + wasm-bindgen + WebGL2 (GLSL 300 es)</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Precision</span>
+                    <span class="spec-val">Infinite Shepard Multi-Scale Synthesis</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Soundtrack</span>
+                    <span class="spec-val">Brookes Brothers - Beautiful feat. Robert Owens</span>
+                </div>
+            </div>
+            <p class="repo-link">
+                GitHub Repository: <a href="https://github.com/tekk/valinfinite" target="_blank" rel="noopener">github.com/tekk/valinfinite</a>
+            </p>
+        </footer>
+    </main>
+
+    <!-- Global Floating Music Player -->
+    <div id="music-player-bar" class="music-player-bar">
+        <div class="player-track-info">
+            <div class="player-eq">
                 <span class="bar bar1"></span>
                 <span class="bar bar2"></span>
                 <span class="bar bar3"></span>
-            </span>
-            <span id="audio-text">Play Audio</span>
-        </button>
-    </header>
+                <span class="bar bar4"></span>
+            </div>
+            <div class="track-details">
+                <span class="track-title">Beautiful feat. Robert Owens</span>
+                <span class="track-artist">Brookes Brothers (Original Mix)</span>
+            </div>
+        </div>
+        <div class="player-controls">
+            <button id="player-play-btn" class="player-btn" aria-label="Toggle Play">
+                <span id="player-play-icon">▶</span>
+            </button>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.8" aria-label="Volume">
+        </div>
+    </div>
 
-    <audio id="bg-music" loop preload="auto">
-        <source src="../audio/music.m4a" type="audio/mp4">
-        <source src="../audio/music.mp3" type="audio/mpeg">
+    <!-- Fullscreen Immersive Modal Viewport -->
+    <div id="immersive-modal" class="immersive-modal">
+        <header class="modal-header">
+            <button id="modal-back-btn" class="modal-btn">⬅ Exit to Portal</button>
+            <span id="modal-version-title" class="modal-title">VALINFINITE</span>
+            <div class="modal-right">
+                <button id="modal-audio-btn" class="modal-btn">Toggle Audio</button>
+                <a id="modal-direct-btn" href="#" class="modal-btn" target="_blank" rel="noopener">Open Standalone ↗</a>
+            </div>
+        </header>
+        <iframe id="modal-frame" src="" title="Fractal Viewer" allow="autoplay"></iframe>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="global-music" loop preload="auto">
         <source src="audio/music.m4a" type="audio/mp4">
         <source src="audio/music.mp3" type="audio/mpeg">
     </audio>
 
-    <script type="module">
-        import init, { start_fractal } from './pkg/wasm_infinite_gpu_fractal.js';
+    <script>
+        const audio = document.getElementById('global-music');
+        const playerBar = document.getElementById('music-player-bar');
+        const playBtn = document.getElementById('player-play-btn');
+        const playIcon = document.getElementById('player-play-icon');
+        const volSlider = document.getElementById('volume-slider');
+        const modal = document.getElementById('immersive-modal');
+        const modalFrame = document.getElementById('modal-frame');
+        const modalBackBtn = document.getElementById('modal-back-btn');
+        const modalTitle = document.getElementById('modal-version-title');
+        const modalAudioBtn = document.getElementById('modal-audio-btn');
+        const modalDirectBtn = document.getElementById('modal-direct-btn');
 
-        const audio = document.getElementById('bg-music');
-        const audioBtn = document.getElementById('audio-btn');
-        const audioText = document.getElementById('audio-text');
-        let audioPlaying = false;
+        let isPlaying = false;
 
-        function updateAudioUI() {
-            if (audioPlaying) {
-                audioBtn.classList.add('playing');
-                audioText.textContent = 'Pause Music';
+        function updatePlayState(playing) {
+            isPlaying = playing;
+            if (isPlaying) {
+                playerBar.classList.add('is-playing');
+                playIcon.textContent = '❚❚';
+                modalAudioBtn.textContent = 'Pause Music';
             } else {
-                audioBtn.classList.remove('playing');
-                audioText.textContent = 'Play Music';
+                playerBar.classList.remove('is-playing');
+                playIcon.textContent = '▶';
+                modalAudioBtn.textContent = 'Play Music';
             }
         }
 
-        async function toggleAudio() {
-            if (!audio) return;
+        async function startMusic() {
             try {
                 if (audio.paused) {
                     await audio.play();
-                    audioPlaying = true;
-                } else {
-                    audio.pause();
-                    audioPlaying = false;
+                    updatePlayState(true);
                 }
             } catch (err) {
-                console.warn('Audio play request prevented:', err);
+                console.warn('Autoplay prevented:', err);
             }
-            updateAudioUI();
         }
 
-        audioBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleAudio();
+        async function toggleMusic() {
+            if (audio.paused) {
+                await audio.play();
+                updatePlayState(true);
+            } else {
+                audio.pause();
+                updatePlayState(false);
+            }
+        }
+
+        playBtn.addEventListener('click', toggleMusic);
+        modalAudioBtn.addEventListener('click', toggleMusic);
+
+        volSlider.addEventListener('input', (e) => {
+            audio.volume = parseFloat(e.target.value);
         });
 
-        // Trigger on first screen tap if query param play=1 or user taps
-        const urlParams = new URLSearchParams(window.location.search);
-        const shouldPlay = urlParams.get('play') === '1' || urlParams.get('audio') === '1';
-
-        function handleFirstInteraction() {
-            if (shouldPlay && !audioPlaying) {
-                audio.play().then(() => {
-                    audioPlaying = true;
-                    updateAudioUI();
-                }).catch(() => {});
-            }
-            window.removeEventListener('click', handleFirstInteraction);
-            window.removeEventListener('touchstart', handleFirstInteraction);
+        // Launch Animation
+        function launchAnimation(version) {
+            startMusic();
+            modalTitle.textContent = version === 'v1' ? 'V1 • Celestial Heart' : 'V2 • Vortex Void';
+            modalDirectBtn.href = `${version}/?play=1`;
+            modalFrame.src = `${version}/index.html`;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        window.addEventListener('click', handleFirstInteraction);
-        window.addEventListener('touchstart', handleFirstInteraction, { passive: true });
+        function closeModal() {
+            modal.classList.remove('active');
+            modalFrame.src = '';
+            document.body.style.overflow = '';
+        }
 
-        // Auto-play attempt if allowed
-        if (shouldPlay) {
-            audio.play().then(() => {
-                audioPlaying = true;
-                updateAudioUI();
-            }).catch(() => {
-                // Will play on first click
+        modalBackBtn.addEventListener('click', closeModal);
+
+        // Bind Launch buttons & card overlays
+        document.querySelectorAll('.launch-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = btn.getAttribute('data-target');
+                launchAnimation(target);
             });
-        }
+        });
 
-        async function launch() {
-            try {
-                await init();
-                start_fractal('fractal-canvas');
+        document.querySelectorAll('.card-play-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                const card = overlay.closest('.fractal-card');
+                const target = card.getAttribute('data-version');
+                launchAnimation(target);
+            });
+        });
 
-                requestAnimationFrame(() => {
-                    const loader = document.getElementById('loading-overlay');
-                    if (loader) {
-                        loader.style.opacity = '0';
-                        setTimeout(() => loader.remove(), 250);
-                    }
-                });
-            } catch (err) {
-                console.error('Failed to launch V2:', err);
-                const text = document.querySelector('.loading-text');
-                if (text) {
-                    text.textContent = 'WebGL2 / WASM Error: ' + err;
-                    text.style.color = '#ff4444';
-                }
+        // Keyboard ESC to close modal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
             }
-        }
-
-        window.addEventListener('DOMContentLoaded', launch);
+        });
     </script>
 </body>
 </html>

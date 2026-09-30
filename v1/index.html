@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Valinfinite V1 • Celestial Heart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="pulsing-heart">💖</div>
+        <div class="loading-text">Awakening V1 Celestial Heart...</div>
+    </div>
+
+    <canvas id="fractal-canvas"></canvas>
+
+    <!-- Floating HUD Controls -->
+    <header class="hud-bar">
+        <a href="../" class="hud-btn back-btn" title="Back to Hub">⬅ Portal</a>
+        <span class="hud-title">V1 • Celestial Heart</span>
+        <button id="audio-btn" class="hud-btn audio-btn" title="Toggle Music">
+            <span class="eq-bars">
+                <span class="bar bar1"></span>
+                <span class="bar bar2"></span>
+                <span class="bar bar3"></span>
+            </span>
+            <span id="audio-text">Play Audio</span>
+        </button>
+    </header>
+
+    <audio id="bg-music" loop preload="auto">
+        <source src="../audio/music.m4a" type="audio/mp4">
+        <source src="../audio/music.mp3" type="audio/mpeg">
+        <source src="audio/music.m4a" type="audio/mp4">
+        <source src="audio/music.mp3" type="audio/mpeg">
+    </audio>
+
+    <script type="module">
+        import init, { start_fractal } from './pkg/wasm_infinite_gpu_fractal.js';
+
+        const audio = document.getElementById('bg-music');
+        const audioBtn = document.getElementById('audio-btn');
+        const audioText = document.getElementById('audio-text');
+        let audioPlaying = false;
+
+        function updateAudioUI() {
+            if (audioPlaying) {
+                audioBtn.classList.add('playing');
+                audioText.textContent = 'Pause Music';
+            } else {
+                audioBtn.classList.remove('playing');
+                audioText.textContent = 'Play Music';
+            }
+        }
+
+        async function toggleAudio() {
+            if (!audio) return;
+            try {
+                if (audio.paused) {
+                    await audio.play();
+                    audioPlaying = true;
+                } else {
+                    audio.pause();
+                    audioPlaying = false;
+                }
+            } catch (err) {
+                console.warn('Audio play request prevented:', err);
+            }
+            updateAudioUI();
+        }
+
+        audioBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleAudio();
+        });
+
+        // Trigger on first screen tap if query param play=1 or user taps
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldPlay = urlParams.get('play') === '1' || urlParams.get('audio') === '1';
+
+        function handleFirstInteraction() {
+            if (shouldPlay && !audioPlaying) {
+                audio.play().then(() => {
+                    audioPlaying = true;
+                    updateAudioUI();
+                }).catch(() => {});
+            }
+            window.removeEventListener('click', handleFirstInteraction);
+            window.removeEventListener('touchstart', handleFirstInteraction);
+        }
+
+        window.addEventListener('click', handleFirstInteraction);
+        window.addEventListener('touchstart', handleFirstInteraction, { passive: true });
+
+        // Auto-play attempt if allowed
+        if (shouldPlay) {
+            audio.play().then(() => {
+                audioPlaying = true;
+                updateAudioUI();
+            }).catch(() => {
+                // Will play on first click
+            });
+        }
+
+        async function launch() {
+            try {
+                await init();
+                start_fractal('fractal-canvas');
+
+                requestAnimationFrame(() => {
+                    const loader = document.getElementById('loading-overlay');
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        setTimeout(() => loader.remove(), 250);
+                    }
+                });
+            } catch (err) {
+                console.error('Failed to launch V1:', err);
+                const text = document.querySelector('.loading-text');
+                if (text) {
+                    text.textContent = 'WebGL2 / WASM Error: ' + err;
+                    text.style.color = '#ff4444';
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', launch);
+    </script>
+</body>
+</html>
