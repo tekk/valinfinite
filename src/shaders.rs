@@ -11,6 +11,7 @@ precision highp float;
 
 uniform vec2 u_resolution;
 uniform float u_time;
+uniform sampler2D u_fontTexture;
 
 out vec4 fragColor;
 
@@ -18,267 +19,350 @@ out vec4 fragColor;
 #define TWO_PI 6.28318530718
 
 // =========================================================================
-// 1. DYNAMIC VIVID COLOR PALETTES ACROSS STORY CHAPTERS
+// 1. UTILITY FUNCTIONS & HIGH-PERFORMANCE HASHES
 // =========================================================================
-// Cosine color palette generator (Inigo Quilez) calibrated for vivid contrast
-vec3 palette(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
+float hash11(float p) {
+    p = fract(p * 0.1031);
+    p *= p + 33.33;
+    p *= p + p;
+    return fract(p);
+}
+
+float hash21(vec2 p) {
+    vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+}
+
+// Multi-spectral psychedelic neon palette (Inigo Quilez cosine generator)
+vec3 palette(float t) {
+    vec3 a = vec3(0.5, 0.5, 0.5);
+    vec3 b = vec3(0.5, 0.5, 0.5);
+    vec3 c = vec3(1.0, 1.0, 1.0);
+    vec3 d = vec3(0.0, 0.33, 0.67);
     return clamp(a + b * cos(TWO_PI * (c * t + d)), 0.0, 1.0);
 }
 
-// Act 1: Celestial Sapphire, Deep Ruby & Electric Violet on Cosmic Indigo Abyss
-vec3 palette_act1(float t) {
-    return palette(t, vec3(0.38, 0.22, 0.52), vec3(0.42, 0.38, 0.50), vec3(1.0, 1.0, 1.0), vec3(0.04, 0.33, 0.67));
+// Sample glyph from 16x16 font atlas
+// cell_idx in 0..255, local_uv in [0..1]
+vec2 get_glyph_sample(int cell_idx, vec2 local_uv, float lod) {
+    if (local_uv.x < 0.04 || local_uv.x > 0.96 || local_uv.y < 0.04 || local_uv.y > 0.96) {
+        return vec2(0.0);
+    }
+    float c = float(cell_idx % 16);
+    float r = float(cell_idx / 16);
+    vec2 atlas_uv = vec2((c + clamp(local_uv.x, 0.0, 1.0)) / 16.0, (r + clamp(local_uv.y, 0.0, 1.0)) / 16.0);
+    
+    float stroke = textureLod(u_fontTexture, atlas_uv, lod).r;
+    float glow = textureLod(u_fontTexture, atlas_uv, lod + 2.5).r;
+    return vec2(stroke, glow);
 }
 
-// Act 2: Emerald Aurora, Deep Jade, Electric Cyan & Radiant Sacred Gold
-vec3 palette_act2(float t) {
-    return palette(t, vec3(0.24, 0.44, 0.40), vec3(0.36, 0.46, 0.42), vec3(1.0, 0.95, 1.1), vec3(0.14, 0.48, 0.80));
+// =========================================================================
+// 2. MODERATED SUN FLARE EFFECTS (Crisp, non-blinding)
+// =========================================================================
+vec3 compute_sun_flare(vec2 uv, vec2 sun_pos, float time) {
+    vec2 sun_d = uv - sun_pos;
+    float sun_r = length(sun_d);
+    float sun_phi = atan(sun_d.y, sun_d.x);
+
+    // 1. Incandescent Solar Core & Corona (tuned for brilliance without washing out the entire screen)
+    float disc = exp(-sun_r * 38.0) * 1.4;
+    float inner_corona = exp(-sun_r * 11.0) * 0.55;
+    float outer_corona = exp(-sun_r * 3.8) * 0.18;
+    vec3 solar_core = vec3(1.2, 1.15, 1.0) * disc 
+                    + vec3(1.10, 0.80, 0.40) * inner_corona
+                    + vec3(0.85, 0.50, 0.20) * outer_corona;
+
+    // 2. Multi-Harmonic Diffraction Starburst Rays (Sun Flare Spikes)
+    float rays_8 = max(0.0, cos(8.0 * sun_phi + time * 0.28));
+    float rays_12 = max(0.0, cos(12.0 * sun_phi - time * 0.19 + 0.6));
+    float starburst = pow(rays_8, 6.0) * 0.7 + pow(rays_12, 8.0) * 0.45;
+    float shimmer = 0.75 + 0.25 * hash11(floor(sun_phi * 36.0) + floor(time * 14.0));
+    float ray_intensity = starburst * exp(-sun_r * 3.4) * shimmer;
+    vec3 ray_col = vec3(1.15, 0.95, 0.60) * ray_intensity;
+
+    // 3. Cinematic Anamorphic Horizontal Flare Beam
+    vec2 anamorphic_d = vec2(sun_d.x * 0.98 + sun_d.y * 0.17, -sun_d.x * 0.17 + sun_d.y * 0.98);
+    float streak = exp(-abs(anamorphic_d.y) * 55.0) * exp(-abs(anamorphic_d.x) * 1.6) * 0.65;
+    vec3 streak_col = vec3(
+        streak * 1.10,
+        streak * 0.80,
+        streak * 1.30
+    );
+
+    // 4. Secondary Ghost Flares & Rainbow Rings
+    vec3 ghosts = vec3(0.0);
+    vec2 flare_axis = -sun_pos;
+    for (float g = 1.0; g <= 4.0; g += 1.0) {
+        vec2 g_center = sun_pos + flare_axis * (g * 0.42);
+        float g_dist = length(uv - g_center);
+        float g_size = 0.04 * g;
+        float g_ring = exp(-pow((g_dist - g_size) * 35.0, 2.0)) * 0.20;
+        vec3 g_color = palette(g * 0.25 + time * 0.1);
+        ghosts += g_color * g_ring;
+    }
+
+    return (solar_core + ray_col + streak_col + ghosts) * 0.55;
 }
 
-// Act 3: Solar Plasma, Obsidian Crimson, Intense Vermilion & Molten Gold
-vec3 palette_act3(float t) {
-    return palette(t, vec3(0.46, 0.22, 0.10), vec3(0.48, 0.34, 0.22), vec3(1.1, 1.0, 0.8), vec3(0.00, 0.25, 0.55));
+// =========================================================================
+// 3. STAR TREK HYPERSPACE PARALLAX STARFIELD
+// =========================================================================
+vec3 render_startrek_starfield(vec2 p, float t, float warp_factor) {
+    if (warp_factor <= 0.005) return vec3(0.0);
+    
+    vec3 stars = vec3(0.0);
+    float r = length(p);
+    float phi = atan(p.y, p.x);
+    float phi_norm = (phi / TWO_PI) + 0.5;
+
+    // 3 Parallax Depth Tiers: Fast Foreground, Midground, Deep Starlight
+    for (int tier = 0; tier < 3; tier++) {
+        float f_tier = float(tier);
+        float num_rays = 44.0 + f_tier * 22.0;
+        float sector = floor(phi_norm * num_rays);
+        float s_hash = hash11(sector * 23.41 + f_tier * 91.17);
+        float s_hash2 = hash11(sector * 67.89 + f_tier * 13.51);
+
+        float ray_phi = (sector + 0.15 + 0.70 * s_hash) / num_rays * TWO_PI - PI;
+        float ang_diff = abs(phi - ray_phi);
+        if (ang_diff > PI) ang_diff = TWO_PI - ang_diff;
+        float d_perp = r * sin(ang_diff);
+
+        // Speed surges during hyperspace acceleration
+        float speed = (2.4 + 5.5 * warp_factor) * (0.85 + 0.35 * f_tier);
+        float z = fract(s_hash2 + t * speed * 0.18);
+        
+        float r_star = 0.04 + pow(z, 1.8) * 1.40;
+        float streak_len = (0.04 + 0.38 * warp_factor) * pow(z, 1.2) * 0.70;
+        
+        float r_diff = r_star - r;
+        if (r_diff >= -0.010 && r_diff <= streak_len && d_perp < 0.004) {
+            float h = clamp(r_diff / max(1e-4, streak_len), 0.0, 1.0);
+            
+            float streak_core = exp(-d_perp * 1600.0) * (1.0 - h * 0.75);
+            float streak_glow = exp(-d_perp * 400.0) * 0.25 * (1.0 - h * 0.6);
+            
+            float head_dist = length(p - vec2(cos(ray_phi), sin(ray_phi)) * r_star);
+            float head = exp(-head_dist * 220.0) * 1.8;
+
+            vec3 star_color = mix(vec3(0.35, 0.85, 1.2), vec3(0.95, 0.98, 1.0), 1.0 - h);
+            if (s_hash > 0.82) star_color = mix(star_color, vec3(1.2, 0.95, 0.6), 0.6);
+
+            stars += (star_color * (streak_core * 1.5 + streak_glow * 0.45) + vec3(1.3, 1.4, 1.7) * head) 
+                   * (0.6 + 0.4 * s_hash);
+        }
+    }
+
+    return stars * warp_factor;
 }
 
-// ACES Filmic Tone Mapping for cinematic HDR range
-vec3 aces_tonemap(vec3 x) {
-    const float a = 2.51;
-    const float b = 0.03;
-    const float c = 2.43;
-    const float d = 0.59;
-    const float e = 0.14;
-    return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
-}
-
+// =========================================================================
+// 4. MAIN SHADER: CLASSIC CYLINDRICAL MATRIX VORTEX TUNNEL
+// =========================================================================
 void main() {
     vec2 raw_uv = (gl_FragCoord.xy - 0.5 * u_resolution) / min(u_resolution.x, u_resolution.y);
 
-    // =========================================================================
-    // 3. MACRO STORY TIMELINE (72.0s CYCLE)
-    // =========================================================================
-    // Act 1: The Celestial Genesis & Sacred Heart (0.0s - 20.0s)
-    // Crossing 1: Solar Caustic Refraction Sweep (20.0s - 24.0s)
-    // Act 2: Kaleidoscopic Vortex & Mandala Bloom (24.0s - 44.0s)
-    // Crossing 2: Gravitational Singularity Ripple (44.0s - 48.0s)
-    // Act 3: Supernova Storm & Relativistic Astral Fire (48.0s - 68.0s)
-    // Crossing 3: Celestial Aurora Rebirth Curtain (68.0s - 72.0s)
-    const float CYCLE_DURATION = 72.0;
-    float macro_t = mod(u_time * 0.92, CYCLE_DURATION);
-
-    // Continuous smoothly integrated zoom time (monotonic, derivative always > 0)
-    // Act 1: calm smooth pace; Act 2: swirling flow; Act 3: rhythmic accelerating surges
-    float base_zoom = 0.40 * u_time - 0.06 * cos(u_time * 0.85) - 0.025 * cos(u_time * 2.3);
-
-    // Scene weights for continuous, butter-smooth blending
-    float act1_w = smoothstep(24.0, 20.0, macro_t) + smoothstep(68.0, 72.0, macro_t);
-    act1_w = clamp(act1_w, 0.0, 1.0);
-    float act2_w = smoothstep(20.0, 24.0, macro_t) * (1.0 - smoothstep(44.0, 48.0, macro_t));
-    float act3_w = smoothstep(44.0, 48.0, macro_t) * (1.0 - smoothstep(68.0, 72.0, macro_t));
-
-    // Normalize weights to strictly partition unity
-    float sum_w = act1_w + act2_w + act3_w + 1e-4;
-    act1_w /= sum_w;
-    act2_w /= sum_w;
-    act3_w /= sum_w;
-
-    // =========================================================================
-    // 4. SCENE CHANGING CROSSINGS (OPTICAL CAUSTICS, WARPS & BEAM REFRACTIONS)
-    // =========================================================================
-    vec2 uv = raw_uv;
-    vec3 crossing_fx = vec3(0.0);
-
-    // Crossing 1 (20s - 24s): Diagonal Solar Caustic Refraction Wave
-    if (macro_t >= 20.0 && macro_t < 24.0) {
-        float ct = (macro_t - 20.0) / 4.0; // 0..1
-        float sweep = (raw_uv.x + raw_uv.y) * 0.707 - (ct * 3.2 - 1.6);
-        float refract_amp = exp(-abs(sweep) * 7.0) * (1.0 - ct * 0.3);
-        uv += vec2(sin(sweep * 15.0), cos(sweep * 15.0)) * refract_amp * 0.038;
-        
-        float beam = exp(-abs(sweep) * 10.0) * 1.0;
-        crossing_fx += vec3(1.1, 0.75, 0.25) * beam;
-    }
-    // Crossing 2 (44s - 48s): Gravitational Singularity Ripple Wave
-    else if (macro_t >= 44.0 && macro_t < 48.0) {
-        float ct = (macro_t - 44.0) / 4.0; // 0..1
-        float r = length(raw_uv);
-        float wave_front = ct * 1.35;
-        float d_wave = abs(r - wave_front);
-        float ripple = sin((r - wave_front) * 36.0) * exp(-d_wave * 12.0) * (1.0 - ct);
-        uv += normalize(raw_uv + 1e-4) * ripple * 0.045;
-        
-        float pulse_beam = exp(-d_wave * 9.5) * (1.0 - ct * 0.5) * 1.1;
-        crossing_fx += vec3(0.25, 0.85, 1.2) * pulse_beam;
-    }
-    // Crossing 3 (68s - 72s): Vertical Celestial Aurora Dissolve Curtain
-    else if (macro_t >= 68.0) {
-        float ct = (macro_t - 68.0) / 4.0; // 0..1
-        float sweep = raw_uv.x - (ct * 2.8 - 1.4);
-        float dissolve = exp(-abs(sweep) * 7.5);
-        uv += vec2(0.0, sin(raw_uv.x * 20.0 + u_time * 8.0)) * dissolve * 0.035;
-        
-        float aurora_beam = exp(-abs(sweep) * 9.0) * 1.0;
-        crossing_fx += vec3(0.95, 0.35, 1.1) * aurora_beam;
-    }
-
-    // =========================================================================
-    // 5. CAMERA DYNAMICS: SWAY, VORTEX TWIST & RELATIVISTIC RECOIL
-    // =========================================================================
-    // Act 1: Subtle gentle breathing sway
-    float rot1 = 0.08 * sin(u_time * 0.45);
-    // Act 2: Hypnotic swirling vortex rotation
-    float rot2 = u_time * 0.28 + 0.16 * sin(u_time * 0.75);
-    // Act 3: Relativistic rapid oscillation & storm vibration
-    float rot3 = 0.18 * sin(u_time * 1.4) + 0.05 * sin(u_time * 4.2);
+    // Dynamic hyperspace warp & FOV speedup cycle (every 32s)
+    float warp_cycle = mod(u_time * 0.12, 1.0);
+    float warp_burst = smoothstep(0.70, 0.82, warp_cycle) * (1.0 - smoothstep(0.92, 1.0, warp_cycle));
     
-    float cam_rot = rot1 * act1_w + rot2 * act2_w + rot3 * act3_w;
-    float ca = cos(cam_rot), sa = sin(cam_rot);
-    mat2 cam_mat = mat2(ca, -sa, sa, ca);
-    vec2 p = cam_mat * uv;
+    // FOV compression during hyperspace speedup
+    float fov_scale = 1.0 - 0.22 * warp_burst;
 
-    // Organic Heartbeat pulse
-    float beat_osc = sin(u_time * TWO_PI * 1.25);
-    float glow_pulse = beat_osc * beat_osc * (0.30 + 0.35 * act3_w);
+    // Lens Barrel Distortion
+    float r2 = dot(raw_uv, raw_uv);
+    vec2 screen_uv = raw_uv * (1.0 + 0.07 * r2) * fov_scale;
 
-    // =========================================================================
-    // 6. CONTINUOUS SHEPARD 4-OCTAVE INFINITE ZOOM ENGINE
-    // =========================================================================
-    const float S = 3.2;
-    const float lnS = 1.1631508; // ln(3.2)
-    const int NUM_OCTAVES = 4;
-    const int ITERATIONS = 12;
+    // Dynamic camera roll and sway
+    float roll = 0.24 * sin(u_time * 0.40);
+    float ca = cos(roll), sa = sin(roll);
+    vec2 uv = mat2(ca, -sa, sa, ca) * screen_uv;
 
-    vec3 total_color = vec3(0.0);
-    float total_weight = 0.0;
-
-    for (int o = 0; o < NUM_OCTAVES; o++) {
-        float phase = fract(base_zoom + float(o) * 0.25);
-        float scale = exp(phase * lnS);
-
-        // Continuous quadratic Hanning crossfade envelope
-        float w = 0.5 - 0.5 * cos(TWO_PI * phase);
-        w = w * w;
-
-        vec2 z = p * scale;
-        float accum = 0.0;
-        float min_trap = 1e8;
-        float edge_trap = 1e8;
-
-        for (int i = 0; i < ITERATIONS; i++) {
-            // 1. Bilateral symmetry fold
-            z.x = abs(z.x);
-
-            // 2. Exact cardioid cleft fold
-            z.y -= 0.58 * (sqrt(max(0.0, z.x) + 0.035) - 0.187);
-
-            // 3. Spherical inversion (fractal chamber recursion)
-            float r2 = dot(z, z) + 1e-4;
-            if (r2 < 0.22) {
-                z *= (1.0 / 0.22);
-            } else if (r2 < 1.38) {
-                z *= (1.0 / r2);
-            }
-
-            // 4. Harmonic variation per story act:
-            // Act 1: Classic subtle dilation
-            // Act 2: Blooming mandala dihedral rotation fold
-            // Act 3: Relativistic storm fold dilation
-            float fold_rot = 0.06 * sin(u_time * 0.4) * act1_w
-                           + (0.32 * sin(u_time * 0.65 + float(i) * 0.4)) * act2_w
-                           + (0.15 * sin(u_time * 1.8 + float(i) * 0.6)) * act3_w;
-            float cfr = cos(fold_rot), sfr = sin(fold_rot);
-            z = mat2(cfr, -sfr, sfr, cfr) * z;
-
-            // Secondary box fold dynamically awakening in Act 2 & Act 3
-            vec2 box_dim = vec2(0.04 * act2_w + 0.02 * act3_w, 0.08 * act2_w + 0.05 * act3_w);
-            z = abs(z) - box_dim;
-
-            // Scale expansion & offset
-            float scale_exp = 1.48 + 0.04 * act2_w + 0.06 * act3_w;
-            vec2 offset = vec2(0.18, 0.30) + vec2(0.02 * sin(u_time * 0.5), 0.02 * cos(u_time * 0.5)) * act2_w;
-            z = z * scale_exp - offset;
-
-            // 5. Heart orbit trap
-            float hx = abs(z.x);
-            float hy = z.y - 0.52 * (sqrt(hx + 0.035) - 0.187);
-            float hd = length(vec2(hx, hy));
-
-            min_trap = min(min_trap, hd);
-            float et = abs(z.x * z.y);
-            edge_trap = min(edge_trap, et);
-
-            accum += exp(-3.8 * hd) + 0.5 * exp(-7.5 * et);
+    // Cyber glitch horizontal slicing
+    float glitch_trigger = step(0.968, sin(u_time * 2.9) * sin(u_time * 6.7));
+    if (glitch_trigger > 0.5) {
+        float slice = step(0.5, fract(gl_FragCoord.y * 0.02 + u_time * 8.0));
+        if (slice > 0.5) {
+            uv.x += 0.030 * sin(gl_FragCoord.y * 0.2 + u_time * 15.0);
         }
-
-        // Multi-frequency color mapping across acts
-        float col_coord = accum * 0.20 + min_trap * 1.5 + u_time * 0.35 + float(o) * 0.25;
-        
-        vec3 col_layer = palette_act1(col_coord) * act1_w
-                       + palette_act2(col_coord) * act2_w
-                       + palette_act3(col_coord) * act3_w;
-
-        // Vivid neon aura along heart contours (tight decay to preserve deep dark contrasts)
-        float aura = exp(-3.8 * min_trap);
-        vec3 neon = vec3(
-            0.50 + 0.50 * sin(u_time * 1.6 + col_coord * 4.0),
-            0.35 + 0.55 * cos(u_time * 1.9 + col_coord * 3.0),
-            0.60 + 0.40 * sin(u_time * 2.2 + col_coord * 5.0)
-        );
-        col_layer = mix(col_layer, neon * 1.3, aura * 0.65);
-
-        // Core singularity beam: crisp intense core without blinding washout
-        float core_dist = length(uv) * scale;
-        float core_beam = exp(-18.0 * core_dist) * 1.0 + exp(-5.0 * core_dist) * 0.35;
-        core_beam *= (0.70 + 0.35 * glow_pulse);
-        vec3 core_tint = mix(
-            vec3(0.95, 0.40, 1.15),
-            mix(vec3(0.30, 1.10, 0.95), vec3(1.30, 0.70, 0.20), act3_w),
-            act2_w + act3_w
-        );
-        col_layer += core_tint * core_beam;
-
-        // Electric iridescent filament lines (sharp, razor-fine, saturated)
-        float edge_line = exp(-18.0 * edge_trap);
-        vec3 edge_tint = mix(
-            vec3(0.20, 0.95, 1.15),
-            mix(vec3(0.40, 1.25, 0.65), vec3(1.25, 0.75, 0.15), act3_w),
-            act2_w + act3_w
-        );
-        col_layer += edge_tint * edge_line * 0.95;
-
-        // Depth shadowing: preserve deep cosmic blacks in void areas
-        float depth_shade = clamp(exp(-1.4 * min_trap) * 1.35 + 0.08, 0.0, 1.0);
-        col_layer *= depth_shade;
-
-        total_color += col_layer * w;
-        total_weight += w;
     }
 
-    vec3 scene_color = total_color / max(total_weight, 1e-5);
+    float r_len = length(uv);
+    float phi = atan(uv.y, uv.x);
 
-    // Blend scene changing optical crossing beams
-    scene_color += crossing_fx;
-
-    // Peripheral chromatic dispersion
-    float dist_sq = dot(raw_uv, raw_uv);
-    scene_color.r += 0.06 * sin(dist_sq * 9.0 + u_time * 2.0) * sqrt(dist_sq);
-    scene_color.b += 0.06 * cos(dist_sq * 8.0 - u_time * 2.5) * sqrt(dist_sq);
+    vec3 final_color = vec3(0.0);
 
     // =========================================================================
-    // 7. VIVID DEMOSCENE COLOR GRADING & CONTRAST
+    // LAYER 1: 3D CYLINDRICAL MATRIX VORTEX TUNNEL
     // =========================================================================
-    // 1. Contrast power curve: deepens cosmic darks, prevents milky over-brightness
-    scene_color = pow(max(scene_color, vec3(0.0)), vec3(1.18));
+    float z = 1.0 / (r_len + 0.035);
 
-    // 2. Saturation boost: makes hues vibrant, rich and saturated
-    float luma = dot(scene_color, vec3(0.2126, 0.7152, 0.0722));
-    scene_color = mix(vec3(luma), scene_color, 1.38);
+    // Helical vortex coordinate
+    float twist = z * 0.18 + sin(u_time * 0.55) * 0.38;
+    float tunnel_phi = phi + twist;
+    
+    // Discretize into 44 angular columns and depth rows
+    const float NUM_COLS = 44.0;
+    float norm_u = (tunnel_phi / TWO_PI + 0.5) * NUM_COLS;
+    float col_idx = floor(norm_u);
+    float fract_u = fract(norm_u);
 
-    // 3. Cosmic peripheral vignette
-    float vignette = clamp(1.0 - 0.40 * dist_sq, 0.0, 1.0);
-    scene_color *= vignette;
+    // Forward flight down the vortex tunnel (accelerates during hyperspace warp)
+    float tunnel_speed = 3.2 + 4.5 * warp_burst;
+    float tunnel_v = z * 1.35 + u_time * tunnel_speed;
+    float row_idx = floor(tunnel_v);
+    float fract_v = fract(tunnel_v);
 
-    // 4. ACES Filmic Tone Mapping for crisp, vibrant highlights
-    vec3 final_color = aces_tonemap(scene_color * 1.06);
+    // Column pseudorandom seeds
+    float col_seed = hash11(col_idx * 13.37 + 7.19);
+    float stream_speed = 0.6 + 0.8 * hash11(col_idx * 31.17);
+    
+    // Rain stream pulse down the column
+    float stream_time = u_time * (4.0 * stream_speed) + col_seed * 128.0;
+    float stream_pos = mod(row_idx + stream_time, 24.0);
+
+    // Raindrop intensity curve: laser head + exponential tail
+    float drop_head_dist = abs(stream_pos - 1.0);
+    float head_intensity = exp(-drop_head_dist * 1.8);
+    float tail_intensity = max(0.0, 1.0 - stream_pos / 18.0);
+    bool is_head = (stream_pos < 1.4);
+
+    // Cell character UV with margin padding (keeps character intact inside boundary)
+    vec2 char_uv = vec2((fract_u - 0.12) / 0.76, (fract_v - 0.12) / 0.76);
+
+    // Determine glyph: Numbers 0..9 (70..109) & Kanji (46..69) & Katakana (0..45) - NO RUNES
+    int glyph = 0;
+    bool is_deciphered = false;
+
+    float decipher_cycle = fract(u_time * 0.18 + col_seed);
+    int row_in_block = int(mod(row_idx, 16.0));
+    if (decipher_cycle > 0.35 && row_in_block >= 0 && row_in_block < 8) {
+        // Deciphered sacred glyph sequence: Kanji 46..69 & Numbers 70..109
+        glyph = int(mod(col_seed * 23.0 + float(row_in_block) * 7.0, 70.0));
+        is_deciphered = true;
+    } else {
+        // Fast-scrambling matrix digital code (Numbers 70..109, Katakana 0..45)
+        glyph = int(mod(col_seed * 113.0 + row_idx * 7.0 + floor(u_time * (4.0 + col_seed * 6.0)), 110.0));
+    }
+
+    // Sample glyph strokes and bloom
+    float lod = clamp((z - 2.0) * 0.15, 0.0, 3.0);
+    vec2 glyph_sample = get_glyph_sample(glyph, char_uv, lod);
+    float stroke = glyph_sample.x;
+    float glow = glyph_sample.y;
+
+    // Multi-spectral neon psychedelic color for this tunnel segment
+    float color_phase = z * 0.08 + col_idx * 0.06 + u_time * 0.35;
+    vec3 neon_color = palette(color_phase);
+
+    if (is_deciphered) {
+        vec3 decipher_shimmer = mix(neon_color, vec3(0.5, 1.0, 0.95), 0.35 + 0.15 * sin(u_time * 2.5 + float(glyph)));
+        neon_color = decipher_shimmer * 1.25;
+    }
+
+    if (is_head) {
+        neon_color = mix(neon_color, vec3(1.5, 1.7, 2.0), 0.85);
+    }
+
+    // Compute layer 1 glyph lighting
+    float stream_light = 0.22 + 0.78 * tail_intensity;
+    if (is_head) stream_light = 1.6;
+    float glyph_vis = stroke * 1.6 + glow * 1.0;
+    vec3 tunnel_color = neon_color * glyph_vis * stream_light;
+
+    // Depth attenuation / atmospheric cyber fog
+    float fog = smoothstep(32.0, 1.8, z);
+    tunnel_color *= fog;
+
+    final_color += tunnel_color;
+
+    // =========================================================================
+    // LAYER 2: 3D FLOATING HOLOGRAPHIC WORD BANNERS (INTACT, UNSCRAMBLED)
+    // =========================================================================
+    float ring_r = r_len * (1.6 + 0.4 * sin(u_time * 0.8));
+    float ring_phi = phi - u_time * 0.5;
+    const float RING_BANNERS = 8.0;
+    float ring_u = (ring_phi / TWO_PI + 0.5) * RING_BANNERS;
+    float ring_idx = floor(ring_u);
+    float ring_fract_u = fract(ring_u);
+
+    float ring_mask = smoothstep(0.12, 0.0, abs(ring_r - 0.72));
+    if (ring_mask > 0.01) {
+        // Floating holographic cyber banners (200..212) - Intact and completely visible
+        int banner_glyph = 200 + int(mod(ring_idx + floor(u_time * 0.2), 13.0));
+        vec2 banner_uv = vec2((ring_fract_u - 0.05) / 0.9, (fract(r_len * 4.0 - u_time * 0.2) - 0.1) / 0.8);
+        vec2 b_sample = get_glyph_sample(banner_glyph, banner_uv, 0.0);
+        
+        vec3 holo_col = palette(ring_idx * 0.25 - u_time * 0.3) * 1.8;
+        holo_col += vec3(0.4, 0.8, 1.0) * b_sample.y * 1.2;
+        final_color += holo_col * (b_sample.x * 2.2 + b_sample.y * 0.7) * ring_mask;
+    }
+
+    // =========================================================================
+    // LAYER 3: PSYCHEDELIC VORTEX CORE SINGULARITY
+    // =========================================================================
+    float core_r = r_len;
+    if (core_r < 0.22) {
+        float core_spiral = phi * 3.0 + 1.0 / (core_r + 0.01) * 0.5 - u_time * 4.0;
+        float core_col_idx = floor(mod(core_spiral * 3.0, 16.0));
+        int core_glyph = 46 + int(mod(core_col_idx + floor(u_time * 6.0), 24.0));
+        vec2 core_uv = vec2(fract(core_spiral), fract(core_r * 20.0));
+        vec2 c_sample = get_glyph_sample(core_glyph, core_uv, 1.0);
+        
+        vec3 core_col = palette(u_time * 0.6 + core_r * 10.0);
+        float core_glow = exp(-core_r * 14.0);
+        final_color += (c_sample.x * core_col * 2.5 + core_col * core_glow * 1.5) * (1.0 - core_r / 0.22);
+    }
+
+    // =========================================================================
+    // LAYER 4: STAR TREK PARALLAX STARFIELD (WARP STARS STREAMING FROM TUNNEL)
+    // =========================================================================
+    vec3 warp_stars = render_startrek_starfield(raw_uv, u_time, 0.35 + 0.65 * warp_burst);
+    final_color += warp_stars;
+
+    // =========================================================================
+    // LAYER 5: MODERATED SUN FLARE EFFECTS
+    // =========================================================================
+    vec2 sun_origin = vec2(
+        0.13 * sin(u_time * 0.36) + 0.05 * cos(u_time * 0.74),
+        0.08 * cos(u_time * 0.43) + 0.04 * sin(u_time * 0.92)
+    );
+    vec3 sun_flare = compute_sun_flare(screen_uv, sun_origin, u_time);
+    final_color += sun_flare;
+
+    // =========================================================================
+    // VFX PIPELINE
+    // =========================================================================
+    // 1. Radial Chromatic Aberration & Spectral Dispersion
+    float ca_shift = r_len * 0.016;
+    final_color.r *= (1.0 + ca_shift * 2.6);
+    final_color.b *= (1.0 - ca_shift * 1.6);
+
+    // 2. Phosphor CRT Scanlines & Cathode Glow
+    float scanline = 0.90 + 0.10 * sin(gl_FragCoord.y * 2.6);
+    final_color *= scanline;
+
+    // 3. Cyber Matrix Glitch Color Inversion
+    if (glitch_trigger > 0.5) {
+        float slice = step(0.48, fract(gl_FragCoord.y * 0.015 + u_time * 5.0));
+        if (slice > 0.5) {
+            final_color = final_color.gbr * 1.35;
+        }
+    }
+
+    // 4. Subtle Film Shimmer / Cyber Dust Grain
+    float grain = (hash11(gl_FragCoord.x * 12.9898 + gl_FragCoord.y * 78.233 + fract(u_time) * 100.0) - 0.5) * 0.025;
+    final_color += grain;
+
+    // 5. Radial Vignette (Lens Darkening at Edges)
+    float vignette = clamp(1.0 - 0.40 * pow(length(raw_uv), 2.2), 0.0, 1.0);
+    final_color *= vignette;
+
+    // 6. Contrast S-Curve with deep obsidian shadows and brilliant solar highlights
+    vec3 c_pow = pow(max(final_color, vec3(0.0)), vec3(1.65));
+    final_color = (c_pow / (c_pow + vec3(0.20))) * 1.40;
 
     fragColor = vec4(clamp(final_color, 0.0, 1.0), 1.0);
 }
