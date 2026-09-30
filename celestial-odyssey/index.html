@@ -15,6 +15,12 @@
     <script type="module">
         import init, { start_fractal } from './pkg/wasm_infinite_gpu_fractal.js';
 
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('time')) {
+            const fixedTimeMs = parseFloat(urlParams.get('time')) * 1000.0;
+            performance.now = () => fixedTimeMs;
+        }
+
         let idleTimer = null;
         function resetIdleTimer() {
             document.body.classList.remove('idle');

@@ -1,9 +1,10 @@
 [package]
 name = "wasm-infinite-gpu-fractal"
-version = "0.1.0"
+version = "1.2.1"
 edition = "2021"
 authors = ["Antigravity"]
 description = "Infinite real-time heart-shaped GPU fractal zoom in WebAssembly and WebGL2"
+license = "GPL-2.0-only"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

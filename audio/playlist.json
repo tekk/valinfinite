@@ -4,265 +4,303 @@
     "title": "Fire In My Soul",
     "artist": "Oliver Heldens feat. Shungudzo",
     "duration": 175.3,
-    "file": "audio/tracks/track_01_fire_in_my_soul.mp3"
+    "file": "audio/tracks/track_01_fire_in_my_soul.mp3",
+    "cover": "audio/covers/cover_01.jpg"
   },
   {
     "id": 2,
     "title": "No Limits (Vocal Mix)",
     "artist": "Danism, Train & DJ Rae",
     "duration": 375.6,
-    "file": "audio/tracks/track_02_no_limits_vocal_mix.mp3"
+    "file": "audio/tracks/track_02_no_limits_vocal_mix.mp3",
+    "cover": "audio/covers/cover_02.jpg"
   },
   {
     "id": 3,
     "title": "Say My Name (Sub Focus Remix)",
     "artist": "Morgan Seatree, Sub Focus",
     "duration": 193.1,
-    "file": "audio/tracks/track_03_say_my_name_sub_focus_remix.mp3"
+    "file": "audio/tracks/track_03_say_my_name_sub_focus_remix.mp3",
+    "cover": "audio/covers/cover_03.jpg"
   },
   {
     "id": 4,
     "title": "Bambou (Original Mix)",
     "artist": "Sebastien Leger",
     "duration": 436.8,
-    "file": "audio/tracks/track_04_bambou_original_mix.mp3"
+    "file": "audio/tracks/track_04_bambou_original_mix.mp3",
+    "cover": "audio/covers/cover_04.jpg"
   },
   {
     "id": 5,
     "title": "TRONCE",
     "artist": "Sili",
     "duration": 291.3,
-    "file": "audio/tracks/track_05_tronce.mp3"
+    "file": "audio/tracks/track_05_tronce.mp3",
+    "cover": "audio/covers/cover_05.jpg"
   },
   {
     "id": 6,
     "title": "Beautiful",
     "artist": "Brookes Brothers feat. Robert Owens",
     "duration": 295.2,
-    "file": "audio/tracks/track_06_beautiful.mp3"
+    "file": "audio/tracks/track_06_beautiful.mp3",
+    "cover": "audio/covers/cover_06.jpg"
   },
   {
     "id": 7,
     "title": "Escapism (Original Mix)",
     "artist": "cYsmix",
     "duration": 300.5,
-    "file": "audio/tracks/track_07_escapism_original_mix.mp3"
+    "file": "audio/tracks/track_07_escapism_original_mix.mp3",
+    "cover": "audio/covers/cover_07.jpg"
   },
   {
     "id": 8,
     "title": "Unity",
     "artist": "TheFatRat",
     "duration": 249.0,
-    "file": "audio/tracks/track_08_unity.mp3"
+    "file": "audio/tracks/track_08_unity.mp3",
+    "cover": "audio/covers/cover_08.jpg"
   },
   {
     "id": 9,
     "title": "Underground",
     "artist": "Tantrum Desire",
     "duration": 274.6,
-    "file": "audio/tracks/track_09_underground.mp3"
+    "file": "audio/tracks/track_09_underground.mp3",
+    "cover": "audio/covers/cover_09.jpg"
   },
   {
     "id": 10,
     "title": "Rhyme Dust (Dimension Remix)",
     "artist": "MK, Dom Dolla",
     "duration": 204.1,
-    "file": "audio/tracks/track_10_rhyme_dust_dimension_remix.mp3"
+    "file": "audio/tracks/track_10_rhyme_dust_dimension_remix.mp3",
+    "cover": "audio/covers/cover_10.jpg"
   },
   {
     "id": 11,
     "title": "Horizon",
     "artist": "1991, Poppy Baskcomb",
     "duration": 180.7,
-    "file": "audio/tracks/track_11_horizon.mp3"
+    "file": "audio/tracks/track_11_horizon.mp3",
+    "cover": "audio/covers/cover_11.jpg"
   },
   {
     "id": 12,
-    "title": "Colours & Lights (Clément Leroux Remix)",
+    "title": "Colours & Lights (Cl\u00e9ment Leroux Remix)",
     "artist": "GoldFish & Cat Dealers",
     "duration": 202.1,
-    "file": "audio/tracks/track_12_colours_lights_clément_leroux_.mp3"
+    "file": "audio/tracks/track_12_colours_lights_cl\u00e9ment_leroux_.mp3",
+    "cover": "audio/covers/cover_12.jpg"
   },
   {
     "id": 13,
     "title": "Mend Your Ways",
     "artist": "PSYQUI",
     "duration": 267.0,
-    "file": "audio/tracks/track_13_mend_your_ways.mp3"
+    "file": "audio/tracks/track_13_mend_your_ways.mp3",
+    "cover": "audio/covers/cover_13.jpg"
   },
   {
     "id": 14,
     "title": "Nights Introlude",
     "artist": "Nightmares On Wax",
     "duration": 280.3,
-    "file": "audio/tracks/track_14_nights_introlude.mp3"
+    "file": "audio/tracks/track_14_nights_introlude.mp3",
+    "cover": "audio/covers/cover_14.jpg"
   },
   {
     "id": 15,
     "title": "Genesis",
     "artist": "Subsonic",
     "duration": 223.4,
-    "file": "audio/tracks/track_15_genesis.mp3"
+    "file": "audio/tracks/track_15_genesis.mp3",
+    "cover": "audio/covers/cover_15.jpg"
   },
   {
     "id": 16,
     "title": "Get To Me",
     "artist": "Culture Shock",
     "duration": 245.5,
-    "file": "audio/tracks/track_16_get_to_me.mp3"
+    "file": "audio/tracks/track_16_get_to_me.mp3",
+    "cover": "audio/covers/cover_16.jpg"
   },
   {
     "id": 17,
     "title": "Focused",
     "artist": "Soulfreq",
     "duration": 456.2,
-    "file": "audio/tracks/track_17_focused.mp3"
+    "file": "audio/tracks/track_17_focused.mp3",
+    "cover": "audio/covers/cover_17.jpg"
   },
   {
     "id": 18,
     "title": "King Of The Swingers (Gettin' Mad Mix)",
     "artist": "Krushed & Sorted",
     "duration": 364.6,
-    "file": "audio/tracks/track_18_king_of_the_swingers_gettin_ma.mp3"
+    "file": "audio/tracks/track_18_king_of_the_swingers_gettin_ma.mp3",
+    "cover": "audio/covers/cover_18.jpg"
   },
   {
     "id": 19,
     "title": "Drugs I Like",
     "artist": "nate band",
     "duration": 198.8,
-    "file": "audio/tracks/track_19_drugs_i_like.mp3"
+    "file": "audio/tracks/track_19_drugs_i_like.mp3",
+    "cover": "audio/covers/cover_19.jpg"
   },
   {
     "id": 20,
     "title": "Remember Me",
     "artist": "High Contrast",
     "duration": 235.8,
-    "file": "audio/tracks/track_20_remember_me.mp3"
+    "file": "audio/tracks/track_20_remember_me.mp3",
+    "cover": "audio/covers/cover_20.jpg"
   },
   {
     "id": 21,
     "title": "TANGARA",
     "artist": "Etherwood, Hugh Hardie",
     "duration": 223.4,
-    "file": "audio/tracks/track_21_tangara.mp3"
+    "file": "audio/tracks/track_21_tangara.mp3",
+    "cover": "audio/covers/cover_21.jpg"
   },
   {
     "id": 22,
     "title": "Beat Keep Rockin'",
     "artist": "Starjunk 95",
     "duration": 183.9,
-    "file": "audio/tracks/track_22_beat_keep_rockin.mp3"
+    "file": "audio/tracks/track_22_beat_keep_rockin.mp3",
+    "cover": "audio/covers/cover_22.jpg"
   },
   {
     "id": 23,
     "title": "Spectra Ocean Dream Circuit",
     "artist": "Starjunk 95",
     "duration": 194.3,
-    "file": "audio/tracks/track_23_spectra_ocean_dream_circuit.mp3"
+    "file": "audio/tracks/track_23_spectra_ocean_dream_circuit.mp3",
+    "cover": "audio/covers/cover_23.jpg"
   },
   {
     "id": 24,
     "title": "Groove District",
     "artist": "Starjunk 95",
     "duration": 186.2,
-    "file": "audio/tracks/track_24_groove_district.mp3"
+    "file": "audio/tracks/track_24_groove_district.mp3",
+    "cover": "audio/covers/cover_24.jpg"
   },
   {
     "id": 25,
     "title": "Tell You What I Did",
     "artist": "Pola & Bryson, Zitah",
     "duration": 209.7,
-    "file": "audio/tracks/track_25_tell_you_what_i_did.mp3"
+    "file": "audio/tracks/track_25_tell_you_what_i_did.mp3",
+    "cover": "audio/covers/cover_25.jpg"
   },
   {
     "id": 26,
     "title": "TAKE ME",
     "artist": "D A N N Y",
     "duration": 129.0,
-    "file": "audio/tracks/track_26_take_me.mp3"
+    "file": "audio/tracks/track_26_take_me.mp3",
+    "cover": "audio/covers/cover_26.jpg"
   },
   {
     "id": 27,
     "title": "Mirage",
     "artist": "MPH, Skrillex",
     "duration": 292.0,
-    "file": "audio/tracks/track_27_mirage.mp3"
+    "file": "audio/tracks/track_27_mirage.mp3",
+    "cover": "audio/covers/cover_27.jpg"
   },
   {
     "id": 28,
     "title": "Liberate (Lane 8 Remix)",
     "artist": "Eric Prydz",
     "duration": 314.8,
-    "file": "audio/tracks/track_28_liberate_lane_8_remix.mp3"
+    "file": "audio/tracks/track_28_liberate_lane_8_remix.mp3",
+    "cover": "audio/covers/cover_28.jpg"
   },
   {
     "id": 29,
     "title": "Szikra",
-    "artist": "Kornél Kovács",
+    "artist": "Korn\u00e9l Kov\u00e1cs",
     "duration": 401.6,
-    "file": "audio/tracks/track_29_szikra.mp3"
+    "file": "audio/tracks/track_29_szikra.mp3",
+    "cover": "audio/covers/cover_29.jpg"
   },
   {
     "id": 30,
     "title": "I Run",
     "artist": "YUSSI",
     "duration": 124.7,
-    "file": "audio/tracks/track_30_i_run.mp3"
+    "file": "audio/tracks/track_30_i_run.mp3",
+    "cover": "audio/covers/cover_30.jpg"
   },
   {
     "id": 31,
     "title": "On & On",
     "artist": "Chris Lake, Yael Watchman",
     "duration": 195.6,
-    "file": "audio/tracks/track_31_on_on.mp3"
+    "file": "audio/tracks/track_31_on_on.mp3",
+    "cover": "audio/covers/cover_31.jpg"
   },
   {
     "id": 32,
     "title": "Out For Blood",
     "artist": "QZB",
     "duration": 248.4,
-    "file": "audio/tracks/track_32_out_for_blood.mp3"
+    "file": "audio/tracks/track_32_out_for_blood.mp3",
+    "cover": "audio/covers/cover_32.jpg"
   },
   {
     "id": 33,
     "title": "Don't Stop",
     "artist": "MUZZ",
     "duration": 176.9,
-    "file": "audio/tracks/track_33_dont_stop.mp3"
+    "file": "audio/tracks/track_33_dont_stop.mp3",
+    "cover": "audio/covers/cover_33.jpg"
   },
   {
     "id": 34,
     "title": "Tu Cafe (Mash Up)",
     "artist": "Prodigy",
     "duration": 242.1,
-    "file": "audio/tracks/track_34_tu_cafe_mash_up.mp3"
+    "file": "audio/tracks/track_34_tu_cafe_mash_up.mp3",
+    "cover": "audio/covers/cover_34.jpg"
   },
   {
     "id": 35,
     "title": "The People (Mehlor Remix)",
     "artist": "Harrie Summers, Joey Rich",
     "duration": 387.0,
-    "file": "audio/tracks/track_35_the_people_mehlor_remix.mp3"
+    "file": "audio/tracks/track_35_the_people_mehlor_remix.mp3",
+    "cover": "audio/covers/cover_35.jpg"
   },
   {
     "id": 36,
     "title": "Spacefunk",
     "artist": "Stussko, Kolter",
     "duration": 456.0,
-    "file": "audio/tracks/track_36_spacefunk.mp3"
+    "file": "audio/tracks/track_36_spacefunk.mp3",
+    "cover": "audio/covers/cover_36.jpg"
   },
   {
     "id": 37,
     "title": "Bunker",
     "artist": "Culture Shock",
     "duration": 281.7,
-    "file": "audio/tracks/track_37_bunker.mp3"
+    "file": "audio/tracks/track_37_bunker.mp3",
+    "cover": "audio/covers/cover_37.jpg"
   },
   {
     "id": 38,
     "title": "On & On (Kanine Remix)",
     "artist": "Sub Focus, bbyclose, Kanine",
     "duration": 175.2,
-    "file": "audio/tracks/track_38_on_on_kanine_remix.mp3"
+    "file": "audio/tracks/track_38_on_on_kanine_remix.mp3",
+    "cover": "audio/covers/cover_38.jpg"
   }
 ]

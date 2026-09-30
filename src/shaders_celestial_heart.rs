@@ -18,28 +18,27 @@ out vec4 fragColor;
 #define TWO_PI 6.28318530718
 
 // =========================================================================
-// 1. DYNAMIC COLOR PALETTES ACROSS STORY CHAPTERS
+// 1. DYNAMIC VIVID COLOR PALETTES ACROSS STORY CHAPTERS
 // =========================================================================
+// Cosine color palette generator (Inigo Quilez) calibrated for vivid contrast
 vec3 palette(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
     return clamp(a + b * cos(TWO_PI * (c * t + d)), 0.0, 1.0);
 }
 
-// Act 1: Celestial Sapphire, Rose Quartz, Radiant Violet, Diamond Core
+// Act 1: Celestial Sapphire, Deep Ruby & Electric Violet on Cosmic Indigo Abyss
 vec3 palette_act1(float t) {
-    return palette(t, vec3(0.52, 0.48, 0.56), vec3(0.48, 0.45, 0.52), vec3(1.0, 1.0, 1.0), vec3(0.00, 0.33, 0.67));
+    return palette(t, vec3(0.38, 0.22, 0.52), vec3(0.42, 0.38, 0.50), vec3(1.0, 1.0, 1.0), vec3(0.04, 0.33, 0.67));
 }
 
-// Act 2: Emerald Aurora, Golden Cyan, Electric Orchid, Sacred Mandala
+// Act 2: Emerald Aurora, Deep Jade, Electric Cyan & Radiant Sacred Gold
 vec3 palette_act2(float t) {
-    return palette(t, vec3(0.45, 0.60, 0.52), vec3(0.50, 0.48, 0.40), vec3(1.0, 0.9, 1.1), vec3(0.12, 0.45, 0.78));
+    return palette(t, vec3(0.24, 0.44, 0.40), vec3(0.36, 0.46, 0.42), vec3(1.0, 0.95, 1.1), vec3(0.14, 0.48, 0.80));
 }
 
-// Act 3: Solar Plasma Gold, Molten Amber, Crimson Blaze, Obsidian Core
+// Act 3: Solar Plasma, Obsidian Crimson, Intense Vermilion & Molten Gold
 vec3 palette_act3(float t) {
-    return palette(t, vec3(0.68, 0.45, 0.22), vec3(0.55, 0.48, 0.35), vec3(1.1, 1.0, 0.8), vec3(0.02, 0.28, 0.58));
+    return palette(t, vec3(0.46, 0.22, 0.10), vec3(0.48, 0.34, 0.22), vec3(1.1, 1.0, 0.8), vec3(0.00, 0.25, 0.55));
 }
-
-
 
 // ACES Filmic Tone Mapping for cinematic HDR range
 vec3 aces_tonemap(vec3 x) {
@@ -95,8 +94,8 @@ void main() {
         float refract_amp = exp(-abs(sweep) * 7.0) * (1.0 - ct * 0.3);
         uv += vec2(sin(sweep * 15.0), cos(sweep * 15.0)) * refract_amp * 0.038;
         
-        float beam = exp(-abs(sweep) * 9.0) * 1.8;
-        crossing_fx += vec3(1.2, 0.95, 0.55) * beam;
+        float beam = exp(-abs(sweep) * 10.0) * 1.0;
+        crossing_fx += vec3(1.1, 0.75, 0.25) * beam;
     }
     // Crossing 2 (44s - 48s): Gravitational Singularity Ripple Wave
     else if (macro_t >= 44.0 && macro_t < 48.0) {
@@ -107,8 +106,8 @@ void main() {
         float ripple = sin((r - wave_front) * 36.0) * exp(-d_wave * 12.0) * (1.0 - ct);
         uv += normalize(raw_uv + 1e-4) * ripple * 0.045;
         
-        float pulse_beam = exp(-d_wave * 8.5) * (1.0 - ct * 0.5) * 2.0;
-        crossing_fx += vec3(0.6, 0.95, 1.3) * pulse_beam;
+        float pulse_beam = exp(-d_wave * 9.5) * (1.0 - ct * 0.5) * 1.1;
+        crossing_fx += vec3(0.25, 0.85, 1.2) * pulse_beam;
     }
     // Crossing 3 (68s - 72s): Vertical Celestial Aurora Dissolve Curtain
     else if (macro_t >= 68.0) {
@@ -117,8 +116,8 @@ void main() {
         float dissolve = exp(-abs(sweep) * 7.5);
         uv += vec2(0.0, sin(raw_uv.x * 20.0 + u_time * 8.0)) * dissolve * 0.035;
         
-        float aurora_beam = exp(-abs(sweep) * 8.0) * 1.9;
-        crossing_fx += vec3(1.15, 0.75, 1.25) * aurora_beam;
+        float aurora_beam = exp(-abs(sweep) * 9.0) * 1.0;
+        crossing_fx += vec3(0.95, 0.35, 1.1) * aurora_beam;
     }
 
     // =========================================================================
@@ -138,7 +137,7 @@ void main() {
 
     // Organic Heartbeat pulse
     float beat_osc = sin(u_time * TWO_PI * 1.25);
-    float glow_pulse = beat_osc * beat_osc * (0.35 + 0.45 * act3_w);
+    float glow_pulse = beat_osc * beat_osc * (0.30 + 0.35 * act3_w);
 
     // =========================================================================
     // 6. CONTINUOUS SHEPARD 4-OCTAVE INFINITE ZOOM ENGINE
@@ -207,43 +206,54 @@ void main() {
             float et = abs(z.x * z.y);
             edge_trap = min(edge_trap, et);
 
-            accum += exp(-3.5 * hd) + 0.5 * exp(-7.0 * et);
+            accum += exp(-3.8 * hd) + 0.5 * exp(-7.5 * et);
         }
 
         // Multi-frequency color mapping across acts
-        float col_coord = accum * 0.18 + min_trap * 1.35 + u_time * 0.40 + float(o) * 0.25;
+        float col_coord = accum * 0.20 + min_trap * 1.5 + u_time * 0.35 + float(o) * 0.25;
         
         vec3 col_layer = palette_act1(col_coord) * act1_w
                        + palette_act2(col_coord) * act2_w
                        + palette_act3(col_coord) * act3_w;
 
-        // Radiant neon aura along heart contours
-        float aura = exp(-1.2 * min_trap);
+        // Vivid neon aura along heart contours (tight decay to preserve deep dark contrasts)
+        float aura = exp(-3.8 * min_trap);
         vec3 neon = vec3(
-            0.65 + 0.35 * sin(u_time * 1.6 + col_coord * 4.0),
-            0.55 + 0.45 * cos(u_time * 1.9 + col_coord * 3.0),
-            0.85 + 0.15 * sin(u_time * 2.2 + col_coord * 5.0)
+            0.50 + 0.50 * sin(u_time * 1.6 + col_coord * 4.0),
+            0.35 + 0.55 * cos(u_time * 1.9 + col_coord * 3.0),
+            0.60 + 0.40 * sin(u_time * 2.2 + col_coord * 5.0)
         );
-        col_layer = mix(col_layer, neon, aura * 0.65);
+        col_layer = mix(col_layer, neon * 1.3, aura * 0.65);
 
-        // Core singularity beam with organic heartbeat pulse
+        // Core singularity beam: crisp intense core without blinding washout
         float core_dist = length(uv) * scale;
-        float core_beam = exp(-7.0 * core_dist) * (1.0 + glow_pulse);
-        vec3 core_tint = mix(vec3(1.2, 0.65, 0.95), vec3(1.4, 1.1, 0.6), act3_w);
-        col_layer += core_tint * core_beam * 2.2;
+        float core_beam = exp(-18.0 * core_dist) * 1.0 + exp(-5.0 * core_dist) * 0.35;
+        core_beam *= (0.70 + 0.35 * glow_pulse);
+        vec3 core_tint = mix(
+            vec3(0.95, 0.40, 1.15),
+            mix(vec3(0.30, 1.10, 0.95), vec3(1.30, 0.70, 0.20), act3_w),
+            act2_w + act3_w
+        );
+        col_layer += core_tint * core_beam;
 
-        // Electric iridescent filament lines
-        float edge_line = exp(-11.0 * edge_trap);
-        vec3 edge_tint = mix(vec3(0.25, 0.95, 1.0), vec3(1.0, 0.85, 0.3), act3_w);
+        // Electric iridescent filament lines (sharp, razor-fine, saturated)
+        float edge_line = exp(-18.0 * edge_trap);
+        vec3 edge_tint = mix(
+            vec3(0.20, 0.95, 1.15),
+            mix(vec3(0.40, 1.25, 0.65), vec3(1.25, 0.75, 0.15), act3_w),
+            act2_w + act3_w
+        );
         col_layer += edge_tint * edge_line * 0.95;
+
+        // Depth shadowing: preserve deep cosmic blacks in void areas
+        float depth_shade = clamp(exp(-1.4 * min_trap) * 1.35 + 0.08, 0.0, 1.0);
+        col_layer *= depth_shade;
 
         total_color += col_layer * w;
         total_weight += w;
     }
 
     vec3 scene_color = total_color / max(total_weight, 1e-5);
-
-
 
     // Blend scene changing optical crossing beams
     scene_color += crossing_fx;
@@ -253,13 +263,23 @@ void main() {
     scene_color.r += 0.06 * sin(dist_sq * 9.0 + u_time * 2.0) * sqrt(dist_sq);
     scene_color.b += 0.06 * cos(dist_sq * 8.0 - u_time * 2.5) * sqrt(dist_sq);
 
-    // Soft peripheral vignette
-    float vignette = clamp(1.0 - 0.24 * dist_sq, 0.0, 1.0);
+    // =========================================================================
+    // 7. VIVID DEMOSCENE COLOR GRADING & CONTRAST
+    // =========================================================================
+    // 1. Contrast power curve: deepens cosmic darks, prevents milky over-brightness
+    scene_color = pow(max(scene_color, vec3(0.0)), vec3(1.18));
+
+    // 2. Saturation boost: makes hues vibrant, rich and saturated
+    float luma = dot(scene_color, vec3(0.2126, 0.7152, 0.0722));
+    scene_color = mix(vec3(luma), scene_color, 1.38);
+
+    // 3. Cosmic peripheral vignette
+    float vignette = clamp(1.0 - 0.40 * dist_sq, 0.0, 1.0);
     scene_color *= vignette;
 
-    // ACES Filmic Tone Mapping for rich punchy vibrance without blowout
-    vec3 final_color = aces_tonemap(scene_color * 1.28);
+    // 4. ACES Filmic Tone Mapping for crisp, vibrant highlights
+    vec3 final_color = aces_tonemap(scene_color * 1.06);
 
-    fragColor = vec4(final_color, 1.0);
+    fragColor = vec4(clamp(final_color, 0.0, 1.0), 1.0);
 }
 "#;

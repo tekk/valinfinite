@@ -1,5 +1,11 @@
 # Infinite Real-Time GPU animations
 
+[![hovnokod](https://raw.githubusercontent.com/tekk/hovnokod-badge/main/assets/badges/hovnokod-flat.svg)](https://github.com/tekk/hovnokod-badge)
+[![WebAssembly](https://img.shields.io/badge/WebAssembly-654FF0?logo=webassembly&logoColor=white)](https://webassembly.org/)
+[![Rust](https://img.shields.io/badge/Rust-000000?logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-222222?logo=githubpages&logoColor=white)](https://tekk.github.io/valinfinite/)
+[![License: GPL-2.0-only](https://img.shields.io/badge/License-GPL--2.0--only-blue.svg)](LICENSE)
+
 Continuous scale-invariant GPU fractals in WebAssembly and WebGL2 with vivid psychedelic palettes, zero precision degradation, multi-act demoscene cinematics, and non-repeating soundtrack synchronization.
 
 **Live Demo Portal**: [https://tekk.github.io/valinfinite/](https://tekk.github.io/valinfinite/)
@@ -268,3 +274,9 @@ wasm-pack build --target web --release
 python3 -m http.server 8088
 ```
 Navigate to `http://localhost:8088/`.
+
+---
+
+## License
+
+This project is licensed under the **GNU General Public License v2.0 only** (`GPL-2.0-only`). See the [LICENSE](LICENSE) file for the full license text.
