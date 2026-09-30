@@ -1,0 +1,19 @@
+{
+  "name": "wasm-infinite-gpu-fractal",
+  "type": "module",
+  "collaborators": [
+    "Antigravity"
+  ],
+  "description": "Infinite real-time heart-shaped GPU fractal zoom in WebAssembly and WebGL2",
+  "version": "0.1.0",
+  "files": [
+    "wasm_infinite_gpu_fractal_bg.wasm",
+    "wasm_infinite_gpu_fractal.js",
+    "wasm_infinite_gpu_fractal.d.ts"
+  ],
+  "main": "wasm_infinite_gpu_fractal.js",
+  "types": "wasm_infinite_gpu_fractal.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

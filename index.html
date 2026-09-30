@@ -11,23 +11,175 @@
     <!-- 3D Fluid Metaballs Demoscene Background Canvas -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Main Container: Pure Preview Pictures and Demure Footer -->
+    <!-- Main Container -->
     <div class="landing-wrap">
-        <main class="previews-container">
-            <div class="previews-grid">
-                <a href="celestial-heart/" class="preview-card" aria-label="Celestial Heart">
-                    <img src="screenshots/celestial_heart_preview.png" alt="Celestial Heart Preview" loading="eager">
-                </a>
-                <a href="matrix-vortex/" class="preview-card" aria-label="Cyber Matrix Vortex">
-                    <img src="screenshots/matrix_vortex_preview.png" alt="Cyber Matrix Vortex Preview" loading="eager">
-                </a>
-                <a href="cosmic-mandelbrot/" class="preview-card" aria-label="Cosmic Mandelbrot">
-                    <img src="screenshots/cosmic_mandelbrot_preview.png" alt="Cosmic Mandelbrot Preview" loading="eager">
-                </a>
-                <a href="vortex-void/" class="preview-card" aria-label="Vortex Void">
-                    <img src="screenshots/vortex_void_preview.png" alt="Vortex Void Preview" loading="eager">
-                </a>
+        <header class="portal-header">
+            <div class="header-badge">WASM + WebGL2 DEMOSCENE</div>
+            <h1 class="portal-title">Infinite GPU Fractals</h1>
+            <p class="portal-subtitle">Continuous scale-invariant procedural topologies &amp; relativistic audio-visual odysseys</p>
+            
+            <!-- Interactive Preview Mode Toggle -->
+            <div class="view-controls">
+                <button id="view-toggle-btn" class="toggle-btn" type="button" aria-pressed="false">
+                    <span class="toggle-icon">🎬</span>
+                    <span class="toggle-text">Toggle Animated Loops</span>
+                </button>
             </div>
+        </header>
+
+        <main id="previews-container" class="previews-container">
+            <!-- Series I: Classics -->
+            <section class="series-section" aria-labelledby="series-1-title">
+                <div class="series-header">
+                    <span class="series-badge">SERIES I</span>
+                    <h2 id="series-1-title" class="series-title">Classic GPU Fractals</h2>
+                    <p class="series-desc">Continuous logarithmic zooms &amp; pure procedural coordinate topologies</p>
+                </div>
+
+                <div class="previews-grid">
+                    <a href="celestial-heart/" class="preview-card" aria-label="Celestial Heart">
+                        <div class="card-media">
+                            <img class="thumb thumb-landscape" src="screenshots/celestial_heart_preview.png" alt="Celestial Heart Preview" loading="eager">
+                            <img class="thumb thumb-gif" src="screenshots/celestial_heart_mobile.gif" alt="Celestial Heart Animated" loading="lazy">
+                            <div class="gif-badge">LOOP</div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-num">01</span>
+                            <div class="card-info">
+                                <h3 class="card-name">Celestial Heart</h3>
+                                <p class="card-sub">Shepard Scale Infinite Zoom</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="matrix-vortex/" class="preview-card" aria-label="Cyber Matrix Vortex">
+                        <div class="card-media">
+                            <img class="thumb thumb-landscape" src="screenshots/matrix_vortex_preview.png" alt="Cyber Matrix Vortex Preview" loading="eager">
+                            <img class="thumb thumb-gif" src="screenshots/matrix_vortex_mobile.gif" alt="Cyber Matrix Vortex Animated" loading="lazy">
+                            <div class="gif-badge">LOOP</div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-num">02</span>
+                            <div class="card-info">
+                                <h3 class="card-name">Cyber Matrix Vortex</h3>
+                                <p class="card-sub">Cylindrical Raymarched Tunnel</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="cosmic-mandelbrot/" class="preview-card" aria-label="Cosmic Mandelbrot">
+                        <div class="card-media">
+                            <img class="thumb thumb-landscape" src="screenshots/cosmic_mandelbrot_preview.png" alt="Cosmic Mandelbrot Preview" loading="eager">
+                            <img class="thumb thumb-gif" src="screenshots/cosmic_mandelbrot_mobile.gif" alt="Cosmic Mandelbrot Animated" loading="lazy">
+                            <div class="gif-badge">LOOP</div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-num">03</span>
+                            <div class="card-info">
+                                <h3 class="card-name">Cosmic Mandelbrot</h3>
+                                <p class="card-sub">Deep Complex Logarithmic Zoom</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="vortex-void/" class="preview-card" aria-label="Vortex Void">
+                        <div class="card-media">
+                            <img class="thumb thumb-landscape" src="screenshots/vortex_void_preview.png" alt="Vortex Void Preview" loading="eager">
+                            <img class="thumb thumb-gif" src="screenshots/vortex_void_mobile.gif" alt="Vortex Void Animated" loading="lazy">
+                            <div class="gif-badge">LOOP</div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-num">04</span>
+                            <div class="card-info">
+                                <h3 class="card-name">Vortex Void</h3>
+                                <p class="card-sub">Cardioid Singularity Plunge</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Elegant Demoscene Separator -->
+            <div class="series-separator" role="separator">
+                <div class="separator-line"></div>
+                <div class="separator-center">
+                    <span class="separator-diamond">◆</span>
+                    <span class="separator-tag">EVOLVING MULTI-ACT SUITE</span>
+                    <span class="separator-diamond">◆</span>
+                </div>
+                <div class="separator-line"></div>
+            </div>
+
+            <!-- Series II: Narrative & Metamorphic Odysseys -->
+            <section class="series-section" aria-labelledby="series-2-title">
+                <div class="series-header">
+                    <span class="series-badge badge-glow">SERIES II</span>
+                    <h2 id="series-2-title" class="series-title">Narrative &amp; Metamorphic Odysseys</h2>
+                    <p class="series-desc">Multi-act cinematics, organic Bezier SDF morphing &amp; relativistic space-warp dynamics</p>
+                </div>
+
+                <div class="previews-grid">
+                    <a href="celestial-odyssey/" class="preview-card" aria-label="Celestial Odyssey">
+                        <div class="card-media">
+                            <img class="thumb thumb-landscape" src="screenshots/celestial_odyssey_preview.png" alt="Celestial Odyssey Preview" loading="lazy">
+                            <img class="thumb thumb-gif" src="screenshots/celestial_odyssey_mobile.gif" alt="Celestial Odyssey Animated" loading="lazy">
+                            <div class="gif-badge">LOOP</div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-num">05</span>
+                            <div class="card-info">
+                                <h3 class="card-name">Celestial Odyssey</h3>
+                                <p class="card-sub">3-Act Journey &amp; Wavefronts</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="matrix-saga/" class="preview-card" aria-label="Matrix Saga">
+                        <div class="card-media">
+                            <img class="thumb thumb-landscape" src="screenshots/matrix_saga_preview.png" alt="Matrix Saga Preview" loading="lazy">
+                            <img class="thumb thumb-gif" src="screenshots/matrix_saga_mobile.gif" alt="Matrix Saga Animated" loading="lazy">
+                            <div class="gif-badge">LOOP</div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-num">06</span>
+                            <div class="card-info">
+                                <h3 class="card-name">Matrix Saga</h3>
+                                <p class="card-sub">3-Stage Infiltration &amp; Mandala</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="cosmic-infinity/" class="preview-card" aria-label="Cosmic Infinity">
+                        <div class="card-media">
+                            <img class="thumb thumb-landscape" src="screenshots/cosmic_infinity_preview.png" alt="Cosmic Infinity Preview" loading="lazy">
+                            <img class="thumb thumb-gif" src="screenshots/cosmic_infinity_mobile.gif" alt="Cosmic Infinity Animated" loading="lazy">
+                            <div class="gif-badge">LOOP</div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-num">07</span>
+                            <div class="card-info">
+                                <h3 class="card-name">Cosmic Infinity</h3>
+                                <p class="card-sub">64,000x Zoom &amp; Relativistic Return</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="vortex-metamorphosis/" class="preview-card" aria-label="Vortex Metamorphosis">
+                        <div class="card-media">
+                            <img class="thumb thumb-landscape" src="screenshots/vortex_metamorphosis_preview.png" alt="Vortex Metamorphosis Preview" loading="lazy">
+                            <img class="thumb thumb-gif" src="screenshots/vortex_metamorphosis_mobile.gif" alt="Vortex Metamorphosis Animated" loading="lazy">
+                            <div class="gif-badge">LOOP</div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-num">08</span>
+                            <div class="card-info">
+                                <h3 class="card-name">Vortex Metamorphosis</h3>
+                                <p class="card-sub">8-Phase Bezier Morphing &amp; VFX</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
         </main>
 
         <footer class="landing-footer">
@@ -35,16 +187,38 @@
                 Coded with ❤️
             </p>
             <a href="https://github.com/tekk/valinfinite" class="github-link" target="_blank" rel="noopener" aria-label="GitHub Repository">
-                <svg class="github-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                <svg class="github-icon" viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
                     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
                 </svg>
             </a>
         </footer>
     </div>
 
-    <!-- WebGL Background Fluid Shader Script -->
+    <!-- Smart Audio Player -->
+    <script src="audio/player.js"></script>
+
+    <!-- WebGL Background Fluid Shader Script & Mode Toggle -->
     <script>
         (function() {
+            // Interactive Preview Mode Toggle
+            const toggleBtn = document.getElementById('view-toggle-btn');
+            const previewsContainer = document.getElementById('previews-container');
+            let isLoopActive = false;
+
+            if (toggleBtn && previewsContainer) {
+                toggleBtn.addEventListener('click', function() {
+                    isLoopActive = !isLoopActive;
+                    toggleBtn.setAttribute('aria-pressed', isLoopActive);
+                    toggleBtn.classList.toggle('active', isLoopActive);
+                    previewsContainer.classList.toggle('show-loops', isLoopActive);
+                    const label = toggleBtn.querySelector('.toggle-text');
+                    if (label) {
+                        label.textContent = isLoopActive ? 'Show Screenshots' : 'Toggle Animated Loops';
+                    }
+                });
+            }
+
+            // WebGL Raymarched Background Fluid
             const canvas = document.getElementById('bg-canvas');
             const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
             if (!gl) return;
@@ -61,7 +235,6 @@
                 uniform vec2 u_resolution;
                 uniform float u_time;
 
-                // Polynomial smooth minimum for viscous fluid metaball blending
                 float smin(float a, float b, float k) {
                     float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
                     return mix(b, a, h) - k * h * (1.0 - h);
@@ -78,23 +251,18 @@
                     return k0 * (k0 - 1.0) / k1;
                 }
 
-                // 3D Scene: Merging semi-liquid oval blobs pouring into each other and backwards
                 float map(vec3 p) {
-                    float t = u_time * 0.40;
+                    float t = u_time * 0.35;
+                    p.xz = rot2D(sin(t * 0.18) * 0.15) * p.xz;
 
-                    // Slow, organic demoscene drift
-                    p.xz = rot2D(sin(t * 0.2) * 0.15) * p.xz;
+                    float cycle1 = sin(t * 0.95);
+                    float cycle2 = cos(t * 0.80);
+                    float cycle3 = sin(t * 0.60 + 1.8);
 
-                    float cycle1 = sin(t * 1.0);
-                    float cycle2 = cos(t * 0.85);
-                    float cycle3 = sin(t * 0.65 + 1.8);
-
-                    // 1. Central fluid pool (oval blob receiving liquid)
-                    vec3 p1 = p - vec3(0.0, -0.3 + 0.18 * cycle2, 0.0);
-                    vec3 r1 = vec3(1.65 + 0.18 * cycle1, 1.05 - 0.14 * cycle1, 1.35 + 0.12 * cycle2);
+                    vec3 p1 = p - vec3(0.0, -0.3 + 0.16 * cycle2, 0.0);
+                    vec3 r1 = vec3(1.65 + 0.16 * cycle1, 1.05 - 0.12 * cycle1, 1.35 + 0.12 * cycle2);
                     float d1 = sdEllipsoid(p1, r1);
 
-                    // 2. Upper oval pouring down into center, stretching, then pulling back upwards
                     float pour1_y = 1.15 + 1.15 * cycle1;
                     float stretch1_y = 1.45 + 0.45 * (1.0 - abs(cycle1));
                     float stretch1_xz = 0.82 - 0.18 * (1.0 - abs(cycle1));
@@ -103,7 +271,6 @@
                     vec3 r2 = vec3(stretch1_xz, stretch1_y, stretch1_xz);
                     float d2 = sdEllipsoid(p2, r2);
 
-                    // 3. Side pouring oval blob (flows into center and retracts)
                     float pour2_x = -1.75 - 0.95 * cycle2;
                     float pour2_y = 0.65 - 0.65 * cycle2;
                     vec3 p3 = p - vec3(pour2_x, pour2_y, 0.3 * cycle1);
@@ -111,7 +278,6 @@
                     vec3 r3 = vec3(1.3 + 0.2 * cycle2, 0.75, 0.85);
                     float d3 = sdEllipsoid(p3, r3);
 
-                    // 4. Companion right droplet coalescing and separating
                     float pour3_x = 1.7 + 0.85 * cycle3;
                     float pour3_y = -0.25 + 0.7 * sin(t * 1.1);
                     vec3 p4 = p - vec3(pour3_x, pour3_y, -0.35 * cycle2);
@@ -119,11 +285,9 @@
                     vec3 r4 = vec3(0.85, 1.05 + 0.25 * cycle1, 0.85);
                     float d4 = sdEllipsoid(p4, r4);
 
-                    // Smooth fluid metaball coalescence with viscous surface tension
                     float d = smin(d1, d2, 0.75);
                     d = smin(d, d3, 0.70);
                     d = smin(d, d4, 0.65);
-
                     return d;
                 }
 
@@ -140,11 +304,9 @@
                 void main() {
                     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / min(u_resolution.x, u_resolution.y);
 
-                    // Camera ray
                     vec3 ro = vec3(0.0, 0.0, 6.2);
                     vec3 rd = normalize(vec3(uv, -1.6));
 
-                    // Deep demoscene space gradient with soft skyblue horizon haze
                     vec3 bg = mix(
                         vec3(0.015, 0.025, 0.05),
                         vec3(0.035, 0.075, 0.14),
@@ -175,7 +337,6 @@
                         vec3 n = calcNormal(p);
                         vec3 v = -rd;
 
-                        // Dual lighting
                         vec3 l1 = normalize(vec3(1.2, 1.8, 1.0));
                         vec3 l2 = normalize(vec3(-1.6, -1.0, 0.8));
 
@@ -187,7 +348,6 @@
 
                         float fresnel = pow(1.0 - max(dot(n, v), 0.0), 2.8);
 
-                        // Skyblue fluid colors (#2eadfa to #94ebff)
                         vec3 fluidBase = vec3(0.18, 0.68, 0.98);
                         vec3 fluidHighlight = vec3(0.58, 0.92, 1.0);
                         vec3 fluidDeep = vec3(0.04, 0.28, 0.58);

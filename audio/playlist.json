@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1,
+    "title": "Fire In My Soul",
+    "artist": "Oliver Heldens, Shungudzo",
+    "duration": 175.3,
+    "file": "audio/tracks/track_01_fire_in_my_soul.mp3"
+  },
+  {
+    "id": 2,
+    "title": "No Limits (Vocal Mix)",
+    "artist": "Danism, Train (UK) & DJ Rae, Danism, Train (UK), DJ Rae",
+    "duration": 375.6,
+    "file": "audio/tracks/track_02_no_limits_vocal_mix.mp3"
+  },
+  {
+    "id": 3,
+    "title": "Say My Name (Sub Focus Remix)",
+    "artist": "Morgan Seatree, Sub Focus",
+    "duration": 193.1,
+    "file": "audio/tracks/track_03_say_my_name_sub_focus_remix.mp3"
+  },
+  {
+    "id": 4,
+    "title": "Bambou (Original Mix)",
+    "artist": "Sebastien Leger",
+    "duration": 436.8,
+    "file": "audio/tracks/track_04_bambou_original_mix.mp3"
+  },
+  {
+    "id": 5,
+    "title": "TRONCE",
+    "artist": "Sili",
+    "duration": 291.3,
+    "file": "audio/tracks/track_05_tronce.mp3"
+  },
+  {
+    "id": 6,
+    "title": "Track 6",
+    "artist": "Unknown",
+    "duration": 295.2,
+    "file": "audio/tracks/track_06_track_6.mp3"
+  },
+  {
+    "id": 7,
+    "title": "Escapism (Original Mix)",
+    "artist": "cYsmix",
+    "duration": 300.5,
+    "file": "audio/tracks/track_07_escapism_original_mix.mp3"
+  },
+  {
+    "id": 8,
+    "title": "Unity",
+    "artist": "TheFatRat",
+    "duration": 249.0,
+    "file": "audio/tracks/track_08_unity.mp3"
+  },
+  {
+    "id": 9,
+    "title": "Underground",
+    "artist": "Tantrum Desire",
+    "duration": 274.6,
+    "file": "audio/tracks/track_09_underground.mp3"
+  },
+  {
+    "id": 10,
+    "title": "Rhyme Dust (Dimension Remix)",
+    "artist": "MK, Dom Dolla",
+    "duration": 204.1,
+    "file": "audio/tracks/track_10_rhyme_dust_dimension_remix.mp3"
+  },
+  {
+    "id": 11,
+    "title": "Horizon",
+    "artist": "1991, Poppy Baskcomb",
+    "duration": 180.7,
+    "file": "audio/tracks/track_11_horizon.mp3"
+  },
+  {
+    "id": 12,
+    "title": "Colours & Lights (Cl\u00e9ment Leroux Remix)",
+    "artist": "GoldFish, Cat Dealers",
+    "duration": 202.1,
+    "file": "audio/tracks/track_12_colours_lights_cl\u00e9ment_leroux_.mp3"
+  },
+  {
+    "id": 13,
+    "title": "Mend Your Ways",
+    "artist": "PSYQUI",
+    "duration": 267.0,
+    "file": "audio/tracks/track_13_mend_your_ways.mp3"
+  },
+  {
+    "id": 14,
+    "title": "Nights Introlude",
+    "artist": "Nightmares On Wax",
+    "duration": 280.3,
+    "file": "audio/tracks/track_14_nights_introlude.mp3"
+  },
+  {
+    "id": 15,
+    "title": "Genesis",
+    "artist": "Subsonic",
+    "duration": 223.4,
+    "file": "audio/tracks/track_15_genesis.mp3"
+  },
+  {
+    "id": 16,
+    "title": "Get To Me",
+    "artist": "Culture Shock, James Pountney",
+    "duration": 245.5,
+    "file": "audio/tracks/track_16_get_to_me.mp3"
+  },
+  {
+    "id": 17,
+    "title": "Focused",
+    "artist": "Soulfreq",
+    "duration": 456.2,
+    "file": "audio/tracks/track_17_focused.mp3"
+  },
+  {
+    "id": 18,
+    "title": "King Of The Swingers (Gettin' Mad Mix)",
+    "artist": "Krushed & Sorted",
+    "duration": 364.6,
+    "file": "audio/tracks/track_18_king_of_the_swingers_gettin_ma.mp3"
+  }
+]

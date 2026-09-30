@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Cosmic Mandelbrot (Infinity Plunge)</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="../audio/player.js" defer></script>
+</head>
+<body>
+    <canvas id="fractal-canvas"></canvas>
+
+    <script type="module">
+        import init, { start_fractal } from './pkg/wasm_infinite_gpu_fractal.js';
+
+        let idleTimer = null;
+        function resetIdleTimer() {
+            document.body.classList.remove('idle');
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => {
+                document.body.classList.add('idle');
+            }, 2500);
+        }
+        window.addEventListener('mousemove', resetIdleTimer);
+        resetIdleTimer();
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                window.location.href = '../';
+            }
+        });
+
+        async function launch() {
+            try {
+                await init();
+                start_fractal('fractal-canvas');
+            } catch (err) {
+                console.error('Failed to launch:', err);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', launch);
+        } else {
+            launch();
+        }
+    </script>
+</body>
+</html>
