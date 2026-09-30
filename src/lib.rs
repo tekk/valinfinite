@@ -29,7 +29,7 @@ impl FractalApp {
         };
 
         // Mobile optimization: Cap devicePixelRatio to 1.5 to guarantee smooth 60-120 FPS
-        // on high-DPI AMOLED screens (like Samsung Galaxy S22 with DPR 3.0)
+        // on high-DPI AMOLED mobile screens
         let raw_dpr = window.device_pixel_ratio();
         let dpr = raw_dpr.min(1.5).max(1.0);
 
@@ -82,7 +82,7 @@ impl FractalApp {
             .ok_or_else(|| format!("Canvas with id '{}' not found", canvas_id))?
             .dyn_into::<HtmlCanvasElement>()?;
 
-        // Context options tuned for maximum performance on mobile (Samsung Galaxy S22)
+        // Context options tuned for maximum performance on mobile devices
         let context_options = js_sys::Object::new();
         js_sys::Reflect::set(&context_options, &"alpha".into(), &false.into())?;
         js_sys::Reflect::set(&context_options, &"depth".into(), &false.into())?;

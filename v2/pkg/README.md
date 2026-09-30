@@ -11,7 +11,7 @@ A WebAssembly application featuring an infinite real-time fractal zoom into an a
 - **Psychedelic Multi-Frequency Color Waves**: Trigonometric cosine color palettes dynamically shifting between electric magenta, cyan, solar gold, emerald, and ultraviolet glow.
 - **Living Heartbeat Rhythm**: An anatomical double-pulse ("lub-dub") rhythmic pulsation subtly breathes life into the geometry.
 - **Zero Controls**: Unobtrusive, borderless visual art designed for pure immersion.
-- **Optimized for Mobile (Samsung Galaxy S22)**:
+- **Optimized for High-Performance Mobile WebGL**:
   - Lean WebGL2 fragment shader with 12 iterations per octave (under 300 ALUs/fragment).
   - Dynamic DPR capping (`dpr <= 1.5`) preserves full 60–120 FPS on high-DPI AMOLED screens without thermal throttling.
   - High-performance context flags (`powerPreference: high-performance`, `preserveDrawingBuffer: false`, `antialias: false`).
