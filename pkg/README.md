@@ -12,30 +12,34 @@ Continuous scale-invariant GPU fractals in WebAssembly and WebGL2 with vivid psy
 
 ## 🔬 Mathematical Formulations & Scene Algorithms
 
-### 1. Celestial Heart (Infinite Shepard Zoom)
+### 1. Celestial Heart (Multi-Act Story & Scene Changing Crossings)
 
 <div align="center">
   <img src="screenshots/celestial_heart_mobile.gif" alt="Celestial Heart Mobile Preview" width="220">
 </div>
 
-#### Logarithmic Octave Synthesis (Shepard Scale)
-Infinite scale-invariant zoom is achieved without floating-point precision collapse by synthesizing $N = 4$ overlapping logarithmic octaves. Each octave $k \in \{0, \dots, N-1\}$ scales exponentially by base $S = 3.2$:
+#### Macro Story Architecture & Dynamic Act Weights
+The animation unfolds as a continuous narrative across a $72.0\text{s}$ macro cycle, smoothly partitioned into three distinct acts with gradual transitions:
 
-$$\phi_k(t) = \mathrm{fract}\left(t \cdot v + \frac{k}{N}\right), \quad s_k(t) = \exp\left(\phi_k(t) \cdot \ln S\right)$$
+$$w_1(t) + w_2(t) + w_3(t) = 1, \quad \theta_{\text{cam}}(t) = \theta_1(t) w_1(t) + \theta_2(t) w_2(t) + \theta_3(t) w_3(t)$$
 
-A quadratic Hanning window eliminates boundary discontinuities:
+- **Act 1: Celestial Genesis ($0\text{s} - 20\text{s}$)**: Serene infinite Shepard scale zoom with gentle breathing sway, sapphire/rose neon auroras, and rhythmic heartbeat pulses.
+- **Act 2: Vortex Mandala Bloom ($24\text{s} - 44\text{s}$)**: Hypnotic swirling vortex rotation with dihedral symmetry folds, blooming kaleidoscopic heart rosettes, and emerald-cyan auroras.
+- **Act 3: Supernova Astral Storm ($48\text{s} - 68\text{s}$)**: Relativistic accelerating surges, molten plasma gold, incandescent solar core eruptions, and crackling procedural lightning arcs.
 
-$$w_k(t) = \left[\frac{1 - \cos(2\pi \phi_k(t))}{2}\right]^2, \quad \mathbf{C}_{\text{total}} = \frac{\sum_{k=0}^{N-1} \mathbf{C}_k \cdot w_k(t)}{\sum_{k=0}^{N-1} w_k(t)}$$
+#### Scene Changing Crossings (Optical Caustics & Singularity Ripples)
+Chapters are bridged by optical wavefront sweeps refracting spacetime:
 
-#### Cardioid Cleft Fold & Inversive Geometry
-Within each octave, the complex coordinate $z \in \mathbb{C}$ undergoes bilateral symmetry, smooth cardioid cleft folding, and spherical inversion over $M = 12$ iterations:
+$$\mathbf{u}' = \mathbf{u} + \mathbf{d}_{\text{wave}} \cdot \sin\left(\psi(\mathbf{u}) \cdot \omega_c\right) e^{-k_c |\psi(\mathbf{u}) - c_0(t)|}, \quad \mathbf{C}_{\text{crossing}} = \mathbf{C}_{\text{beam}} e^{-k_b |\psi(\mathbf{u}) - c_0(t)|}$$
 
-$$z_x \leftarrow |z_x|, \quad z_y \leftarrow z_y - \alpha \left(\sqrt{|z_x| + \epsilon} - \beta\right)$$
+#### Logarithmic Octave Synthesis & Dynamic Folding Geometry
+Infinite scale invariance is preserved across all acts using $N = 4$ overlapping logarithmic octaves ($S = 3.2$), driven by a strictly monotonic integrated zoom phase:
 
-$$z \leftarrow \begin{cases} 
-\frac{z}{r_{\min}^2} & |z|^2 < r_{\min}^2 \\ 
-\frac{z}{|z|^2} & r_{\min}^2 \le |z|^2 < r_{\max}^2 
-\end{cases}$$
+$$\Phi(t) = v_0 \cdot t - \frac{A_1}{\omega_1} \cos(\omega_1 t) - \frac{A_2}{\omega_2} \cos(\omega_2 t), \quad \frac{d\Phi}{dt} > 0 \quad \forall t$$
+
+Within each octave, the complex coordinate $z$ undergoes bilateral symmetry, cardioid cleft folding, spherical inversion, and act-dependent dihedral rotations:
+
+$$z_x \leftarrow |z_x|, \quad z_y \leftarrow z_y - \alpha \left(\sqrt{|z_x| + \epsilon} - \beta\right), \quad z \leftarrow \mathbf{R}\left(\theta_{\text{fold}}(t)\right) z - \mathbf{b}_{\text{fold}}(t)$$
 
 ---
 

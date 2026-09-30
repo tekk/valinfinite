@@ -17,250 +17,48 @@ out vec4 fragColor;
 #define PI 3.14159265359
 #define TWO_PI 6.28318530718
 
-// ==========================================
-// 1. WARM VIVID COLOR PALETTES
-// ==========================================
-// Molten gold, sunset vermilion, fiery amber, peach, radiant magenta
-vec3 warm_palette(float t) {
-    vec3 a = vec3(0.68, 0.42, 0.22);
-    vec3 b = vec3(0.55, 0.45, 0.32);
-    vec3 c = vec3(1.0, 1.0, 1.0);
-    vec3 d = vec3(0.00, 0.25, 0.52);
+// =========================================================================
+// 1. DYNAMIC COLOR PALETTES ACROSS STORY CHAPTERS
+// =========================================================================
+vec3 palette(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
     return clamp(a + b * cos(TWO_PI * (c * t + d)), 0.0, 1.0);
 }
 
-vec3 warm_palette_secondary(float t) {
-    vec3 a = vec3(0.72, 0.35, 0.18);
-    vec3 b = vec3(0.48, 0.40, 0.35);
-    vec3 c = vec3(1.2, 0.9, 0.7);
-    vec3 d = vec3(0.05, 0.32, 0.65);
-    return clamp(a + b * cos(TWO_PI * (c * t + d)), 0.0, 1.0);
+// Act 1: Celestial Sapphire, Rose Quartz, Radiant Violet, Diamond Core
+vec3 palette_act1(float t) {
+    return palette(t, vec3(0.52, 0.48, 0.56), vec3(0.48, 0.45, 0.52), vec3(1.0, 1.0, 1.0), vec3(0.00, 0.33, 0.67));
 }
 
-// ==========================================
-// 2. ANALYTICAL SDF PRIMITIVES
-// ==========================================
-
-// Exact Circle SDF
-float sdCircle(vec2 p, float r) {
-    return length(p) - r;
+// Act 2: Emerald Aurora, Golden Cyan, Electric Orchid, Sacred Mandala
+vec3 palette_act2(float t) {
+    return palette(t, vec3(0.45, 0.60, 0.52), vec3(0.50, 0.48, 0.40), vec3(1.0, 0.9, 1.1), vec3(0.12, 0.45, 0.78));
 }
 
-// Inigo Quilez Exact Heart SDF
-float sdHeart(vec2 p) {
-    p.x = abs(p.x);
-    p.y += 0.45; // Center heart: sharp tip at bottom, rounded lobes at top
-    if (p.y + p.x > 1.0) {
-        vec2 q = p - vec2(0.25, 0.75);
-        return length(q) - 0.35355339;
-    }
-    vec2 q1 = p - vec2(0.0, 1.0);
-    vec2 q2 = p - 0.5 * max(p.x + p.y, 0.0);
-    return sqrt(min(dot(q1, q1), dot(q2, q2))) * sign(p.x - p.y);
+// Act 3: Solar Plasma Gold, Molten Amber, Crimson Blaze, Obsidian Core
+vec3 palette_act3(float t) {
+    return palette(t, vec3(0.68, 0.45, 0.22), vec3(0.55, 0.48, 0.35), vec3(1.1, 1.0, 0.8), vec3(0.02, 0.28, 0.58));
 }
 
-// Rounded Box / Square SDF
-float sdBox(vec2 p, vec2 b, float r) {
-    vec2 q = abs(p) - b + r;
-    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
-}
-
-// Octagon SDF
-float sdOctagon(vec2 p, float r) {
-    const vec3 k = vec3(-0.9238795325, 0.3826834323, 0.4142135623);
-    p = abs(p);
-    p -= 2.0 * min(dot(vec2(k.x, k.y), p), 0.0) * vec2(k.x, k.y);
-    p -= 2.0 * min(dot(vec2(-k.x, k.y), p), 0.0) * vec2(-k.x, k.y);
-    p -= vec2(clamp(p.x, -k.z * r, k.z * r), r);
-    return length(p) * sign(p.y);
-}
-
-// Hexagon SDF
-float sdHexagon(vec2 p, float r) {
-    const vec3 k = vec3(-0.866025404, 0.5, 0.577350269);
-    p = abs(p);
-    p -= 2.0 * min(dot(k.xy, p), 0.0) * k.xy;
-    p -= vec2(clamp(p.x, -k.z * r, k.z * r), r);
-    return length(p) * sign(p.y);
-}
-
-// Star SDF (5-pointed)
-float sdStar5(vec2 p, float r, float rf) {
-    const vec2 k1 = vec2(0.80901699437, -0.58778525229);
-    const vec2 k2 = vec2(-k1.x, k1.y);
-    p.x = abs(p.x);
-    p -= 2.0 * max(dot(k1, p), 0.0) * k1;
-    p -= 2.0 * max(dot(k2, p), 0.0) * k2;
-    p.x = abs(p.x);
-    p.y -= r;
-    vec2 ba = rf * vec2(-k1.y, k1.x) - vec2(0.0, 1.0);
-    float h = clamp(dot(p, ba) / dot(ba, ba), 0.0, r);
-    return length(p - ba * h) * sign(p.y * ba.x - p.x * ba.y);
-}
-
-// Random / Organic Multilobe Polygon
-float sdOrganicPoly(vec2 p) {
-    float a = atan(p.y, p.x);
-    float r = 0.44 + 0.08 * sin(a * 5.0 + 1.2) 
-                   + 0.05 * cos(a * 3.0 - 0.8) 
-                   + 0.03 * sin(a * 7.0 + 2.4);
-    return length(p) - r;
-}
-
-// Randomly moving Bezier curve control points
-float sdBezierMoving(vec2 p, float t) {
-    float a = atan(p.y, p.x);
-    float r = length(p);
-    float r_bez = 0.42 + 0.11 * sin(a * 4.0 + t * 2.5)
-                        + 0.07 * cos(a * 6.0 - t * 3.2 + sin(t * 1.4))
-                        + 0.04 * sin(a * 9.0 + t * 4.1);
-    return r - r_bez;
-}
-
-// ==========================================
-// 3. MORPHOLOGY ENGINE FOR SCENE A
-// ==========================================
-float evaluate_scene_a_shape(vec2 p, float anim_time) {
-    float t = mod(max(0.0, anim_time), 46.0);
-    
-    if (t < 6.0) {
-        // Unfilled circle: starts small (r=0.12), expands, gets bolder until solid circle
-        float frac = t / 6.0;
-        float r = mix(0.12, 0.52, smoothstep(0.0, 1.0, frac));
-        float th = mix(0.008, 0.55, pow(frac, 1.8));
-        // Mathematically exact annular ring shrinking hole until solid
-        return max(length(p) - r, -(length(p) - max(0.0, r - th)));
-    } else if (t < 17.0) {
-        // Morph into Heart (stays 11s!) with gentle heartbeat
-        float morph_t = smoothstep(0.0, 1.8, t - 6.0);
-        float d_prev = sdCircle(p, 0.52);
-        // Soft romantic pulse
-        float pulse = 1.0 + 0.03 * sin(t * 4.0) * exp(-mod(t * 1.33, 1.0) * 2.5);
-        vec2 p_heart = (p / 0.68) / pulse;
-        float d_heart = sdHeart(p_heart) * 0.68 * pulse;
-        return mix(d_prev, d_heart, morph_t);
-    } else if (t < 22.0) {
-        // Morph into Rounded Square
-        float morph_t = smoothstep(0.0, 1.5, t - 17.0);
-        vec2 p_heart = p / 0.68;
-        float d_prev = sdHeart(p_heart) * 0.68;
-        float d_square = sdBox(p, vec2(0.40), 0.10);
-        return mix(d_prev, d_square, morph_t);
-    } else if (t < 27.0) {
-        // Morph into Octagon
-        float morph_t = smoothstep(0.0, 1.5, t - 22.0);
-        float d_prev = sdBox(p, vec2(0.40), 0.10);
-        float d_oct = sdOctagon(p, 0.48);
-        return mix(d_prev, d_oct, morph_t);
-    } else if (t < 32.0) {
-        // Morph into Hexagon
-        float morph_t = smoothstep(0.0, 1.5, t - 27.0);
-        float d_prev = sdOctagon(p, 0.48);
-        float d_hex = sdHexagon(p, 0.50);
-        return mix(d_prev, d_hex, morph_t);
-    } else if (t < 37.0) {
-        // Morph into Star
-        float morph_t = smoothstep(0.0, 1.5, t - 32.0);
-        float d_prev = sdHexagon(p, 0.50);
-        float d_star = sdStar5(p, 0.56, 0.42);
-        return mix(d_prev, d_star, morph_t);
-    } else if (t < 41.0) {
-        // Morph into Organic Polygon
-        float morph_t = smoothstep(0.0, 1.5, t - 37.0);
-        float d_prev = sdStar5(p, 0.56, 0.42);
-        float d_org = sdOrganicPoly(p);
-        return mix(d_prev, d_org, morph_t);
-    } else {
-        // Morph into Moving Bezier Curve with Lightning
-        float morph_t = smoothstep(0.0, 1.5, t - 41.0);
-        float d_prev = sdOrganicPoly(p);
-        float d_bez = sdBezierMoving(p, t);
-        return mix(d_prev, d_bez, morph_t);
-    }
-}
-
-// Scene B: Radiant Sacred Rosette / Hypnotic Torus Metamorphosis
-float evaluate_scene_b_shape(vec2 p, float anim_time) {
-    float t = mod(max(0.0, anim_time), 46.0);
-    float a = atan(p.y, p.x);
-    float r = length(p);
-    
-    // Smoothly morphing petal order: 3 -> 5 -> 8 -> 12 -> spiral rosette
-    float n_petals = mix(3.0, 12.0, smoothstep(0.0, 46.0, t));
-    float petal_amp = 0.16 + 0.05 * sin(t * 0.8);
-    float base_r = 0.45 + 0.06 * cos(t * 0.5);
-    
-    float rosette = base_r + petal_amp * cos(n_petals * a + t * 0.9) 
-                           + 0.04 * sin(a * 4.0 - t * 1.5);
-    return r - rosette;
-}
-
-// ==========================================
-// 4. FIVE UNEXPECTED PROCEDURAL RANDOM EFFECTS
-// ==========================================
-
-// Effect 1: Procedural Lightning Arcs
+// =========================================================================
+// 2. PROCEDURAL ACTION VFX (LIGHTNING & SHOCKWAVES)
+// =========================================================================
 float fxLightning(vec2 p, float t, float seed) {
     float bolt = 0.0;
     for (int i = 0; i < 3; i++) {
         float fi = float(i);
-        float flash = step(0.65, fract(sin(floor(t * 4.5 + fi * 17.13 + seed)) * 43758.5453));
+        float flash = step(0.68, fract(sin(floor(t * 5.0 + fi * 19.3 + seed)) * 43758.5453));
         if (flash > 0.0) {
-            float y = p.y * 3.5;
-            float path = 0.30 * sin(y * 2.2 + t * 15.0 + fi * 3.1)
-                       + 0.14 * sin(y * 8.0 - t * 30.0)
-                       + 0.06 * sin(y * 19.0 + t * 60.0);
-            float d = abs(p.x - path - (fi - 1.0) * 0.45);
-            bolt += flash * (exp(-d * 70.0) * 1.8 + exp(-d * 12.0) * 0.4);
+            float y = p.y * 3.2;
+            float path = 0.28 * sin(y * 2.2 + t * 16.0 + fi * 3.14)
+                       + 0.12 * sin(y * 7.5 - t * 32.0);
+            float d = abs(p.x - path - (fi - 1.0) * 0.42);
+            bolt += flash * (exp(-d * 75.0) * 1.6 + exp(-d * 14.0) * 0.4);
         }
     }
     return bolt;
 }
 
-// Effect 2: Solar Shockwave Lensing Ripple
-vec2 fxShockwave(vec2 p, float t) {
-    float cycle = mod(t * 0.32, 4.0);
-    float r = length(p);
-    float wave_front = cycle * 0.70;
-    float d = abs(r - wave_front);
-    float ripple = sin((r - wave_front) * 40.0) * exp(-d * 16.0) * smoothstep(2.5, 0.0, cycle);
-    return p + normalize(p + 1e-4) * ripple * 0.032;
-}
-
-// Effect 3: Ethereal Glowing Embers Swarm
-float fxEmbers(vec2 p, float t) {
-    float sparks = 0.0;
-    for (int i = 0; i < 7; i++) {
-        float fi = float(i);
-        vec2 pos = vec2(
-            0.62 * sin(t * 0.60 + fi * 1.57) * cos(t * 0.30 + fi * 0.8),
-            0.58 * cos(t * 0.48 + fi * 2.1) + 0.20 * sin(t * 1.10 + fi * 3.2)
-        );
-        float d = length(p - pos);
-        sparks += exp(-d * 45.0) * 1.5 + exp(-d * 10.0) * 0.30;
-    }
-    return sparks;
-}
-
-// Effect 4: Volumetric Golden Sunbeams
-float fxSunbeams(vec2 p, float t) {
-    float phi = atan(p.y, p.x);
-    float r = length(p);
-    float rays = max(0.0, sin(phi * 8.0 + t * 0.30) * cos(phi * 5.0 - t * 0.20));
-    return pow(rays, 3.5) * exp(-r * 1.2);
-}
-
-// Effect 5: Cosmic Auroral Magnetic Filaments
-float fxMagneticFilaments(vec2 p, float t) {
-    float r = length(p);
-    float phi = atan(p.y, p.x);
-    float lines = sin(phi * 12.0 + sin(r * 14.0 - t * 2.2));
-    return smoothstep(0.70, 1.0, lines) * exp(-abs(r - 0.68) * 5.0);
-}
-
-// ==========================================
-// 5. ACES FILM TONE MAPPING
-// ==========================================
+// ACES Filmic Tone Mapping for cinematic HDR range
 vec3 aces_tonemap(vec3 x) {
     const float a = 2.51;
     const float b = 0.03;
@@ -270,122 +68,221 @@ vec3 aces_tonemap(vec3 x) {
     return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
 }
 
-// ==========================================
-// 6. MAIN MULTI-LAYER PIPELINE
-// ==========================================
 void main() {
     vec2 raw_uv = (gl_FragCoord.xy - 0.5 * u_resolution) / min(u_resolution.x, u_resolution.y);
 
-    // Two Interchanging Scene Cycles of 58.0 seconds each:
-    // Scene 0: Layered Bezier Metamorphosis (Circle -> Heart -> Square -> Octagon -> Hexagon -> Star -> Polygon -> Bezier + Lightning)
-    // Scene 1: Radiant Sacred Rosette / Hypnotic Torus Metamorphosis
-    const float SCENE_DURATION = 58.0;
-    float global_time = u_time * 0.95;
-    int scene_idx = int(floor(global_time / SCENE_DURATION)) % 2;
-    float scene_t = mod(global_time, SCENE_DURATION);
+    // =========================================================================
+    // 3. MACRO STORY TIMELINE (72.0s CYCLE)
+    // =========================================================================
+    // Act 1: The Celestial Genesis & Sacred Heart (0.0s - 20.0s)
+    // Crossing 1: Solar Caustic Refraction Sweep (20.0s - 24.0s)
+    // Act 2: Kaleidoscopic Vortex & Mandala Bloom (24.0s - 44.0s)
+    // Crossing 2: Gravitational Singularity Ripple (44.0s - 48.0s)
+    // Act 3: Supernova Storm & Relativistic Astral Fire (48.0s - 68.0s)
+    // Crossing 3: Celestial Aurora Rebirth Curtain (68.0s - 72.0s)
+    const float CYCLE_DURATION = 72.0;
+    float macro_t = mod(u_time * 0.92, CYCLE_DURATION);
 
-    // Apply Refractive Solar Shockwave Lensing (Effect 2)
-    vec2 p = fxShockwave(raw_uv, u_time);
+    // Continuous smoothly integrated zoom time (monotonic, derivative always > 0)
+    // Act 1: calm smooth pace; Act 2: swirling flow; Act 3: rhythmic accelerating surges
+    float base_zoom = 0.40 * u_time - 0.06 * cos(u_time * 0.85) - 0.025 * cos(u_time * 2.3);
 
-    // Dynamic subtle camera breathing & organic rotation
-    float roll = 0.12 * sin(u_time * 0.30);
-    float ca = cos(roll), sa = sin(roll);
-    p = mat2(ca, -sa, sa, ca) * p;
+    // Scene weights for continuous, butter-smooth blending
+    float act1_w = smoothstep(24.0, 20.0, macro_t) + smoothstep(68.0, 72.0, macro_t);
+    act1_w = clamp(act1_w, 0.0, 1.0);
+    float act2_w = smoothstep(20.0, 24.0, macro_t) * (1.0 - smoothstep(44.0, 48.0, macro_t));
+    float act3_w = smoothstep(44.0, 48.0, macro_t) * (1.0 - smoothstep(68.0, 72.0, macro_t));
 
-    // Atmospheric warm background with subtle radial gradient
-    vec3 col_accum = vec3(0.035, 0.012, 0.022) * (1.0 - 0.45 * length(p));
+    // Normalize weights to strictly partition unity
+    float sum_w = act1_w + act2_w + act3_w + 1e-4;
+    act1_w /= sum_w;
+    act2_w /= sum_w;
+    act3_w /= sum_w;
 
-    // Multi-Layer Compositing (6 Concentric Out-of-Phase Layers)
-    const int NUM_LAYERS = 6;
-    float anim_t = max(0.0, scene_t - 4.5);
+    // =========================================================================
+    // 4. SCENE CHANGING CROSSINGS (OPTICAL CAUSTICS, WARPS & BEAM REFRACTIONS)
+    // =========================================================================
+    vec2 uv = raw_uv;
+    vec3 crossing_fx = vec3(0.0);
 
-    for (int l = 0; l < NUM_LAYERS; l++) {
-        float fl = float(l);
-        float layer_t = max(0.0, anim_t - fl * 0.18);
-        float scale = 1.0 + fl * 0.20 + 0.03 * sin(u_time * 1.5 + fl);
+    // Crossing 1 (20s - 24s): Diagonal Solar Caustic Refraction Wave
+    if (macro_t >= 20.0 && macro_t < 24.0) {
+        float ct = (macro_t - 20.0) / 4.0; // 0..1
+        float sweep = (raw_uv.x + raw_uv.y) * 0.707 - (ct * 3.2 - 1.6);
+        float refract_amp = exp(-abs(sweep) * 7.0) * (1.0 - ct * 0.3);
+        uv += vec2(sin(sweep * 15.0), cos(sweep * 15.0)) * refract_amp * 0.038;
         
-        float rot_l = (fl - 2.5) * 0.06 * sin(u_time * 0.40) + fl * 0.04;
-        float cal = cos(rot_l), sal = sin(rot_l);
-        vec2 p_layer = (mat2(cal, -sal, sal, cal) * p) / scale;
+        float beam = exp(-abs(sweep) * 9.0) * 1.8;
+        crossing_fx += vec3(1.2, 0.95, 0.55) * beam;
+    }
+    // Crossing 2 (44s - 48s): Gravitational Singularity Ripple Wave
+    else if (macro_t >= 44.0 && macro_t < 48.0) {
+        float ct = (macro_t - 44.0) / 4.0; // 0..1
+        float r = length(raw_uv);
+        float wave_front = ct * 1.35;
+        float d_wave = abs(r - wave_front);
+        float ripple = sin((r - wave_front) * 36.0) * exp(-d_wave * 12.0) * (1.0 - ct);
+        uv += normalize(raw_uv + 1e-4) * ripple * 0.045;
         
-        float d_layer = 0.0;
-        if (scene_idx == 0) {
-            d_layer = evaluate_scene_a_shape(p_layer, layer_t) * scale;
-        } else {
-            d_layer = evaluate_scene_b_shape(p_layer, layer_t) * scale;
+        float pulse_beam = exp(-d_wave * 8.5) * (1.0 - ct * 0.5) * 2.0;
+        crossing_fx += vec3(0.6, 0.95, 1.3) * pulse_beam;
+    }
+    // Crossing 3 (68s - 72s): Vertical Celestial Aurora Dissolve Curtain
+    else if (macro_t >= 68.0) {
+        float ct = (macro_t - 68.0) / 4.0; // 0..1
+        float sweep = raw_uv.x - (ct * 2.8 - 1.4);
+        float dissolve = exp(-abs(sweep) * 7.5);
+        uv += vec2(0.0, sin(raw_uv.x * 20.0 + u_time * 8.0)) * dissolve * 0.035;
+        
+        float aurora_beam = exp(-abs(sweep) * 8.0) * 1.9;
+        crossing_fx += vec3(1.15, 0.75, 1.25) * aurora_beam;
+    }
+
+    // =========================================================================
+    // 5. CAMERA DYNAMICS: SWAY, VORTEX TWIST & RELATIVISTIC RECOIL
+    // =========================================================================
+    // Act 1: Subtle gentle breathing sway
+    float rot1 = 0.08 * sin(u_time * 0.45);
+    // Act 2: Hypnotic swirling vortex rotation
+    float rot2 = u_time * 0.28 + 0.16 * sin(u_time * 0.75);
+    // Act 3: Relativistic rapid oscillation & storm vibration
+    float rot3 = 0.18 * sin(u_time * 1.4) + 0.05 * sin(u_time * 4.2);
+    
+    float cam_rot = rot1 * act1_w + rot2 * act2_w + rot3 * act3_w;
+    float ca = cos(cam_rot), sa = sin(cam_rot);
+    mat2 cam_mat = mat2(ca, -sa, sa, ca);
+    vec2 p = cam_mat * uv;
+
+    // Organic Heartbeat pulse
+    float beat_osc = sin(u_time * TWO_PI * 1.25);
+    float glow_pulse = beat_osc * beat_osc * (0.35 + 0.45 * act3_w);
+
+    // =========================================================================
+    // 6. CONTINUOUS SHEPARD 4-OCTAVE INFINITE ZOOM ENGINE
+    // =========================================================================
+    const float S = 3.2;
+    const float lnS = 1.1631508; // ln(3.2)
+    const int NUM_OCTAVES = 4;
+    const int ITERATIONS = 12;
+
+    vec3 total_color = vec3(0.0);
+    float total_weight = 0.0;
+
+    for (int o = 0; o < NUM_OCTAVES; o++) {
+        float phase = fract(base_zoom + float(o) * 0.25);
+        float scale = exp(phase * lnS);
+
+        // Continuous quadratic Hanning crossfade envelope
+        float w = 0.5 - 0.5 * cos(TWO_PI * phase);
+        w = w * w;
+
+        vec2 z = p * scale;
+        float accum = 0.0;
+        float min_trap = 1e8;
+        float edge_trap = 1e8;
+
+        for (int i = 0; i < ITERATIONS; i++) {
+            // 1. Bilateral symmetry fold
+            z.x = abs(z.x);
+
+            // 2. Exact cardioid cleft fold
+            z.y -= 0.58 * (sqrt(max(0.0, z.x) + 0.035) - 0.187);
+
+            // 3. Spherical inversion (fractal chamber recursion)
+            float r2 = dot(z, z) + 1e-4;
+            if (r2 < 0.22) {
+                z *= (1.0 / 0.22);
+            } else if (r2 < 1.38) {
+                z *= (1.0 / r2);
+            }
+
+            // 4. Harmonic variation per story act:
+            // Act 1: Classic subtle dilation
+            // Act 2: Blooming mandala dihedral rotation fold
+            // Act 3: Relativistic storm fold dilation
+            float fold_rot = 0.06 * sin(u_time * 0.4) * act1_w
+                           + (0.32 * sin(u_time * 0.65 + float(i) * 0.4)) * act2_w
+                           + (0.15 * sin(u_time * 1.8 + float(i) * 0.6)) * act3_w;
+            float cfr = cos(fold_rot), sfr = sin(fold_rot);
+            z = mat2(cfr, -sfr, sfr, cfr) * z;
+
+            // Secondary box fold dynamically awakening in Act 2 & Act 3
+            vec2 box_dim = vec2(0.04 * act2_w + 0.02 * act3_w, 0.08 * act2_w + 0.05 * act3_w);
+            z = abs(z) - box_dim;
+
+            // Scale expansion & offset
+            float scale_exp = 1.48 + 0.04 * act2_w + 0.06 * act3_w;
+            vec2 offset = vec2(0.18, 0.30) + vec2(0.02 * sin(u_time * 0.5), 0.02 * cos(u_time * 0.5)) * act2_w;
+            z = z * scale_exp - offset;
+
+            // 5. Heart orbit trap
+            float hx = abs(z.x);
+            float hy = z.y - 0.52 * (sqrt(hx + 0.035) - 0.187);
+            float hd = length(vec2(hx, hy));
+
+            min_trap = min(min_trap, hd);
+            float et = abs(z.x * z.y);
+            edge_trap = min(edge_trap, et);
+
+            accum += exp(-3.5 * hd) + 0.5 * exp(-7.0 * et);
         }
+
+        // Multi-frequency color mapping across acts
+        float col_coord = accum * 0.18 + min_trap * 1.35 + u_time * 0.40 + float(o) * 0.25;
         
-        // Multi-tier optical profile
-        float d_edge = abs(d_layer);
-        float stroke = exp(-d_edge * (48.0 - fl * 3.0));
-        float aura = exp(-d_edge * (8.0 - fl * 0.6));
-        float fill = smoothstep(0.01, -0.20, d_layer) * 0.14;
-        
-        // Warm psychedelic color coordinate shifted per layer & time
-        float col_coord = fract(u_time * 0.06 + fl * 0.14 + d_layer * 0.18);
-        vec3 col_layer = (scene_idx == 0) ? warm_palette(col_coord) : warm_palette_secondary(col_coord);
-        
-        vec3 layer_light = col_layer * (stroke * 1.5 + aura * 0.55 + fill)
-                         + vec3(1.0, 0.94, 0.82) * pow(stroke, 3.0) * 0.9;
-                         
-        float layer_w = 1.0 / (1.0 + fl * 0.28);
-        col_accum += layer_light * layer_w * 0.42;
+        vec3 col_layer = palette_act1(col_coord) * act1_w
+                       + palette_act2(col_coord) * act2_w
+                       + palette_act3(col_coord) * act3_w;
+
+        // Radiant neon aura along heart contours
+        float aura = exp(-1.2 * min_trap);
+        vec3 neon = vec3(
+            0.65 + 0.35 * sin(u_time * 1.6 + col_coord * 4.0),
+            0.55 + 0.45 * cos(u_time * 1.9 + col_coord * 3.0),
+            0.85 + 0.15 * sin(u_time * 2.2 + col_coord * 5.0)
+        );
+        col_layer = mix(col_layer, neon, aura * 0.65);
+
+        // Core singularity beam with organic heartbeat pulse
+        float core_dist = length(uv) * scale;
+        float core_beam = exp(-7.0 * core_dist) * (1.0 + glow_pulse);
+        vec3 core_tint = mix(vec3(1.2, 0.65, 0.95), vec3(1.4, 1.1, 0.6), act3_w);
+        col_layer += core_tint * core_beam * 2.2;
+
+        // Electric iridescent filament lines
+        float edge_line = exp(-11.0 * edge_trap);
+        vec3 edge_tint = mix(vec3(0.25, 0.95, 1.0), vec3(1.0, 0.85, 0.3), act3_w);
+        col_layer += edge_tint * edge_line * 0.95;
+
+        total_color += col_layer * w;
+        total_weight += w;
     }
 
-    // Effect 1: Lightning (continuous subtle + heightened during final bezier state)
-    float lightning_intensity = (scene_idx == 0) ? (0.35 + 1.1 * smoothstep(36.0, 46.0, anim_t)) : 0.4;
-    float bolts = fxLightning(p, u_time, 21.7) * lightning_intensity;
-    col_accum += vec3(1.0, 0.85, 0.60) * bolts * 0.65;
+    vec3 scene_color = total_color / max(total_weight, 1e-5);
 
-    // Effect 3: Glowing Embers Swarm
-    float embers = fxEmbers(p, u_time);
-    col_accum += vec3(1.0, 0.62, 0.20) * embers * 0.55;
-
-    // Effect 4: Volumetric Sunbeams
-    float sunbeams = fxSunbeams(p, u_time);
-    col_accum += vec3(0.9, 0.65, 0.25) * sunbeams * 0.35;
-
-    // Effect 5: Magnetic Auroral Filaments
-    float filaments = fxMagneticFilaments(p, u_time);
-    col_accum += vec3(1.0, 0.35, 0.55) * filaments * 0.45;
-
-    // ==========================================
-    // MACRO PHASE COMPOSITING: INTRO / OUTRO / CROSSING
-    // ==========================================
-    // 0s-4.5s: Intro
-    // 4.5s-50.0s: Main Layered Bezier Evolution
-    // 50.0s-54.0s: Outro (Singularity & Supernova)
-    // 54.0s-58.0s: Scene Interchange Crossing
-    if (scene_t < 4.5) {
-        // INTRO: Radiant solar ignition & opening shockwave
-        float intro_fade = smoothstep(0.0, 3.5, scene_t);
-        float core_flare = exp(-length(p) * 7.0) * (4.5 - scene_t) * 0.6;
-        col_accum *= intro_fade;
-        col_accum += vec3(1.0, 0.82, 0.50) * max(0.0, core_flare);
-    } else if (scene_t >= 50.0 && scene_t < 54.0) {
-        // OUTRO: Gravitational singularity collapse into Supernova pulse
-        float outro_t = (scene_t - 50.0) / 4.0; // 0..1
-        float supernova = exp(-length(p) * mix(7.0, 1.5, outro_t)) * pow(outro_t, 2.0) * 1.5;
-        col_accum += vec3(1.0, 0.88, 0.65) * supernova;
-    } else if (scene_t >= 54.0) {
-        // SCENE INTERCHANGE CROSSING: Diagonal chromatic wipe into next scene
-        float cross_t = (scene_t - 54.0) / 4.0; // 0..1
-        float wipe_line = (raw_uv.x + raw_uv.y) * 0.707 + (cross_t * 3.2 - 1.6);
-        float wipe_mask = smoothstep(-0.20, 0.20, wipe_line);
-        float wipe_beam = exp(-abs(wipe_line) * 9.0) * 1.4;
-        
-        vec3 next_scene_hint = warm_palette_secondary(cross_t * 0.4 + length(p) * 0.4) * 0.35;
-        col_accum = mix(col_accum, next_scene_hint, wipe_mask);
-        col_accum += vec3(1.0, 0.90, 0.70) * wipe_beam;
+    // =========================================================================
+    // 7. STORY ACTION PARTICLES & LIGHTNING DISCHARGES (ACT 3 & CROSSINGS)
+    // =========================================================================
+    if (act3_w > 0.05) {
+        float bolts = fxLightning(p, u_time, 13.7) * act3_w;
+        scene_color += vec3(1.2, 0.95, 0.65) * bolts * 0.85;
     }
 
-    // ACES Filmic Tone Mapping for rich vivid saturation without blowout
-    vec3 mapped = aces_tonemap(col_accum * 1.35);
+    // Blend scene changing optical crossing beams
+    scene_color += crossing_fx;
 
-    // Subtle film vignette
-    float vig = 1.0 - 0.28 * dot(raw_uv, raw_uv);
-    mapped *= clamp(vig, 0.0, 1.0);
+    // Peripheral chromatic dispersion
+    float dist_sq = dot(raw_uv, raw_uv);
+    scene_color.r += 0.06 * sin(dist_sq * 9.0 + u_time * 2.0) * sqrt(dist_sq);
+    scene_color.b += 0.06 * cos(dist_sq * 8.0 - u_time * 2.5) * sqrt(dist_sq);
 
-    fragColor = vec4(mapped, 1.0);
+    // Soft peripheral vignette
+    float vignette = clamp(1.0 - 0.24 * dist_sq, 0.0, 1.0);
+    scene_color *= vignette;
+
+    // ACES Filmic Tone Mapping for rich punchy vibrance without blowout
+    vec3 final_color = aces_tonemap(scene_color * 1.28);
+
+    fragColor = vec4(final_color, 1.0);
 }
 "#;
