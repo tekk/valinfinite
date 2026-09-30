@@ -1,4 +1,4 @@
-# 💖 VALINFINITE — Infinite Real-Time GPU Fractals
+# 💖 Infinite Real-Time GPU Fractals
 
 Continuous scale-invariant GPU fractals in WebAssembly and WebGL2 with vivid psychedelic palettes, zero precision degradation, and audio synchronization.
 
@@ -104,29 +104,34 @@ $$\mathbf{C}(\nu) = \mathbf{a} + \mathbf{b} \cos\left(2\pi (\mathbf{c} \cdot \nu
 
 ---
 
-### 4. Vortex Void (High-Contrast Cardioid Plunge)
+### 4. Vortex Void (Layered Bezier Metamorphosis)
 
 <div align="center">
   <img src="screenshots/vortex_void_mobile.gif" alt="Vortex Void Mobile Preview" width="220">
 </div>
 
-#### Swirling Cardiac Rotations & Cardioid Orbit Traps
-Building upon Shepard synthesis with accelerated plunge ($v = 0.60$), coordinates undergo dynamic harmonic camera sway:
+#### Multi-Layer Bezier Rendering & Out-of-Phase Compositing
+The animation renders concentric layers out-of-phase with dynamic harmonic scaling and rotational offsets:
 
-$$\mathbf{u}_{\text{rot}} = \begin{pmatrix} \cos(\omega t) & -\sin(\omega t) \\ \sin(\omega t) & \cos(\omega t) \end{pmatrix} \mathbf{u}, \quad \omega t = 0.22 \sin(0.85 t)$$
+$$\mathbf{p}_l = \frac{1}{s_l} \mathbf{R}(\theta_l) \mathbf{p}, \quad s_l = 1 + \alpha l + \delta \sin(\omega_s t + l), \quad \theta_l = (l - 2.5) \beta \sin(\omega_\theta t) + \phi_l$$
 
-Orbit trap distance to the true cardioid manifold:
+$$d_l = f_{\text{morph}}(\mathbf{p}_l, \max(0, t_{\text{scene}} - l \Delta \tau)) \cdot s_l$$
 
-$$d_{\text{trap}}(z) = \sqrt{\left(|z_x|\right)^2 + \left(z_y - \kappa \left(\sqrt{|z_x| + \epsilon} - \beta\right)\right)^2}$$
+$$\mathbf{C}_{\text{accum}} = \mathbf{C}_{\text{bg}} + \sum_{l=0}^{N-1} w_l \left[ \mathbf{C}_l \left(e^{-k_{\text{core}} |d_l|} + e^{-k_{\text{aura}} |d_l|} + I_{\text{fill}}(d_l)\right) + \mathbf{C}_{\text{hi}} e^{-3 k_{\text{core}} |d_l|} \right]$$
 
-#### Negative-Space Cosmic Chasms & Non-Linear Sigmoid Response
-Deep cosmic voids between cardioid shells are carved using a sinusoidal threshold mask:
+#### Cubic Smoothstep Morphing & Topological Sequence
+Continuous metamorphosis interpolates between signed distance fields across the macro cycle:
 
-$$M_{\text{dark}} = \left[\max\left(0, \frac{\sin(\mu \cdot \text{accum} - \nu \cdot d_{\text{trap}} + \omega t) - \tau_{\text{bias}}}{1 - \tau_{\text{bias}}}\right)\right]^\gamma$$
+$$d_{\text{morph}}(t) = (1 - S(\tau)) d_{\text{prev}} + S(\tau) d_{\text{next}}, \quad S(\tau) = \tau^2(3 - 2\tau), \quad \tau = \mathrm{clamp}\left(\frac{t - t_0}{\Delta t}, 0, 1\right)$$
 
-Non-linear tone mapping achieves pitch-black cosmic shadows with blazing neon highlights:
+$$\text{Circle (unfilled } \to \text{ solid)} \longrightarrow \text{Heart (sustained)} \longrightarrow \text{Square} \longrightarrow \text{Octagon} \longrightarrow \text{Hexagon} \longrightarrow \text{Star} \longrightarrow \text{Polygon} \longrightarrow \text{Dynamic Bezier}$$
 
-$$\mathbf{C}_{\text{final}} = \left(\frac{\mathbf{C}^\gamma}{\mathbf{C}^\gamma + \mathbf{k}}\right) \cdot \alpha_{\text{boost}}$$
+#### Solar Lensing & ACES Filmic Tone Mapping
+Refractive radial shockwaves distort the field prior to projection, and high dynamic range energy is mapped to prevent saturation clipping:
+
+$$\mathbf{p}' = \mathbf{p} + \frac{\mathbf{p}}{\|\mathbf{p}\|} \sin\left((\|\mathbf{p}\| - r_w) \omega_w\right) e^{-k_w |\|\mathbf{p}\| - r_w|} \cdot A_w$$
+
+$$\mathbf{C}_{\text{final}} = \frac{\mathbf{C} (a \mathbf{C} + b)}{\mathbf{C} (c \mathbf{C} + d) + e}$$
 
 ---
 

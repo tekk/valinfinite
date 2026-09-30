@@ -1,0 +1,178 @@
+import http.server
+import socketserver
+import subprocess
+import threading
+import urllib.parse
+import base64
+import os
+import re
+import sys
+import time
+
+PORT = 8211
+FRAMES = 36
+FRAME_DIR = "/tmp/vortex_void_frames"
+OUTPUT_DIR = "/home/tekk/dev/wasm-infinite-gpu-fractal/screenshots"
+
+os.makedirs(FRAME_DIR, exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+with open("/home/tekk/dev/wasm-infinite-gpu-fractal/src/shaders.rs", "r") as f:
+    src = f.read()
+
+m = re.search(r'pub const FRAGMENT_SHADER_SOURCE:\s*&str\s*=\s*r#"([\s\S]+?)"#;', src)
+if not m:
+    print("Could not extract FRAGMENT_SHADER_SOURCE from src/shaders.rs")
+    sys.exit(1)
+
+fs_code = m.group(1).strip()
+fs_js = fs_code.replace('\\', '\\\\').replace('`', '\\`').replace('$', '\\$')
+
+done_event = threading.Event()
+
+class GIFHandler(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, format, *args):
+        pass
+
+    def do_GET(self):
+        html = f"""<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>body,html{{margin:0;padding:0;overflow:hidden;background:#000;}}canvas{{display:block;width:240px;height:426px;}}</style></head>
+<body>
+<canvas id="c" width="240" height="426"></canvas>
+<script>
+const fsSource = `{fs_js}`;
+const vsSource = `#version 300 es
+in vec2 a_pos;
+void main() {{ gl_Position = vec4(a_pos, 0.0, 1.0); }}
+`;
+
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2', {{ alpha: false, preserveDrawingBuffer: true, antialias: false }});
+
+function createShader(gl, type, src) {{
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {{
+        console.error(gl.getShaderInfoLog(s));
+    }}
+    return s;
+}}
+
+const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+const prog = gl.createProgram();
+gl.attachShader(prog, vs);
+gl.attachShader(prog, fs);
+gl.linkProgram(prog);
+gl.useProgram(prog);
+
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    -1,-1, 1,-1, -1,1,
+    -1,1, 1,-1, 1,1
+]), gl.STATIC_DRAW);
+
+const pos = gl.getAttribLocation(prog, 'a_position') !== -1 ? gl.getAttribLocation(prog, 'a_position') : gl.getAttribLocation(prog, 'a_pos');
+if (pos !== -1) {{
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+}}
+
+const uRes = gl.getUniformLocation(prog, 'u_resolution');
+const uTime = gl.getUniformLocation(prog, 'u_time');
+
+async function capture() {{
+    const totalFrames = {FRAMES};
+    // Capture across heart and transition (e.g. t = 9.0 to 18.0)
+    const t_start = 9.0;
+    const step = 0.25;
+    for (let i = 0; i < totalFrames; i++) {{
+        const t = t_start + i * step;
+        gl.viewport(0, 0, 240, 426);
+        gl.uniform2f(uRes, 240, 426);
+        gl.uniform1f(uTime, t);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        const dataUrl = canvas.toDataURL('image/png');
+        await fetch('/save?frame=' + i, {{
+            method: 'POST',
+            body: dataUrl
+        }});
+    }}
+    await fetch('/done', {{ method: 'POST' }});
+}}
+
+window.addEventListener('load', () => setTimeout(capture, 150));
+</script>
+</body>
+</html>"""
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/html; charset=utf-8')
+        self.end_headers()
+        self.wfile.write(html.encode('utf-8'))
+
+    def do_POST(self):
+        parsed = urllib.parse.urlparse(self.path)
+        params = urllib.parse.parse_qs(parsed.query)
+
+        if parsed.path == '/save':
+            frame = int(params.get('frame', [0])[0])
+            length = int(self.headers['Content-Length'])
+            data = self.rfile.read(length).decode('utf-8')
+            img_b64 = data.split(',')[1] if ',' in data else data
+            img_bytes = base64.b64decode(img_b64)
+
+            with open(os.path.join(FRAME_DIR, f"frame_{frame:03d}.png"), "wb") as f:
+                f.write(img_bytes)
+
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+        elif parsed.path == '/done':
+            done_event.set()
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"DONE")
+
+def run_server():
+    socketserver.TCPServer.allow_reuse_address = True
+    with socketserver.TCPServer(('127.0.0.1', PORT), GIFHandler) as httpd:
+        httpd.serve_forever()
+
+t = threading.Thread(target=run_server, daemon=True)
+t.start()
+print("Recorder server online on port", PORT)
+
+chrome_cmd = [
+    "google-chrome",
+    "--headless=new",
+    "--disable-gpu",
+    "--window-size=240,426",
+    f"http://127.0.0.1:{PORT}/"
+]
+proc = subprocess.Popen(chrome_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+success = done_event.wait(timeout=25)
+proc.terminate()
+proc.wait()
+
+if not success:
+    print("Timeout recording frames!")
+    sys.exit(1)
+
+print("Frames recorded successfully. Encoding GIF...")
+gif_out = os.path.join(OUTPUT_DIR, "vortex_void_mobile.gif")
+
+ff_cmd = [
+    "ffmpeg", "-y",
+    "-framerate", "14",
+    "-i", os.path.join(FRAME_DIR, "frame_%03d.png"),
+    "-vf", "fps=14,scale=240:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128:reserve_transparent=0[p];[s1][p]paletteuse=dither=bayer:bayer_scale=3",
+    gif_out
+]
+subprocess.check_call(ff_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+size_kb = os.path.getsize(gif_out) / 1024
+print(f"Generated {gif_out} ({size_kb:.1f} KB)")
