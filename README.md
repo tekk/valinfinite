@@ -127,6 +127,15 @@ $$\mathbf{C}_{\text{final}} = \left(\frac{\mathbf{C}^\gamma}{\mathbf{C}^\gamma +
 
 ---
 
+## 🎵 Soundtracks
+
+- **V1**: *GoldFish & Cat Dealers — Colours & Lights (Clément Leroux Remix)*
+- **V2**: *cYsmix — Escapism (Original Mix)*
+- **V3**: *Brookes Brothers — Beautiful feat. Robert Owens (Original Mix)*
+- **V4**: *Oliver Heldens feat. Shungudzo — Fire In My Soul*
+
+---
+
 ## 🛠️ Local Build
 
 ```bash
