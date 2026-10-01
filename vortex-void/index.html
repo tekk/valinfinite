@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>Vortex Void (Classic)</title>
+    <title>Vortex Void (Futuristic Demoscene Odyssey)</title>
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="style.css">
     <script src="../audio/player.js" defer></script>
@@ -14,6 +14,12 @@
 
     <script type="module">
         import init, { start_fractal } from './pkg/wasm_infinite_gpu_fractal.js';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('time')) {
+            const fixedTimeMs = parseFloat(urlParams.get('time')) * 1000.0;
+            performance.now = () => fixedTimeMs;
+        }
 
         let idleTimer = null;
         function resetIdleTimer() {

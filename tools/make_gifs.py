@@ -10,9 +10,10 @@ import sys
 import time
 
 PORT = 8199
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 FRAMES_PER_SCENE = 30
 FRAME_DIR = "/tmp/valinfinite_gif_frames"
-OUTPUT_DIR = "/home/tekk/dev/wasm-infinite-gpu-fractal/screenshots"
+OUTPUT_DIR = os.path.join(REPO_ROOT, "screenshots")
 
 os.makedirs(FRAME_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)

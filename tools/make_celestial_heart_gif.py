@@ -10,14 +10,15 @@ import sys
 import time
 
 PORT = 8212
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 FRAMES = 40
 FRAME_DIR = "/tmp/celestial_heart_frames"
-OUTPUT_DIR = "/home/tekk/dev/wasm-infinite-gpu-fractal/screenshots"
+OUTPUT_DIR = os.path.join(REPO_ROOT, "screenshots")
 
 os.makedirs(FRAME_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-with open("/home/tekk/dev/wasm-infinite-gpu-fractal/src/shaders.rs", "r") as f:
+with open(os.path.join(REPO_ROOT, "src", "shaders.rs"), "r") as f:
     src = f.read()
 
 m = re.search(r'pub const FRAGMENT_SHADER_SOURCE:\s*&str\s*=\s*r#"([\s\S]+?)"#;', src)

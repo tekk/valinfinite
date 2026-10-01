@@ -10,7 +10,8 @@ import sys
 import time
 
 PORT = 8225
-OUTPUT_DIR = "/home/tekk/dev/wasm-infinite-gpu-fractal/screenshots"
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+OUTPUT_DIR = os.path.join(REPO_ROOT, "screenshots")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def extract_fragment_shader(filepath):
@@ -21,8 +22,8 @@ def extract_fragment_shader(filepath):
         raise ValueError(f"Could not extract fragment shader from {filepath}")
     return m.group(1).strip()
 
-vortex_fs = extract_fragment_shader("/home/tekk/dev/wasm-infinite-gpu-fractal/src/shaders_matrix_vortex.rs")
-saga_fs = extract_fragment_shader("/home/tekk/dev/wasm-infinite-gpu-fractal/src/shaders_matrix_saga.rs")
+vortex_fs = extract_fragment_shader(os.path.join(REPO_ROOT, "src", "shaders_matrix_vortex.rs"))
+saga_fs = extract_fragment_shader(os.path.join(REPO_ROOT, "src", "shaders_matrix_saga.rs"))
 
 # Shared server state
 current_task = None

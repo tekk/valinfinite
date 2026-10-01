@@ -79,23 +79,28 @@ $$I_{\text{glow}}(\mathbf{uv}) = \mathrm{tex}_{\mathrm{LOD}}(\mathbf{uv}, \lambd
 
 ---
 
-### 3. Vortex Void (Classic Cardiac Singularity Plunge)
+### 3. Vortex Void (5-Scene Futuristic Demoscene Odyssey)
 
 <div align="center">
   <img src="screenshots/vortex_void_mobile.gif" alt="Vortex Void Mobile Preview" width="220">
 </div>
 
-#### High-Contrast Cardiac Orbit Traps
-Complex coordinates are iteratively folded around an asymmetrical cardioid cusp:
+#### Multi-Scene Quantum Macro Cycle & Partition of Unity
+The animation unfolds across an $80.0\text{s}$ macro cycle featuring 5 brand-new, distinct futuristic demoscene realms connected via continuous $C^1$-smooth transition windows ($\Delta t = 3.6\text{s}$):
 
-$$z_x \leftarrow |z_x|, \quad z_y \leftarrow z_y - 0.52 \left(\sqrt{|z_x| + 0.035} - 0.187\right)$$
+$$\sum_{k=1}^5 w_k(t) = 1.0, \quad \mathbf{C}_{\text{total}} = \sum_{k=1}^5 w_k(t) \mathbf{C}_k(\mathbf{u}_{\text{warp}}, t) + \mathbf{C}_{\text{flare}}(t)$$
 
-$$\mathcal{A} = \sum_{k=1}^M \left(\exp(-3.5 \cdot d_{\text{heart}}(z_k)) + 0.45 \cdot \exp(-7.0 \cdot |z_{k,x} z_{k,y}|)\right)$$
+- **Scene 1: The Event Horizon ($0\text{s} - 16\text{s}$)**: Relativistic Kerr black hole with spacetime gravitational lensing, Lense-Thirring frame-dragging, Doppler-beamed accretion disk, razor-sharp photon ring ($1.55 r_s$), and magnetic polar plasma jets.
+- **Scene 2: The Cyber Tesseract ($16\text{s} - 32\text{s}$)**: 4D quantum hypercube double-rotating simultaneously in the $XW$ and $YZ$ planes, stereographically projected into 3D and 2D perspective, with 32 laser edges, glowing quantum nodes, and traveling photon data pulses.
+- **Scene 3: The Cyber-Hex Conduit ($32\text{s} - 48\text{s}$)**: 6-sided faceted metallic obsidian conduit with 6 longitudinal corner emerald ribs, segmental panel seams, expanding hexagonal iris quantum gates, and relativistic particle streaks.
+- **Scene 4: The Quantum Gyroscope ($48\text{s} - 64\text{s}$)**: 3-axis concentric toroidal gimbal rings with chamfered bevels, laser-etched precision telemetry graduations, a pulsating central magnetic plasma core with dipole flux loops, and orbiting drone satellites.
+- **Scene 5: The Hyperbolic Kaleidoscope Void & Implosion ($64\text{s} - 80\text{s}$)**: Non-Euclidean domain folding crystal cathedral in deep obsidian space, culminating in a violent gravitational collapse ($\mathbf{u} \to \infty$) and a blinding relativistic warp shockwave burst that smoothly loops back into Scene 1.
 
-#### Obsidian Contrast Transfer Function
-Sigmoid S-curve mapping ensures rich obsidian shadows alongside piercing neon laser highlights:
-
-$$\mathbf{C}_{\text{out}} = \frac{\mathbf{C}_{\text{in}}^{1.6}}{\mathbf{C}_{\text{in}}^{1.6} + 0.16} \cdot 1.30$$
+#### Mathematical Formulations: Relativistic Lensing & Spatial Ripple Wave
+- **Einstein Gravitational Deflection & Doppler Boosting**:
+  $$\mathbf{p}_{\text{lens}} = \mathbf{p} \left(1.0 - \frac{r_s}{\|\mathbf{p}\|^{1.5} + \epsilon}\right), \quad I_{\text{doppler}} = \mathrm{clamp}\left(1.0 - 0.75 \frac{p_{\text{disk},x}}{r_{\text{disk}} + 0.05}, 0.25, 2.8\right)$$
+- **Optical Spatial Ripple Wave**:
+  $$\mathbf{u}_{\text{warp}} = \mathbf{u} + \frac{\mathbf{u}}{\|\mathbf{u}\|} \cdot A \sin(\omega \|\mathbf{u}\| - \tau \nu) e^{-k \|\mathbf{u}\|} \cdot 4 w_a(t) w_b(t)$$
 
 ---
 
@@ -251,7 +256,7 @@ Audio engine features a persistent non-repeating shuffle pool stored in `localSt
 │
 ├── celestial-heart/             # [01] Classic Shepard scale infinite zoom
 ├── matrix-vortex/               # [02] Classic cylindrical raymarched matrix tunnel
-├── vortex-void/                 # [03] Classic high-contrast cardiac singularity plunge
+├── vortex-void/                 # [03] 5-Scene futuristic demoscene singularity odyssey
 │
 ├── celestial-odyssey/           # [04] 3-Act narrative journey with optical wavefronts
 ├── matrix-saga/                 # [05] 3-Stage cyberpunk infiltration & sacred AI mandala
