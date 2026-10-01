@@ -17,17 +17,18 @@ Continuous scale-invariant GPU fractals in WebAssembly and WebGL2 with vivid psy
 ### Series I: Classic Procedural Zooms
 Continuous logarithmic zooms and pure procedural coordinate topologies.
 
-1. **Celestial Heart**: [https://tekk.github.io/valinfinite/celestial-heart/](https://tekk.github.io/valinfinite/celestial-heart/)
-2. **Cyber Matrix Vortex**: [https://tekk.github.io/valinfinite/matrix-vortex/](https://tekk.github.io/valinfinite/matrix-vortex/)
-3. **Vortex Void**: [https://tekk.github.io/valinfinite/vortex-void/](https://tekk.github.io/valinfinite/vortex-void/)
+| [01 · Celestial Heart](https://tekk.github.io/valinfinite/celestial-heart/) | [02 · Cyber Matrix Vortex](https://tekk.github.io/valinfinite/matrix-vortex/) | [03 · Vortex Void](https://tekk.github.io/valinfinite/vortex-void/) |
+| :---: | :---: | :---: |
+| <a href="https://tekk.github.io/valinfinite/celestial-heart/"><img src="screenshots/celestial_heart_mobile.gif?v=1.2.3" alt="Celestial Heart Mobile Preview" width="220"></a> | <a href="https://tekk.github.io/valinfinite/matrix-vortex/"><img src="screenshots/matrix_vortex_mobile.gif?v=1.2.3" alt="Cyber Matrix Vortex Mobile Preview" width="220"></a> | <a href="https://tekk.github.io/valinfinite/vortex-void/"><img src="screenshots/vortex_void_mobile.gif?v=1.2.3" alt="Vortex Void Mobile Preview" width="220"></a> |
+| Shepard Scale Zoom | Cylindrical Matrix Tunnel | 5-Scene Singularity Odyssey |
 
 ### Series II: Evolving Narrative & Metamorphic Odysseys
 Multi-act narrative journeys, organic Bezier SDF morphing, optical wavefront crossings, and exponential relativistic dynamics.
 
-4. **Celestial Odyssey**: [https://tekk.github.io/valinfinite/celestial-odyssey/](https://tekk.github.io/valinfinite/celestial-odyssey/)
-5. **Matrix Saga**: [https://tekk.github.io/valinfinite/matrix-saga/](https://tekk.github.io/valinfinite/matrix-saga/)
-6. **Cosmic Infinity**: [https://tekk.github.io/valinfinite/cosmic-infinity/](https://tekk.github.io/valinfinite/cosmic-infinity/)
-7. **Vortex Metamorphosis**: [https://tekk.github.io/valinfinite/vortex-metamorphosis/](https://tekk.github.io/valinfinite/vortex-metamorphosis/)
+| [04 · Celestial Odyssey](https://tekk.github.io/valinfinite/celestial-odyssey/) | [05 · Matrix Saga](https://tekk.github.io/valinfinite/matrix-saga/) | [06 · Cosmic Infinity](https://tekk.github.io/valinfinite/cosmic-infinity/) | [07 · Vortex Metamorphosis](https://tekk.github.io/valinfinite/vortex-metamorphosis/) |
+| :---: | :---: | :---: | :---: |
+| <a href="https://tekk.github.io/valinfinite/celestial-odyssey/"><img src="screenshots/celestial_odyssey_mobile.gif?v=1.2.3" alt="Celestial Odyssey Mobile Preview" width="180"></a> | <a href="https://tekk.github.io/valinfinite/matrix-saga/"><img src="screenshots/matrix_saga_mobile.gif?v=1.2.3" alt="Matrix Saga Mobile Preview" width="180"></a> | <a href="https://tekk.github.io/valinfinite/cosmic-infinity/"><img src="screenshots/cosmic_infinity_mobile.gif?v=1.2.3" alt="Cosmic Infinity Mobile Preview" width="180"></a> | <a href="https://tekk.github.io/valinfinite/vortex-metamorphosis/"><img src="screenshots/vortex_metamorphosis_mobile.gif?v=1.2.3" alt="Vortex Metamorphosis Mobile Preview" width="180"></a> |
+| 3-Act Wavefront Journey | Cyberpunk Infiltration | 64,000x Mandelbrot Plunge | 8-Phase Bezier Morphing |
 
 ---
 
@@ -36,7 +37,7 @@ Multi-act narrative journeys, organic Bezier SDF morphing, optical wavefront cro
 ### 1. Celestial Heart (Classic Shepard Scale Zoom)
 
 <div align="center">
-  <img src="screenshots/celestial_heart_mobile.gif" alt="Celestial Heart Mobile Preview" width="220">
+  <img src="screenshots/celestial_heart_mobile.gif?v=1.2.3" alt="Celestial Heart Mobile Preview" width="220">
 </div>
 
 #### Logarithmic Octave Synthesis
@@ -59,7 +60,7 @@ $$z_x \leftarrow |z_x|, \quad z_y \leftarrow z_y - \alpha \left(\sqrt{|z_x| + \e
 ### 2. Cyber Matrix Vortex (Classic Cylindrical Wormhole)
 
 <div align="center">
-  <img src="screenshots/matrix_vortex_mobile.gif" alt="Cyber Matrix Vortex Mobile Preview" width="220">
+  <img src="screenshots/matrix_vortex_mobile.gif?v=1.2.3" alt="Cyber Matrix Vortex Mobile Preview" width="220">
 </div>
 
 #### Cylindrical Raymarched Tunnel Projection
@@ -82,7 +83,7 @@ $$I_{\text{glow}}(\mathbf{uv}) = \mathrm{tex}_{\mathrm{LOD}}(\mathbf{uv}, \lambd
 ### 3. Vortex Void (5-Scene Futuristic Demoscene Odyssey)
 
 <div align="center">
-  <img src="screenshots/vortex_void_mobile.gif" alt="Vortex Void Mobile Preview" width="220">
+  <img src="screenshots/vortex_void_mobile.gif?v=1.2.3" alt="Vortex Void Mobile Preview" width="220">
 </div>
 
 #### Multi-Scene Quantum Macro Cycle & Partition of Unity
@@ -107,7 +108,7 @@ $$\sum_{k=1}^5 w_k(t) = 1.0, \quad \mathbf{C}_{\text{total}} = \sum_{k=1}^5 w_k(
 ### 4. Celestial Odyssey (3-Act Narrative Journey & Wavefront Crossing)
 
 <div align="center">
-  <img src="screenshots/celestial_odyssey_mobile.gif" alt="Celestial Odyssey Mobile Preview" width="220">
+  <img src="screenshots/celestial_odyssey_mobile.gif?v=1.2.3" alt="Celestial Odyssey Mobile Preview" width="220">
 </div>
 
 #### Macro Story Architecture & Dynamic Act Weights
@@ -134,7 +135,7 @@ $$\Phi(t) = v_0 \cdot t - \frac{A_1}{\omega_1} \cos(\omega_1 t) - \frac{A_2}{\om
 ### 5. Matrix Saga (3-Stage Cyberpunk Infiltration & Dynamic Plexus)
 
 <div align="center">
-  <img src="screenshots/matrix_saga_mobile.gif" alt="Matrix Saga Mobile Preview" width="220">
+  <img src="screenshots/matrix_saga_mobile.gif?v=1.2.3" alt="Matrix Saga Mobile Preview" width="220">
 </div>
 
 #### Tri-Realm Convex Interpolation
@@ -159,7 +160,7 @@ $$\mathbf{C}_{\text{total}} = \sum_{k=1}^3 w_k(t) \mathbf{C}_k + \mathbf{C}_{\te
 ### 6. Cosmic Infinity (64,000x Multi-Target Deep Zoom & Continuous Filament Flow)
 
 <div align="center">
-  <img src="screenshots/cosmic_infinity_mobile.gif" alt="Cosmic Infinity Mobile Preview" width="220">
+  <img src="screenshots/cosmic_infinity_mobile.gif?v=1.2.3" alt="Cosmic Infinity Mobile Preview" width="220">
 </div>
 
 #### Dual-Phase Zoom Dynamics: Multi-Target Wandering, Multi-Stage Rotation & Relativistic Return
@@ -180,7 +181,7 @@ Rotation and viewport centering are $C^1$-continuous without hops at either turn
 ### 7. Vortex Metamorphosis (8-Phase Bezier Morphing & Procedural VFX)
 
 <div align="center">
-  <img src="screenshots/vortex_metamorphosis_mobile.gif" alt="Vortex Metamorphosis Mobile Preview" width="220">
+  <img src="screenshots/vortex_metamorphosis_mobile.gif?v=1.2.3" alt="Vortex Metamorphosis Mobile Preview" width="220">
 </div>
 
 Concentric multi-layer Bezier SDF rendering with harmonic scaling and out-of-phase rotational offsets:
