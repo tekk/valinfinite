@@ -19,7 +19,7 @@ Continuous logarithmic zooms and pure procedural coordinate topologies.
 
 | [01 · Celestial Heart](https://tekk.github.io/valinfinite/celestial-heart/) | [02 · Cyber Matrix Vortex](https://tekk.github.io/valinfinite/matrix-vortex/) | [03 · Vortex Void](https://tekk.github.io/valinfinite/vortex-void/) |
 | :---: | :---: | :---: |
-| <a href="https://tekk.github.io/valinfinite/celestial-heart/"><img src="screenshots/celestial_heart_mobile.gif?v=1.2.3" alt="Celestial Heart Mobile Preview" width="220"></a> | <a href="https://tekk.github.io/valinfinite/matrix-vortex/"><img src="screenshots/matrix_vortex_mobile.gif?v=1.2.3" alt="Cyber Matrix Vortex Mobile Preview" width="220"></a> | <a href="https://tekk.github.io/valinfinite/vortex-void/"><img src="screenshots/vortex_void_mobile.gif?v=1.2.3" alt="Vortex Void Mobile Preview" width="220"></a> |
+| <a href="https://tekk.github.io/valinfinite/celestial-heart/"><img src="screenshots/celestial_heart_mobile.gif?v=1.2.3.1" alt="Celestial Heart Mobile Preview" width="220"></a> | <a href="https://tekk.github.io/valinfinite/matrix-vortex/"><img src="screenshots/matrix_vortex_mobile.gif?v=1.2.3" alt="Cyber Matrix Vortex Mobile Preview" width="220"></a> | <a href="https://tekk.github.io/valinfinite/vortex-void/"><img src="screenshots/vortex_void_mobile.gif?v=1.2.3" alt="Vortex Void Mobile Preview" width="220"></a> |
 | Shepard Scale Zoom | Cylindrical Matrix Tunnel | 5-Scene Singularity Odyssey |
 
 ### Series II: Evolving Narrative & Metamorphic Odysseys
@@ -37,7 +37,7 @@ Multi-act narrative journeys, organic Bezier SDF morphing, optical wavefront cro
 ### 1. Celestial Heart (Classic Shepard Scale Zoom)
 
 <div align="center">
-  <img src="screenshots/celestial_heart_mobile.gif?v=1.2.3" alt="Celestial Heart Mobile Preview" width="220">
+  <img src="screenshots/celestial_heart_mobile.gif?v=1.2.3.1" alt="Celestial Heart Mobile Preview" width="220">
 </div>
 
 #### Logarithmic Octave Synthesis

@@ -32,8 +32,8 @@ ANIMATIONS = {
     "celestial_heart": {
         "shader_path": os.path.join(REPO_ROOT, "src", "shaders_celestial_heart.rs"),
         "needs_font": False,
-        "preview_t": 12.0,
-        "gif_times": [6.0 + i * 0.18 for i in range(36)],
+        "preview_t": 10.0,
+        "gif_times": [6.0 + i * 0.08 for i in range(36)],
         "preview_name": "celestial_heart_preview.png",
         "gif_name": "celestial_heart_mobile.gif"
     },
@@ -336,7 +336,8 @@ def process_animation(key):
     else:
         print(f"FAILED to create {gif_path}")
 
-for key in ANIMATIONS.keys():
+target_keys = [sys.argv[1]] if len(sys.argv) > 1 and sys.argv[1] in ANIMATIONS else list(ANIMATIONS.keys())
+for key in target_keys:
     process_animation(key)
 
-print("\nAll 7 animation previews and animated GIFs generated successfully!")
+print(f"\nPreviews and animated GIFs generated successfully for: {', '.join(target_keys)}!")
