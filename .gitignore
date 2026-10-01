@@ -1,3 +1,5 @@
 /target
 .DS_Store
 *.tmp
+**/pkg/README.md
+pkg/README.md

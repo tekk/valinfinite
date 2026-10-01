@@ -254,6 +254,14 @@
                 transform: scale(0.92);
             }
 
+            .audio-btn svg {
+                display: block;
+                width: 12px;
+                height: 12px;
+                fill: currentColor;
+                pointer-events: none;
+            }
+
             /* Responsive adjustments for mobile viewports */
             @media (max-width: 600px) {
                 #audio-controller {
@@ -330,6 +338,16 @@
         `;
         document.head.appendChild(style);
 
+        const PLAY_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+        const PAUSE_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        const NEXT_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>';
+
+        window.__setToggleIcon = function(btn, isPlaying) {
+            if (!btn) return;
+            btn.innerHTML = isPlaying ? PAUSE_ICON : PLAY_ICON;
+            btn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+        };
+
         const container = document.createElement('div');
         container.id = 'audio-controller';
         container.setAttribute('aria-label', 'Audio Player');
@@ -343,8 +361,8 @@
                 <span class="track-artist" id="track-by"></span>
             </div>
             <div class="audio-controls">
-                <button class="audio-btn" id="audio-toggle" title="Play/Pause" aria-label="Play or Pause">▶</button>
-                <button class="audio-btn" id="audio-next" title="Next Random Track" aria-label="Next Track">⏭</button>
+                <button class="audio-btn" id="audio-toggle" title="Play/Pause" aria-label="Play">${PLAY_ICON}</button>
+                <button class="audio-btn" id="audio-next" title="Next Random Track" aria-label="Next Track">${NEXT_ICON}</button>
             </div>
         `;
         document.body.appendChild(container);
@@ -358,12 +376,12 @@
             if (!audioElem) return;
             if (audioElem.paused) {
                 audioElem.play().then(() => {
-                    toggleBtn.textContent = '⏸';
+                    window.__setToggleIcon(toggleBtn, true);
                     container.classList.add('is-playing');
                 }).catch(() => {});
             } else {
                 audioElem.pause();
-                toggleBtn.textContent = '▶';
+                window.__setToggleIcon(toggleBtn, false);
                 container.classList.remove('is-playing');
             }
         };
@@ -403,7 +421,7 @@
         }
 
         const isPlaying = audioElem && !audioElem.paused;
-        if (toggleBtn) toggleBtn.textContent = isPlaying ? '⏸' : '▶';
+        if (toggleBtn && window.__setToggleIcon) window.__setToggleIcon(toggleBtn, isPlaying);
         if (controller) {
             if (isPlaying) controller.classList.add('is-playing');
             else controller.classList.remove('is-playing');
@@ -420,13 +438,13 @@
             audioElem.addEventListener('ended', playNext);
             audioElem.addEventListener('play', () => {
                 const btn = document.getElementById('audio-toggle');
-                if (btn) btn.textContent = '⏸';
+                if (btn && window.__setToggleIcon) window.__setToggleIcon(btn, true);
                 const ctrl = document.getElementById('audio-controller');
                 if (ctrl) ctrl.classList.add('is-playing');
             });
             audioElem.addEventListener('pause', () => {
                 const btn = document.getElementById('audio-toggle');
-                if (btn) btn.textContent = '▶';
+                if (btn && window.__setToggleIcon) window.__setToggleIcon(btn, false);
                 const ctrl = document.getElementById('audio-controller');
                 if (ctrl) ctrl.classList.remove('is-playing');
             });
@@ -439,7 +457,7 @@
         if (playPromise !== undefined) {
             playPromise.then(() => {
                 const btn = document.getElementById('audio-toggle');
-                if (btn) btn.textContent = '⏸';
+                if (btn && window.__setToggleIcon) window.__setToggleIcon(btn, true);
                 const ctrl = document.getElementById('audio-controller');
                 if (ctrl) ctrl.classList.add('is-playing');
             }).catch(() => {

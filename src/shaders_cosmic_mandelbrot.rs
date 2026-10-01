@@ -22,18 +22,31 @@ vec3 palette(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
     return a + b * cos(TWO_PI * (c * t + d));
 }
 
+// Target catalog helper: 8 dense boundary regions across the Mandelbrot set
+vec2 get_target_c(int id) {
+    int target_idx = int(mod(float(id), 8.0));
+    if (target_idx == 0) return vec2(-0.743838635, 0.132019139); // Seahorse Valley Spiral
+    if (target_idx == 1) return vec2(0.000980397, 0.822128414);  // Quad Spiral Dendrite
+    if (target_idx == 2) return vec2(-0.088846200, 0.654217423); // Triple Spiral Valley
+    if (target_idx == 3) return vec2(-1.749771911, -0.000000322);// Mini-Brot Satellite Antenna
+    if (target_idx == 4) return vec2(-0.743632452, 0.131962586); // Seahorse Double Spiral
+    if (target_idx == 5) return vec2(0.300634684, 0.022717098);  // Elephant Valley Boundary
+    if (target_idx == 6) return vec2(-0.101112679, 0.956295445); // Scepter Valley Deep
+    return vec2(-0.775980227, 0.136894813);                     // North Seahorse Mini-Brot
+}
+
 void main() {
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / min(u_resolution.x, u_resolution.y);
 
     // Deep multi-target fractal zoom trajectory with staged dynamic rotation & continuous filament tracking:
-    // Pace reduced to 0.4x original speed:
-    // Phase 1 (Zoom-In): 60.0s plunge (1x -> 64,000x), stopping gradually with C1 easing and multi-stage rotation speeds
-    // Phase 2 (Zoom-Out): 20.0s exponential acceleration with sigmoid easing return (64,000x -> 1x)
-    // Total cycle period = 80.0s
+    // Dynamic 1x speed:
+    // Phase 1 (Zoom-In): 24.0s plunge (1x -> 64,000x), stopping gradually with C1 easing and multi-stage rotation speeds
+    // Phase 2 (Zoom-Out): 8.0s exponential acceleration with sigmoid easing return (64,000x -> 1x)
+    // Total cycle period = 32.0s
     // Note: Zoom is calibrated to 64,000x to maintain absolute razor sharpness without FP16 block quantization rectangles!
-    const float T_IN = 60.0;
-    const float T_OUT = 20.0;
-    const float PERIOD = T_IN + T_OUT; // 80.0s
+    const float T_IN = 24.0;
+    const float T_OUT = 8.0;
+    const float PERIOD = T_IN + T_OUT; // 32.0s
 
     float cycle_idx = floor(u_time / PERIOD);
     float cycle_time = mod(u_time, PERIOD);
@@ -44,6 +57,7 @@ void main() {
     float zoom = 1.0;
     float rot_angle = 0.0;
     float s_norm = 0.0; // 0.0 (zoomed out) -> 1.0 (deepest zoom)
+    float g_out = 0.0;
 
     if (cycle_time < T_IN) {
         // --- PHASE 1: ZOOM-IN (Deep plunge, stopping gradually with easing) ---
@@ -87,7 +101,7 @@ void main() {
         float sig = 1.0 / (1.0 + exp(-x));
         const float sig0 = 0.00055278; // 1.0 / (1.0 + exp(7.5))
         const float sig1 = 0.99944722; // 1.0 / (1.0 + exp(-7.5))
-        float g_out = clamp((sig - sig0) / (sig1 - sig0), 0.0, 1.0);
+        g_out = clamp((sig - sig0) / (sig1 - sig0), 0.0, 1.0);
         
         // Fractional zoom remaining: starts at 1.0 (64,000x), ends at 0.0 (1x)
         s_norm = 1.0 - g_out;
@@ -99,36 +113,32 @@ void main() {
     }
 
     // Curated catalog of dense boundary regions across the Mandelbrot set
-    // Each zoom-in cycle automatically selects a different feature:
-    int target_id = int(mod(cycle_idx, 8.0));
-    vec2 target_c;
-    if (target_id == 0) {
-        target_c = vec2(-0.743838635, 0.132019139); // Seahorse Valley Spiral
-    } else if (target_id == 1) {
-        target_c = vec2(0.000980397, 0.822128414);  // Quad Spiral Dendrite
-    } else if (target_id == 2) {
-        target_c = vec2(-0.088846200, 0.654217423); // Triple Spiral Valley
-    } else if (target_id == 3) {
-        target_c = vec2(-1.749771911, -0.000000322);// Mini-Brot Satellite Antenna
-    } else if (target_id == 4) {
-        target_c = vec2(-0.743632452, 0.131962586); // Seahorse Double Spiral
-    } else if (target_id == 5) {
-        target_c = vec2(0.300634684, 0.022717098);  // Elephant Valley Boundary
-    } else if (target_id == 6) {
-        target_c = vec2(-0.101112679, 0.956295445); // Scepter Valley Deep
+    // Seamless camera transit: Current target for this plunge, and next target for following plunge
+    int curr_id = int(mod(cycle_idx, 8.0));
+    int next_id = int(mod(cycle_idx + 1.0, 8.0));
+    vec2 c_curr = get_target_c(curr_id);
+    vec2 c_next = get_target_c(next_id);
+
+    // Continuous center tracking:
+    // During zoom-in, locked strictly on c_curr.
+    // During zoom-out, as camera pulls out wide (g_out >= 0.4), center smoothly glides from c_curr to c_next.
+    // By the time zoom-out finishes (g_out >= 0.92), center has already arrived at c_next with zero derivative.
+    // Thus when cycle loops to p=0, center is already at the new target with zero hop!
+    vec2 center;
+    if (cycle_time < T_IN) {
+        center = c_curr;
     } else {
-        target_c = vec2(-0.775980227, 0.136894813); // North Seahorse Mini-Brot
+        float pan_t = smoothstep(0.40, 0.92, g_out);
+        center = mix(c_curr, c_next, pan_t);
     }
 
     // Continuous filament tracking:
-    // Centering directly on target_c prevents traveling across the black main cardioid interior.
-    // Dynamic boundary tracking weave continuously steers around spiral filaments across the zoom:
+    // Steers gently around boundary filaments during deep zoom, and smoothly fades to zero at the zoom-out overview
+    float wander_weight = smoothstep(0.08, 0.40, s_norm);
     vec2 boundary_wander = vec2(
-        sin(u_time * 0.45 + float(target_id) * 1.7) * 0.14,
-        cos(u_time * 0.38 + float(target_id) * 2.3) * 0.14
-    ) * (2.85 / zoom);
-
-    vec2 center = target_c;
+        sin(u_time * 0.55) * 0.12 + sin(u_time * 1.3) * 0.03,
+        cos(u_time * 0.48) * 0.12 + cos(u_time * 1.1) * 0.03
+    ) * (2.85 / zoom) * wander_weight;
 
     float ca = cos(rot_angle);
     float sa = sin(rot_angle);

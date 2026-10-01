@@ -158,7 +158,7 @@ $$\mathbf{C}_{\text{total}} = \sum_{k=1}^3 w_k(t) \mathbf{C}_k + \mathbf{C}_{\te
 </div>
 
 #### Dual-Phase Zoom Dynamics: Multi-Target Wandering, Multi-Stage Rotation & Relativistic Return
-The trajectory operates across an 80.0s macro cycle at 0.4x deliberate demoscene pace. Each cycle dynamically locks onto a different dense boundary feature from a curated catalog (Seahorse Valley, Quad Spiral Dendrites, Triple Spiral Valleys, Satellite Mini-Brots, Elephant Valley boundary) with continuous filament tracking and quantum nebula orbit-trap coloring to guarantee vibrant imagery across the entire plunge:
+The trajectory operates across a 32.0s macro cycle at 1x speed (24.0s deep plunge and 8.0s relativistic return). Each cycle dynamically locks onto a different dense boundary feature from a curated catalog (Seahorse Valley, Quad Spiral Dendrites, Triple Spiral Valleys, Satellite Mini-Brots, Elephant Valley boundary) with smooth target panning and continuous filament tracking, ensuring fluid and continuous camera orientation across all cycle boundaries without hops or jumps:
 
 $$\text{Zoom-In } (p \in [0, 1]): \quad s_{\text{in}}(p) = \begin{cases} v_0 \cdot p & p \le p_0 \\ 1 - a_{\text{dec}} (1 - p)^2 & p > p_0 \end{cases}, \quad \text{zoom}(p) = \exp(s_{\text{in}}(p) \cdot \ln s_{\max})$$
 
@@ -280,3 +280,54 @@ Navigate to `http://localhost:8088/`.
 ## License
 
 This project is licensed under the **GNU General Public License v2.0 only** (`GPL-2.0-only`). See the [LICENSE](LICENSE) file for the full license text.
+
+---
+
+## Audio Credits & Disclaimer
+
+The musical tracks featured in this project are incorporated strictly for non-commercial, interactive art and demoscene demonstration purposes. All music rights, copyrights, composition, and performance ownership belong unconditionally to their respective original artists, producers, and affiliated record labels.
+
+No copyright infringement is intended. If you are a copyright owner and wish to request removal or modification of any track, please submit an issue on this repository.
+
+Please support the featured artists by purchasing and streaming their music on their official channels:
+
+| # | Track Title | Artist(s) | Duration |
+|---|-------------|-----------|----------|
+| 01 | **Fire In My Soul** | Oliver Heldens feat. Shungudzo | 02:55 |
+| 02 | **No Limits (Vocal Mix)** | Danism, Train & DJ Rae | 06:15 |
+| 03 | **Say My Name (Sub Focus Remix)** | Morgan Seatree, Sub Focus | 03:13 |
+| 04 | **Bambou (Original Mix)** | Sebastien Leger | 07:16 |
+| 05 | **TRONCE** | Sili | 04:51 |
+| 06 | **Beautiful** | Brookes Brothers feat. Robert Owens | 04:55 |
+| 07 | **Escapism (Original Mix)** | cYsmix | 05:00 |
+| 08 | **Unity** | TheFatRat | 04:09 |
+| 09 | **Underground** | Tantrum Desire | 04:34 |
+| 10 | **Rhyme Dust (Dimension Remix)** | MK, Dom Dolla | 03:24 |
+| 11 | **Horizon** | 1991, Poppy Baskcomb | 03:00 |
+| 12 | **Colours & Lights (Clément Leroux Remix)** | GoldFish & Cat Dealers | 03:22 |
+| 13 | **Mend Your Ways** | PSYQUI | 04:27 |
+| 14 | **Nights Introlude** | Nightmares On Wax | 04:40 |
+| 15 | **Genesis** | Subsonic | 03:43 |
+| 16 | **Get To Me** | Culture Shock | 04:05 |
+| 17 | **Focused** | Soulfreq | 07:36 |
+| 18 | **King Of The Swingers (Gettin' Mad Mix)** | Krushed & Sorted | 06:04 |
+| 19 | **Drugs I Like** | nate band | 03:18 |
+| 20 | **Remember Me** | High Contrast | 03:55 |
+| 21 | **TANGARA** | Etherwood, Hugh Hardie | 03:43 |
+| 22 | **Beat Keep Rockin'** | Starjunk 95 | 03:03 |
+| 23 | **Spectra Ocean Dream Circuit** | Starjunk 95 | 03:14 |
+| 24 | **Groove District** | Starjunk 95 | 03:06 |
+| 25 | **Tell You What I Did** | Pola & Bryson, Zitah | 03:29 |
+| 26 | **TAKE ME** | D A N N Y | 02:09 |
+| 27 | **Mirage** | MPH, Skrillex | 04:52 |
+| 28 | **Liberate (Lane 8 Remix)** | Eric Prydz | 05:14 |
+| 29 | **Szikra** | Kornél Kovács | 06:41 |
+| 30 | **I Run** | YUSSI | 02:04 |
+| 31 | **On & On** | Chris Lake, Yael Watchman | 03:15 |
+| 32 | **Out For Blood** | QZB | 04:08 |
+| 33 | **Don't Stop** | MUZZ | 02:56 |
+| 34 | **Tu Cafe (Mash Up)** | Prodigy | 04:02 |
+| 35 | **The People (Mehlor Remix)** | Harrie Summers, Joey Rich | 06:27 |
+| 36 | **Spacefunk** | Stussko, Kolter | 07:36 |
+| 37 | **Bunker** | Culture Shock | 04:41 |
+| 38 | **On & On (Kanine Remix)** | Sub Focus, bbyclose, Kanine | 02:55 |
