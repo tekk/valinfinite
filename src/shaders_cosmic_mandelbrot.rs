@@ -38,15 +38,16 @@ vec2 get_target_c(int id) {
 void main() {
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / min(u_resolution.x, u_resolution.y);
 
-    // Deep multi-target fractal zoom trajectory with staged dynamic rotation & continuous filament tracking:
-    // Dynamic 1x speed:
-    // Phase 1 (Zoom-In): 24.0s plunge (1x -> 64,000x), stopping gradually with C1 easing and multi-stage rotation speeds
-    // Phase 2 (Zoom-Out): 8.0s exponential acceleration with sigmoid easing return (64,000x -> 1x)
+    // Multi-target deep Mandelbrot fractal plunge & overview transition cycle:
     // Total cycle period = 32.0s
+    // Phase 1 (Zoom-In): 20.0s plunge (1x -> 64,000x) into c_curr, stopping smoothly with C1 easing and multi-stage rotation speeds
+    // Phase 2 (Zoom-Out): 7.0s straight zoom-out (64,000x -> 1x) strictly maintaining the FOV, center, and orientation of c_curr
+    // Phase 3 (Overview Alignment): 5.0s at 1x overview slowly and with ease adjusting rotation (3.4 -> 2*PI) and position (c_curr -> c_next)
     // Note: Zoom is calibrated to 64,000x to maintain absolute razor sharpness without FP16 block quantization rectangles!
-    const float T_IN = 24.0;
-    const float T_OUT = 8.0;
-    const float PERIOD = T_IN + T_OUT; // 32.0s
+    const float T_IN = 20.0;
+    const float T_OUT = 7.0;
+    const float T_ALIGN = 5.0;
+    const float PERIOD = T_IN + T_OUT + T_ALIGN; // 32.0s
 
     float cycle_idx = floor(u_time / PERIOD);
     float cycle_time = mod(u_time, PERIOD);
@@ -54,10 +55,16 @@ void main() {
     const float MAX_ZOOM = 64000.0;
     const float LN_MAX = 11.066638; // ln(64000.0)
 
+    // Curated catalog of dense boundary regions across the Mandelbrot set
+    int curr_id = int(mod(cycle_idx, 8.0));
+    int next_id = int(mod(cycle_idx + 1.0, 8.0));
+    vec2 c_curr = get_target_c(curr_id);
+    vec2 c_next = get_target_c(next_id);
+
     float zoom = 1.0;
     float rot_angle = 0.0;
     float s_norm = 0.0; // 0.0 (zoomed out) -> 1.0 (deepest zoom)
-    float g_out = 0.0;
+    vec2 center = c_curr;
 
     if (cycle_time < T_IN) {
         // --- PHASE 1: ZOOM-IN (Deep plunge, stopping gradually with easing) ---
@@ -83,7 +90,6 @@ void main() {
         float s_smooth = s_norm * s_norm * (3.0 - 2.0 * s_norm);
         
         // Staged harmonic oscillations that dynamically speed up, hold, and surge rotation:
-        // sin^2(pi*p) window guarantees zero velocity at start (p=0) and terminal stop (p=1)
         float window = sin(PI * p);
         float h_rot = (window * window) * (
             0.28 * sin(4.0 * PI * p) +
@@ -91,53 +97,43 @@ void main() {
             0.08 * sin(14.0 * PI * p)
         );
         rot_angle = s_smooth * 3.4 + h_rot;
-    } else {
-        // --- PHASE 2: ZOOM-OUT (Exponential acceleration with easing, cruise, easing stop) ---
+        center = c_curr;
+    } else if (cycle_time < T_IN + T_OUT) {
+        // --- PHASE 2: STRAIGHT ZOOM-OUT (Maintains FOV and orientation of populated place) ---
         float q = (cycle_time - T_IN) / T_OUT; // 0.0 -> 1.0
         
-        // Normalized logistic sigmoid:
-        const float k_sig = 7.5;
-        float x = k_sig * (2.0 * q - 1.0);
-        float sig = 1.0 / (1.0 + exp(-x));
-        const float sig0 = 0.00055278; // 1.0 / (1.0 + exp(7.5))
-        const float sig1 = 0.99944722; // 1.0 / (1.0 + exp(-7.5))
-        g_out = clamp((sig - sig0) / (sig1 - sig0), 0.0, 1.0);
+        // Quintic smootherstep easing (both 1st and 2nd derivatives zero at endpoints):
+        float g_out = q * q * q * (q * (q * 6.0 - 15.0) + 10.0);
         
-        // Fractional zoom remaining: starts at 1.0 (64,000x), ends at 0.0 (1x)
         s_norm = 1.0 - g_out;
         zoom = exp(s_norm * LN_MAX);
 
-        // Dynamic 360-degree turnaround spin synchronized with zoom-out easing:
-        // Starts at 3.4 rad, smoothly finishes at 6.2831853 (2*PI = 0.0 mod 2*PI)
-        rot_angle = 3.4 + g_out * (TWO_PI - 3.4);
-    }
-
-    // Curated catalog of dense boundary regions across the Mandelbrot set
-    // Seamless camera transit: Current target for this plunge, and next target for following plunge
-    int curr_id = int(mod(cycle_idx, 8.0));
-    int next_id = int(mod(cycle_idx + 1.0, 8.0));
-    vec2 c_curr = get_target_c(curr_id);
-    vec2 c_next = get_target_c(next_id);
-
-    // Continuous center tracking:
-    // During zoom-in, locked strictly on c_curr.
-    // During zoom-out, as camera pulls out wide (g_out >= 0.4), center smoothly glides from c_curr to c_next.
-    // By the time zoom-out finishes (g_out >= 0.92), center has already arrived at c_next with zero derivative.
-    // Thus when cycle loops to p=0, center is already at the new target with zero hop!
-    vec2 center;
-    if (cycle_time < T_IN) {
+        // Maintain fixed view and orientation of the populated place explored during zoom-in
+        rot_angle = 3.4;
         center = c_curr;
     } else {
-        float pan_t = smoothstep(0.40, 0.92, g_out);
-        center = mix(c_curr, c_next, pan_t);
+        // --- PHASE 3: OVERVIEW ALIGNMENT (Entirely zoomed out, slowly & smoothly align to next target) ---
+        float u = (cycle_time - (T_IN + T_OUT)) / T_ALIGN; // 0.0 -> 1.0
+        
+        s_norm = 0.0;
+        zoom = 1.0;
+
+        // Quintic smootherstep easing for ultra-fluent, gentle pan and rotation:
+        float e_align = u * u * u * (u * (u * 6.0 - 15.0) + 10.0);
+        
+        // Slowly and with ease adjust position from c_curr to c_next
+        center = mix(c_curr, c_next, e_align);
+
+        // Slowly and with ease adjust rotation from 3.4 to TWO_PI (smoothly aligns with upcoming zoom-in)
+        rot_angle = 3.4 + e_align * (TWO_PI - 3.4);
     }
 
-    // Continuous filament tracking:
-    // Steers gently around boundary filaments during deep zoom, and smoothly fades to zero at the zoom-out overview
-    float wander_weight = smoothstep(0.08, 0.40, s_norm);
+    // Organic filament tracking during deep zoom, smoothly retreating during zoom-out
+    // Dependent purely on s_norm so zooming in and zooming out retrace the exact same path
+    float wander_weight = smoothstep(0.12, 0.50, s_norm);
     vec2 boundary_wander = vec2(
-        sin(u_time * 0.55) * 0.12 + sin(u_time * 1.3) * 0.03,
-        cos(u_time * 0.48) * 0.12 + cos(u_time * 1.1) * 0.03
+        sin(s_norm * 4.5) * 0.14 + sin(s_norm * 9.0) * 0.04,
+        cos(s_norm * 4.0) * 0.14 + cos(s_norm * 8.5) * 0.04
     ) * (2.85 / zoom) * wander_weight;
 
     float ca = cos(rot_angle);

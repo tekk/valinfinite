@@ -27,7 +27,7 @@ Multi-act narrative journeys, organic Bezier SDF morphing, optical wavefront cro
 
 | [04 · Celestial Odyssey](https://tekk.github.io/valinfinite/celestial-odyssey/) | [05 · Matrix Saga](https://tekk.github.io/valinfinite/matrix-saga/) | [06 · Cosmic Infinity](https://tekk.github.io/valinfinite/cosmic-infinity/) | [07 · Vortex Metamorphosis](https://tekk.github.io/valinfinite/vortex-metamorphosis/) |
 | :---: | :---: | :---: | :---: |
-| <a href="https://tekk.github.io/valinfinite/celestial-odyssey/"><img src="screenshots/celestial_odyssey_mobile.gif?v=1.2.3" alt="Celestial Odyssey Mobile Preview" width="180"></a> | <a href="https://tekk.github.io/valinfinite/matrix-saga/"><img src="screenshots/matrix_saga_mobile.gif?v=1.2.3" alt="Matrix Saga Mobile Preview" width="180"></a> | <a href="https://tekk.github.io/valinfinite/cosmic-infinity/"><img src="screenshots/cosmic_infinity_mobile.gif?v=1.2.3" alt="Cosmic Infinity Mobile Preview" width="180"></a> | <a href="https://tekk.github.io/valinfinite/vortex-metamorphosis/"><img src="screenshots/vortex_metamorphosis_mobile.gif?v=1.2.3" alt="Vortex Metamorphosis Mobile Preview" width="180"></a> |
+| <a href="https://tekk.github.io/valinfinite/celestial-odyssey/"><img src="screenshots/celestial_odyssey_mobile.gif?v=1.2.3" alt="Celestial Odyssey Mobile Preview" width="180"></a> | <a href="https://tekk.github.io/valinfinite/matrix-saga/"><img src="screenshots/matrix_saga_mobile.gif?v=1.2.3" alt="Matrix Saga Mobile Preview" width="180"></a> | <a href="https://tekk.github.io/valinfinite/cosmic-infinity/"><img src="screenshots/cosmic_infinity_mobile.gif?v=1.2.3.1" alt="Cosmic Infinity Mobile Preview" width="180"></a> | <a href="https://tekk.github.io/valinfinite/vortex-metamorphosis/"><img src="screenshots/vortex_metamorphosis_mobile.gif?v=1.2.3" alt="Vortex Metamorphosis Mobile Preview" width="180"></a> |
 | 3-Act Wavefront Journey | Cyberpunk Infiltration | 64,000x Mandelbrot Plunge | 8-Phase Bezier Morphing |
 
 ---
@@ -160,21 +160,25 @@ $$\mathbf{C}_{\text{total}} = \sum_{k=1}^3 w_k(t) \mathbf{C}_k + \mathbf{C}_{\te
 ### 6. Cosmic Infinity (64,000x Multi-Target Deep Zoom & Continuous Filament Flow)
 
 <div align="center">
-  <img src="screenshots/cosmic_infinity_mobile.gif?v=1.2.3" alt="Cosmic Infinity Mobile Preview" width="220">
+  <img src="screenshots/cosmic_infinity_mobile.gif?v=1.2.3.1" alt="Cosmic Infinity Mobile Preview" width="220">
 </div>
 
-#### Dual-Phase Zoom Dynamics: Multi-Target Wandering, Multi-Stage Rotation & Relativistic Return
-The trajectory operates across a 32.0s macro cycle at 1x speed (24.0s deep plunge and 8.0s relativistic return). Each cycle dynamically locks onto a different dense boundary feature from a curated catalog (Seahorse Valley, Quad Spiral Dendrites, Triple Spiral Valleys, Satellite Mini-Brots, Elephant Valley boundary) with smooth target panning and continuous filament tracking, ensuring fluid and continuous camera orientation across all cycle boundaries without hops or jumps:
+#### Tri-Phase Zoom Dynamics: Straight Zoom-Out & Fluent Overview Realignment
+The trajectory operates across a 32.0s macro cycle at 1x speed divided into three distinct, continuous phases across a catalog of 8 dense boundary features (Seahorse Valley, Quad Spiral Dendrites, Triple Spiral Valleys, Satellite Mini-Brots, Elephant Valley boundary):
 
-$$\text{Zoom-In } (p \in [0, 1]): \quad s_{\text{in}}(p) = \begin{cases} v_0 \cdot p & p \le p_0 \\ 1 - a_{\text{dec}} (1 - p)^2 & p > p_0 \end{cases}, \quad \text{zoom}(p) = \exp(s_{\text{in}}(p) \cdot \ln s_{\max})$$
+1. **Phase 1: Deep Zoom-In Plunge ($t \in [0, 20\text{s}]$, $p \in [0, 1]$)**:
+   $$s_{\text{norm}}(p) = \begin{cases} v_0 \cdot p & p \le p_0 \\ 1 - a_{\text{dec}} (1 - p)^2 & p > p_0 \end{cases}, \quad \text{zoom}(p) = \exp(s_{\text{norm}}(p) \cdot \ln s_{\max})$$
+   Camera dives into feature $\mathbf{c}_{\text{curr}}$ up to $64{,}000\times$, bringing inward and rotational velocity to a complete $C^1$ halt at peak zoom ($p=1$).
 
-At peak zoom ($s_{\max} = 64{,}000\times$, calibrated to prevent floating-point precision block quantization rectangles), inward velocity $\left.\frac{ds_{\text{in}}}{dp}\right|_{p=1} = 0$, bringing the plunge to a complete stop. Rotation speeds dynamically surge and ease through multi-stage harmonic modulation. The camera then smoothly accelerates outward with a logistic sigmoid return and 360° turnaround spin:
+2. **Phase 2: Straight Zoom-Out ($t \in [20\text{s}, 27\text{s}]$, $q \in [0, 1]$)**:
+   $$g_{\text{out}}(q) = 6q^5 - 15q^4 + 10q^3, \quad s_{\text{norm}}(q) = 1 - g_{\text{out}}(q), \quad \text{zoom}(q) = \exp(s_{\text{norm}}(q) \cdot \ln s_{\max})$$
+   The camera pulls straight backward out of the populated feature maintaining its exact FOV, center ($\mathbf{c}_{\text{curr}}$), and orientation ($\theta = 3.4\text{ rad}$) without changing the view, expanding smoothly until fully zoomed out to the entire Mandelbrot set ($s_{\text{norm}} = 0, \text{zoom} = 1\times$).
 
-$$\text{Zoom-Out } (q \in [0, 1]): \quad g(q) = \frac{\sigma(k(2q - 1)) - \sigma(-k)}{\sigma(k) - \sigma(-k)}, \quad \text{zoom}(q) = \exp((1 - g(q)) \cdot \ln s_{\max})$$
-
-$$\sigma(x) = \frac{1}{1 + \exp(-x)}, \quad \theta_{\text{out}}(q) = \theta_0 + g(q) \cdot (2\pi - \theta_0)$$
-
-Rotation and viewport centering are $C^1$-continuous without hops at either turnaround point ($p=1$ or $q=1$).
+3. **Phase 3: Overview Realignment ($t \in [27\text{s}, 32\text{s}]$, $u \in [0, 1]$)**:
+   $$e_{\text{align}}(u) = 6u^5 - 15u^4 + 10u^3$$
+   $$\mathbf{center}(u) = (1 - e_{\text{align}}(u))\mathbf{c}_{\text{curr}} + e_{\text{align}}(u)\mathbf{c}_{\text{next}}$$
+   $$\theta(u) = 3.4 + e_{\text{align}}(u) \cdot (2\pi - 3.4)$$
+   Holding wide at $1\times$ overview, the viewport slowly and with ease glides its position from $\mathbf{c}_{\text{curr}}$ to $\mathbf{c}_{\text{next}}$ and rotates into alignment with zero terminal velocity, smoothly initiating the next plunge with zero hop.
 
 ---
 
