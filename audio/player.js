@@ -1,5 +1,11 @@
-// Smart Non-Repeating Audio Player for Infinite GPU Fractals with Cover Art & Condensed Typography
+// Smart Non-Repeating Audio Player for Infinite GPU Fractals with Cover Art,
+// Condensed Typography, Cross-Scene Playback Continuity, and Seamless Scene Switching
 (function() {
+    // Guard: Do not run or play music on landing screen (gallery portal)
+    if (document.getElementById('bg-canvas') || (!document.getElementById('fractal-canvas') && !window.location.pathname.includes('-'))) {
+        return;
+    }
+
     const PLAYLIST = [
         { id: 1, title: "Fire In My Soul", artist: "Oliver Heldens feat. Shungudzo", file: "audio/tracks/track_01_fire_in_my_soul.mp3", cover: "audio/covers/cover_01.jpg" },
         { id: 2, title: "No Limits (Vocal Mix)", artist: "Danism, Train & DJ Rae", file: "audio/tracks/track_02_no_limits_vocal_mix.mp3", cover: "audio/covers/cover_02.jpg" },
@@ -41,7 +47,18 @@
         { id: 38, title: "On & On (Kanine Remix)", artist: "Sub Focus, bbyclose, Kanine", file: "audio/tracks/track_38_on_on_kanine_remix.mp3", cover: "audio/covers/cover_38.jpg" }
     ];
 
+    const SCENES = [
+        { id: 'celestial-heart', name: 'Celestial Heart', path: '../celestial-heart/' },
+        { id: 'matrix-vortex', name: 'Cyber Matrix Vortex', path: '../matrix-vortex/' },
+        { id: 'vortex-void', name: 'Vortex Void', path: '../vortex-void/' },
+        { id: 'celestial-odyssey', name: 'Celestial Odyssey', path: '../celestial-odyssey/' },
+        { id: 'matrix-saga', name: 'Matrix Saga', path: '../matrix-saga/' },
+        { id: 'cosmic-infinity', name: 'Cosmic Infinity', path: '../cosmic-infinity/' },
+        { id: 'vortex-metamorphosis', name: 'Vortex Metamorphosis', path: '../vortex-metamorphosis/' }
+    ];
+
     const STORAGE_KEY = 'valinfinite_played_tracks_v3';
+    const STATE_KEY = 'valinfinite_audio_state_v1';
 
     // Robust path resolution that works across root portal, subdirectories, localhost, and GitHub Pages
     function getAudioPath(relPath) {
@@ -97,6 +114,34 @@
 
     let audioElem = null;
     let currentTrack = null;
+
+    // Save audio state for seamless cross-scene continuity
+    function saveAudioState(isPlayingOverride) {
+        if (!currentTrack || !audioElem) return;
+        const isPlaying = (typeof isPlayingOverride === 'boolean') ? isPlayingOverride : !audioElem.paused;
+        const state = {
+            trackId: currentTrack.id,
+            currentTime: audioElem.currentTime || 0,
+            isPlaying: isPlaying,
+            volume: audioElem.volume,
+            timestamp: Date.now()
+        };
+        try {
+            localStorage.setItem(STATE_KEY, JSON.stringify(state));
+        } catch (e) {}
+    }
+
+    let saveTimer = null;
+    function throttledSaveState() {
+        if (saveTimer) return;
+        saveTimer = setTimeout(() => {
+            saveTimer = null;
+            saveAudioState();
+        }, 250);
+    }
+
+    window.addEventListener('pagehide', () => saveAudioState());
+    window.addEventListener('beforeunload', () => saveAudioState());
 
     function createAudioPlayerUI() {
         // Ensure Roboto Condensed font is linked in document head
@@ -262,6 +307,70 @@
                 pointer-events: none;
             }
 
+            /* Subtle Desktop Scene Navigation Arrows */
+            .scene-nav-arrow {
+                position: fixed;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: rgba(8, 12, 24, 0.45);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                color: rgba(255, 255, 255, 0.65);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 9000;
+                outline: none;
+                padding: 0;
+                transition: opacity 0.35s ease, transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+                opacity: 0.38;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+                user-select: none;
+                -webkit-user-select: none;
+            }
+
+            .scene-nav-arrow:hover {
+                opacity: 0.95;
+                transform: translateY(-50%) scale(1.12);
+                background: rgba(14, 23, 42, 0.85);
+                border-color: rgba(56, 189, 248, 0.6);
+                color: #38bdf8;
+                box-shadow: 0 0 22px rgba(56, 189, 248, 0.35), 0 4px 20px rgba(0, 0, 0, 0.6);
+            }
+
+            .scene-nav-arrow:active {
+                transform: translateY(-50%) scale(0.94);
+            }
+
+            .scene-nav-prev {
+                left: 20px;
+            }
+
+            .scene-nav-next {
+                right: 20px;
+            }
+
+            body.idle .scene-nav-arrow {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            body.scene-switching {
+                opacity: 0;
+                transition: opacity 0.25s ease;
+            }
+
+            @media (max-width: 640px) {
+                .scene-nav-arrow {
+                    display: none !important;
+                }
+            }
+
             /* Responsive adjustments for mobile viewports */
             @media (max-width: 600px) {
                 #audio-controller {
@@ -378,11 +487,13 @@
                 audioElem.play().then(() => {
                     window.__setToggleIcon(toggleBtn, true);
                     container.classList.add('is-playing');
+                    saveAudioState(true);
                 }).catch(() => {});
             } else {
                 audioElem.pause();
                 window.__setToggleIcon(toggleBtn, false);
                 container.classList.remove('is-playing');
+                saveAudioState(false);
             }
         };
 
@@ -392,6 +503,115 @@
         nextBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             playNext();
+        });
+    }
+
+    function getCurrentSceneIndex() {
+        const path = window.location.pathname;
+        const idx = SCENES.findIndex(s => path.includes(s.id));
+        return idx >= 0 ? idx : 0;
+    }
+
+    function navigateToScene(targetIndex) {
+        saveAudioState();
+        const target = SCENES[targetIndex];
+        if (target) {
+            document.body.classList.add('scene-switching');
+            window.location.href = target.path;
+        }
+    }
+
+    function navigateToPrevScene() {
+        const current = getCurrentSceneIndex();
+        const prev = (current - 1 + SCENES.length) % SCENES.length;
+        navigateToScene(prev);
+    }
+
+    function navigateToNextScene() {
+        const current = getCurrentSceneIndex();
+        const next = (current + 1) % SCENES.length;
+        navigateToScene(next);
+    }
+
+    function createSceneNavUI() {
+        const currentIdx = getCurrentSceneIndex();
+        const prevIdx = (currentIdx - 1 + SCENES.length) % SCENES.length;
+        const nextIdx = (currentIdx + 1) % SCENES.length;
+        const prevScene = SCENES[prevIdx];
+        const nextScene = SCENES[nextIdx];
+
+        // Subtle desktop arrows
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'scene-nav-arrow scene-nav-prev';
+        prevBtn.title = `Previous: ${prevScene.name} (Left Arrow / Swipe Right)`;
+        prevBtn.setAttribute('aria-label', `Previous: ${prevScene.name}`);
+        prevBtn.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>`;
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigateToPrevScene();
+        });
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'scene-nav-arrow scene-nav-next';
+        nextBtn.title = `Next: ${nextScene.name} (Right Arrow / Swipe Left)`;
+        nextBtn.setAttribute('aria-label', `Next: ${nextScene.name}`);
+        nextBtn.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigateToNextScene();
+        });
+
+        document.body.appendChild(prevBtn);
+        document.body.appendChild(nextBtn);
+
+        // Mobile swipe gestures
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        let isSwiping = false;
+
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length !== 1) return;
+            // Ignore touches on interactive buttons/widgets
+            if (e.target.closest('#audio-controller') || e.target.closest('.scene-nav-arrow') || e.target.closest('button') || e.target.closest('a')) {
+                return;
+            }
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+            isSwiping = true;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            if (!isSwiping || e.changedTouches.length === 0) return;
+            isSwiping = false;
+
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            const elapsed = Date.now() - touchStartTime;
+
+            // Horizontal swipe detection: threshold 45px, predominantly horizontal, < 650ms
+            if (elapsed < 650 && Math.abs(deltaX) >= 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.35) {
+                if (deltaX < 0) {
+                    // Swipe left -> advance to next scene
+                    navigateToNextScene();
+                } else {
+                    // Swipe right -> return to previous scene
+                    navigateToPrevScene();
+                }
+            }
+        }, { passive: true });
+
+        // Keyboard arrow keys for scene navigation
+        window.addEventListener('keydown', (e) => {
+            if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+            if (e.key === 'ArrowRight') {
+                navigateToNextScene();
+            } else if (e.key === 'ArrowLeft') {
+                navigateToPrevScene();
+            }
         });
     }
 
@@ -428,7 +648,7 @@
         }
     }
 
-    function playTrack(track) {
+    function playTrack(track, startPosition = 0, shouldPlay = true) {
         currentTrack = track;
         const filePath = getAudioPath(track.file);
 
@@ -441,49 +661,114 @@
                 if (btn && window.__setToggleIcon) window.__setToggleIcon(btn, true);
                 const ctrl = document.getElementById('audio-controller');
                 if (ctrl) ctrl.classList.add('is-playing');
+                saveAudioState(true);
             });
             audioElem.addEventListener('pause', () => {
                 const btn = document.getElementById('audio-toggle');
                 if (btn && window.__setToggleIcon) window.__setToggleIcon(btn, false);
                 const ctrl = document.getElementById('audio-controller');
                 if (ctrl) ctrl.classList.remove('is-playing');
+                saveAudioState(false);
             });
+            audioElem.addEventListener('timeupdate', throttledSaveState);
         }
 
         audioElem.src = filePath;
         updateTrackUI(track);
 
-        const playPromise = audioElem.play();
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                const btn = document.getElementById('audio-toggle');
-                if (btn && window.__setToggleIcon) window.__setToggleIcon(btn, true);
-                const ctrl = document.getElementById('audio-controller');
-                if (ctrl) ctrl.classList.add('is-playing');
-            }).catch(() => {
-                // Autoplay blocked by browser policy; wait for first user gesture
-                const unlock = () => {
-                    if (audioElem && audioElem.paused) {
-                        audioElem.play().catch(() => {});
+        let seekDone = false;
+        const doSeek = () => {
+            if (!seekDone && startPosition > 0) {
+                try {
+                    if (audioElem.duration && startPosition < audioElem.duration) {
+                        audioElem.currentTime = startPosition;
+                        seekDone = true;
+                    } else if (!isNaN(audioElem.duration) && startPosition >= audioElem.duration) {
+                        playNext();
+                        return;
+                    } else {
+                        audioElem.currentTime = startPosition;
+                        seekDone = true;
                     }
+                } catch (e) {}
+            }
+        };
+
+        audioElem.addEventListener('loadedmetadata', doSeek, { once: true });
+        audioElem.addEventListener('canplay', doSeek, { once: true });
+
+        if (shouldPlay) {
+            const playPromise = audioElem.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    doSeek();
+                    saveAudioState(true);
+                    const btn = document.getElementById('audio-toggle');
+                    if (btn && window.__setToggleIcon) window.__setToggleIcon(btn, true);
+                    const ctrl = document.getElementById('audio-controller');
+                    if (ctrl) ctrl.classList.add('is-playing');
+                }).catch(() => {
+                    // Autoplay blocked by browser policy; wait for first user gesture
+                    const unlock = () => {
+                        if (audioElem && audioElem.paused) {
+                            doSeek();
+                            audioElem.play().catch(() => {});
+                        }
+                        ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+                            window.removeEventListener(evt, unlock);
+                        });
+                    };
                     ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
-                        window.removeEventListener(evt, unlock);
+                        window.addEventListener(evt, unlock, { passive: true });
                     });
-                };
-                ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
-                    window.addEventListener(evt, unlock, { passive: true });
                 });
-            });
+            }
+        } else {
+            const btn = document.getElementById('audio-toggle');
+            if (btn && window.__setToggleIcon) window.__setToggleIcon(btn, false);
+            const ctrl = document.getElementById('audio-controller');
+            if (ctrl) ctrl.classList.remove('is-playing');
         }
     }
 
     function playNext() {
         const next = pickNextTrack();
-        playTrack(next);
+        playTrack(next, 0, true);
     }
 
     window.initAudioPlayer = function() {
+        // Guard: NEVER run or play music on landing screen (gallery portal)
+        if (document.getElementById('bg-canvas') || (!document.getElementById('fractal-canvas') && !window.location.pathname.includes('-'))) {
+            return;
+        }
+
         createAudioPlayerUI();
+        createSceneNavUI();
+
+        // Check for saved playback state to continue seamlessly across scene transitions
+        let state = null;
+        try {
+            state = JSON.parse(localStorage.getItem(STATE_KEY));
+        } catch (e) {}
+
+        if (state && state.trackId) {
+            const track = PLAYLIST.find(t => t.id === state.trackId);
+            if (track) {
+                let resumePos = typeof state.currentTime === 'number' ? state.currentTime : 0;
+                // Add elapsed transition time if music was playing
+                if (state.isPlaying && state.timestamp) {
+                    const elapsed = (Date.now() - state.timestamp) / 1000;
+                    if (elapsed > 0 && elapsed < 8) {
+                        resumePos += elapsed;
+                    }
+                }
+                const shouldPlay = state.isPlaying !== false;
+                playTrack(track, resumePos, shouldPlay);
+                return;
+            }
+        }
+
+        // Default initial playback: pick random track
         playNext();
     };
 
