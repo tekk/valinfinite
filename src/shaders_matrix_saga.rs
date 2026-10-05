@@ -251,7 +251,7 @@ vec3 render_scene1_gateway(vec2 uv, float t) {
     float pad_y = 0.14;
     vec2 char_uv = vec2(
         (cell_fx - pad_x) / (1.0 - 2.0 * pad_x),
-        (cell_fy - pad_y) / (1.0 - 2.0 * pad_y)
+        (1.0 - cell_fy - pad_y) / (1.0 - 2.0 * pad_y)
     );
     
     float char_mask = smoothstep(0.0, 0.12, char_uv.x) * (1.0 - smoothstep(0.88, 1.0, char_uv.x))
@@ -270,7 +270,7 @@ vec3 render_scene1_gateway(vec2 uv, float t) {
     int word_start = int(mod(col_h * 11.0, 24.0 - float(word_len)));
 
     if (col_has_word && row_in_block >= word_start && row_in_block < word_start + word_len) {
-        int pos = row_in_block - word_start;
+        int pos = (word_start + word_len - 1) - row_in_block;
         glyph = get_intended_word_glyph(word_id, pos);
         is_intended_word = true;
     } else {
